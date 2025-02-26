@@ -1,0 +1,20 @@
+# Java/Spring 관련
+back/target/
+back/.idea/
+back/.classpath
+back/.project
+back/.settings/
+back/*.iml
+
+# Node.js/React 관련
+front/node_modules/
+front/.next/
+front/.idea/
+front/build/
+front/.env.local
+
+# 공통
+.DS_Store
+.env
+.idea/
+.vscode/
