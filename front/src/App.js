@@ -1,25 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
+import React from "react";
+import {Table} from "react-bootstrap";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    return (
+        <>
+            <Table striped bordered hover>
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>날짜</th>
+                    <th>추천</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </Table>
+        </>
+    );
 }
 
 export default App;
