@@ -16,4 +16,8 @@ public class HomeService {
     public List<Map<String, Object>> getBoardList() {
         return boardMapper.getBoardList();
     }
+
+    public Map<String, Object> getBoardDetail(int no) {
+        return boardMapper.getBoardDetail(no);
+    }
 }
