@@ -1,57 +1,100 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Button, Table } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
+import { Button, Container, ListGroup, Table } from "react-bootstrap";
+import customAlert from "../../components/customAlert";
+import Comment from "./Comment";
 
 const BoardDetail = () => {
+  const nav = useNavigate();
   const location = useLocation();
   const [data, setData] = useState({});
-  const [path, setPath] = useState(false);
-
-  const [param, setParam] = useState({ author: "하드코딩" });
-
   const init_data = {
     TITLE: "",
     AUTHOR: "",
     CONTENTS: "",
   };
 
-  const changeObj = (e) => {
+  const [path, setPath] = useState(false);
+  //게시글
+  const [param, setParam] = useState({ author: "하드코딩" });
+
+  const [cnt, setCnt] = useState(0);
+
+  const changeBoard = (e) => {
     const { name, value } = e.target;
     setParam({ ...param, [name]: value });
   };
 
-  const append_board = async () => {
-    const res = await axios.get("/api/board/detail", {
-      params: param,
-    });
-    if (res.data === 1) {
-      console.log("ok");
+  const getDetail = async () => {
+    if (location.state) {
+      setPath(true);
+      try {
+        const res = await axios.get("/api/board/detail", {
+          params: { no: location.state },
+        });
+        setData(res.data);
+      } catch {
+        customAlert("조회 오류 발생", () => {
+          nav("board");
+        });
+      }
+    } else {
+      setPath(false);
+      setData(init_data);
     }
+  };
+
+  const append_board = async () => {
+    try {
+      const res = await axios.post("/api/board/detail", param, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.data === 1) {
+        customAlert("등록완료", () => {
+          nav("board");
+        });
+      }
+    } catch {
+      alert("등록실패");
+    }
+  };
+
+  const recommend = async (no) => {
+    try {
+      const res = await axios.put("/api/board/detail/recommend", { no: no });
+      if (res) {
+        getDetail();
+      }
+    } catch {
+      alert("추천실패");
+    }
+  };
+  useEffect(() => {}, [cnt]);
+
+  const commonProps = {
+    location,
+    getDetail,
+    data,
   };
 
   useEffect(() => {}, [param]);
 
   useEffect(() => {
-    const getDetail = async () => {
-      if (location.state) {
-        setPath(true);
-        const res = await axios.get("/api/board/detail", {
-          params: { no: location.state },
-        });
-        setData(res.data);
-      } else {
-        setPath(false);
-        setData(init_data);
-      }
-    };
-    getDetail().then();
-  }, [location.state]);
+    getDetail();
+  }, []);
 
   return (
     <>
-      <div>
-        <Table bordered>
+      <Container>
+        <Table bordered striped="columns" className="my-4">
+          <colgroup>
+            <col style={{ width: "20%" }} />
+            <col />
+          </colgroup>
           <tbody>
             <tr>
               <td>제목</td>
@@ -59,11 +102,11 @@ const BoardDetail = () => {
                 {path ? (
                   data.TITLE
                 ) : (
-                  <input
+                  <Form.Control
                     name="title"
                     placeholder="제목을 입력하세요"
                     onChange={(e) => {
-                      changeObj(e);
+                      changeBoard(e);
                     }}
                   />
                 )}
@@ -73,72 +116,57 @@ const BoardDetail = () => {
               <td>글쓴이</td>
               <td>{path ? data.AUTHOR : param.author}</td>
             </tr>
+            <tr>
+              <td></td>
+              <td>
+                {path ? (
+                  data.CONTENTS
+                ) : (
+                  <Form.Control
+                    name="contents"
+                    placeholder="내용을 입력하세요."
+                    as="textarea"
+                    style={{ height: "100px" }}
+                    onChange={(e) => {
+                      changeBoard(e);
+                    }}
+                  />
+                )}
+              </td>
+            </tr>
           </tbody>
         </Table>
-        <Table>
-          <tr>
-            <td>내용</td>
-            <td>
-              {path ? (
-                data.CONTENTS
-              ) : (
-                <textarea
-                  name="contents"
-                  placeholder="내용을 입력하세요"
-                  onChange={(e) => {
-                    changeObj(e);
-                  }}
-                />
-              )}
-            </td>
-          </tr>
-        </Table>
-      </div>
-      {path && (
-        <>
-          <div>
-            <Button>추천</Button>
-          </div>
-          <div>
+        {path && (
+          <Container className="text-center">
+            <Button
+              onClick={() => {
+                recommend(data.NO);
+              }}
+            >
+              추천 {data.RECOMMEND}
+            </Button>
+          </Container>
+        )}
+        {path && (
+          <ListGroup className="my-2">
             <h5>댓글</h5>
-            <Table bordered>
-              <col style={{ width: "20%" }} />
-              <col style={{ width: "60%" }} />
-              <col style={{ width: "20%" }} />
-              <tbody>
-                <tr>
-                  <th>테스트 댓글러</th>
-                  <td>테스트 내용</td>
-                  <td>
-                    <Button>X</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>사용자이름</td>
-                  <td>
-                    <textarea />
-                  </td>
-                  <td>
-                    <Button>등록</Button>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
-        </>
-      )}
-      <Link to={"/board"}>
-        <Button>목록</Button>
-      </Link>
-      {!path && (
-        <Button
-          onClick={() => {
-            append_board();
-          }}
-        >
-          등록
-        </Button>
-      )}
+            <Comment {...commonProps} />
+          </ListGroup>
+        )}
+        <Link to={"/board"}>
+          <Button>목록</Button>
+        </Link>
+        <Button variant="danger">글 삭제</Button>
+        {!path && (
+          <Button
+            onClick={() => {
+              append_board();
+            }}
+          >
+            등록
+          </Button>
+        )}
+      </Container>
     </>
   );
 };
