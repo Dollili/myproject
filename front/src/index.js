@@ -6,12 +6,16 @@ import router from "./router";
 
 import reportWebVitals from "./reportWebVitals";
 import { RouterProvider } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
+    <div className="App">
+      <Header />
+      <RouterProvider router={router} />
+      <Footer />
+    </div>
 );
 
 // If you want to start measuring performance in your app, pass a function
