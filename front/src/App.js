@@ -8,18 +8,7 @@ function App() {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-          backgroundColor: "gray.100",
-          padding: "20px",
-          textAlign: "center",
-        }}
-      >
+      <main className="App-contents">
         <Button
           onClick={() => {
             nav("/board");
@@ -27,7 +16,7 @@ function App() {
         >
           시작하기
         </Button>
-      </div>
+      </main>
     </>
   );
 }
