@@ -16,8 +16,8 @@ public class HomeController {
     private HomeService homeService;
 
     @GetMapping("")
-    public List<Map<String, Object>> board() {
-        return homeService.getBoardList();
+    public List<Map<String, Object>> board(@RequestParam Map<String, Object> params) {
+        return homeService.getBoardList(params);
     }
 
     @GetMapping("/detail")
@@ -28,6 +28,12 @@ public class HomeController {
     @PostMapping("/detail")
     public int boardInsert(@RequestBody Map<String, Object> param) {
         return homeService.insertBoard(param);
+    }
+
+    @DeleteMapping("/detail")
+    public ResponseEntity<Boolean> boardDelete(@RequestParam int no) {
+        homeService.deleteBoard(no);
+        return ResponseEntity.ok(true);
     }
 
     @PutMapping("/detail/recommend")
