@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Container, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import Form from "react-bootstrap/Form";
 
 const Board = () => {
   const [data, setData] = useState([]);
@@ -19,15 +18,15 @@ const Board = () => {
 
   return (
     <>
-      <Container>
-        <div className="my-2">
-          <select>
+      <Container id="container">
+        <div className="search-container my-2">
+          <select className="search-select">
             <option>전체</option>
             <option>작성자</option>
             <option>제목</option>
           </select>
-          <input />
-          <Button>검색</Button>
+          <input className="search-input" type="text"/>
+          <Button className="search-button">검색</Button>
         </div>
         <Table striped bordered hover className="my-4">
           <thead>
