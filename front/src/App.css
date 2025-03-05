@@ -1,14 +1,18 @@
 .App {
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .App-contents {
-  flex-grow: 1;
-  min-height: 85vh;
   display: flex;
   align-items: center;
+}
+
+.App-main {
+  display: flex;
   justify-content: center;
+  flex: 1;
 }
 
 .App-header {
@@ -18,6 +22,7 @@
   flex-direction: column;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  margin-bottom: 30px;
 }
 
 .App-header .logo {
@@ -26,9 +31,6 @@
 }
 
 .App-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
   background-color: #282c34;
   min-height: 10vh;
@@ -38,6 +40,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  margin-top: 50px;
 }
 
 .App-logo {
