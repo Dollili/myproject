@@ -17,7 +17,7 @@ public interface BoardMapper {
     void viewCount(@Param("no") int no);
 
     @Update("UPDATE BOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO=#{no}")
-    void recommendUp(Map<String, Object> param);
+    int recommendUp(Map<String, Object> param);
 
     @Select("SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%m:%s') AS APPLY_FORMAT_DATE " +
             "FROM COMMENT WHERE BOARD_NO=#{no}")
@@ -27,7 +27,7 @@ public interface BoardMapper {
     int insertBoard(Map<String, Object> param);
 
     @Delete("DELETE FROM BOARD WHERE NO=#{no}")
-    void deleteBoard(@Param("no") int no);
+    int deleteBoard(@Param("no") int no);
 /*
     @Update()
     int updateBoard();*/
@@ -36,5 +36,5 @@ public interface BoardMapper {
     int insertComment(Map<String, Object> param);
 
     @Delete("DELETE FROM COMMENT WHERE ID=#{id}")
-    void deleteComment(@Param("id") int id);
+    int deleteComment(@Param("id") int id);
 }
