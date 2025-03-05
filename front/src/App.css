@@ -15,19 +15,59 @@
   flex: 1;
 }
 
+.App-side .dropdown {
+  position: absolute;
+  width: 100%;
+  background-color: grey;
+  opacity: 0.3;
+  animation: fadeIn ease-in-out 1s;
+}
+
+.App-side .dropdown.active {
+  opacity: 0;
+  animation: fadeOut ease-in-out 1s;
+}
+
+.App-side .dropdown.active @keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 .App-header {
   background-color: #282c34;
-  min-height: 5vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  min-height: 10vh;
   font-size: calc(10px + 2vmin);
-  margin-bottom: 30px;
+}
+
+.App-header .menu {
+  float: right;
+  color: white;
+  margin: 30px;
+  background-color: #282c34;
 }
 
 .App-header .logo {
+  float: left;
   color: white;
-  padding-left: 30px;
+  margin: 30px;
+}
+
+.menu:hover, .logo:hover {
+    cursor: pointer;
 }
 
 .App-footer {

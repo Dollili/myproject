@@ -42,7 +42,7 @@ const Comment = ({ location, getDetail, data }) => {
   useEffect(() => {}, [comment]);
 
   return (
-    <>
+    <div className="comment">
       <Table bordered>
         <colgroup>
           <col style={{ width: "20%" }} />
@@ -51,19 +51,18 @@ const Comment = ({ location, getDetail, data }) => {
         </colgroup>
         <tbody>
           {data.comment &&
-            data.comment.map((com) => (
-              <tr>
+            data.comment.map((com, index) => (
+              <tr key={index}>
                 <th>{com.USER_NM}</th>
                 <td>{com.COMMENT}</td>
                 <td>
                   {com.APPLY_FORMAT_DATE}
                   <Button
-                    className="btn-danger"
+                    className="delete-btn btn-danger"
                     onClick={() => {
                       deleteComment(com.ID);
-                    }}
-                  >
-                    삭제
+                    }}>
+                    -
                   </Button>
                 </td>
               </tr>
@@ -91,7 +90,7 @@ const Comment = ({ location, getDetail, data }) => {
                 }}
               />
             </td>
-            <td>
+            <td className="td3">
               <Button
                 onClick={() => {
                   append_comment();
@@ -103,7 +102,7 @@ const Comment = ({ location, getDetail, data }) => {
           </tr>
         </tbody>
       </Table>
-    </>
+    </div>
   );
 };
 export default Comment;
