@@ -24,23 +24,23 @@ public class HomeService {
         return board;
     }
 
-    public void recommendUp(Map<String, Object> param) {
-        boardMapper.recommendUp(param);
+    public int recommendUp(Map<String, Object> param) {
+        return boardMapper.recommendUp(param);
     }
 
     public int insertBoard(Map<String, Object> param) {
         return boardMapper.insertBoard(param);
     }
 
-    public void deleteBoard(int no) {
-        boardMapper.deleteBoard(no);
+    public int deleteBoard(int no) {
+        return boardMapper.deleteBoard(no);
     }
 
     public int insertComment(Map<String, Object> param) {
         return boardMapper.insertComment(param);
     }
 
-    public void deleteComment(int id) {
-        boardMapper.deleteComment(id);
+    public int deleteComment(int id) {
+        return boardMapper.deleteComment(id);
     }
 }

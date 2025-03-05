@@ -2,6 +2,7 @@ package org.example.Controller;
 
 import org.example.Service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,15 +32,23 @@ public class HomeController {
     }
 
     @DeleteMapping("/detail")
-    public ResponseEntity<Boolean> boardDelete(@RequestParam int no) {
-        homeService.deleteBoard(no);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<Void> boardDelete(@RequestParam int no) {
+        int result = homeService.deleteBoard(no);
+        if (result == 1) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PutMapping("/detail/recommend")
-    public ResponseEntity<Boolean> boardRecUp(@RequestBody Map<String, Object> param) {
-        homeService.recommendUp(param);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<Void> boardRecUp(@RequestBody Map<String, Object> param) {
+        int result = homeService.recommendUp(param);
+        if (result == 1) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PostMapping("/comment")
@@ -48,9 +57,13 @@ public class HomeController {
     }
 
     @DeleteMapping("/comment/delete")
-    public ResponseEntity<Boolean> commentDelete(@RequestParam int id) {
-        homeService.deleteComment(id);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<Void> commentDelete(@RequestParam int id) {
+        int result = homeService.deleteComment(id);
+        if (result == 1) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }
