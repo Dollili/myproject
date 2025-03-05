@@ -90,7 +90,7 @@ const BoardDetail = () => {
   return (
     <>
       <Container>
-        <Table bordered striped="columns" className="my-4">
+        <Table bordered>
           <colgroup>
             <col style={{ width: "20%" }} />
             <col />
@@ -120,13 +120,18 @@ const BoardDetail = () => {
               <td></td>
               <td>
                 {path ? (
-                  data.CONTENTS
+                  <Form.Control
+                    className="contentsInput disabled"
+                    value={data.CONTENTS}
+                    as="textarea"
+                    disabled
+                  />
                 ) : (
                   <Form.Control
+                    className="contentsInput"
                     name="contents"
                     placeholder="내용을 입력하세요."
                     as="textarea"
-                    style={{ height: "100px" }}
                     onChange={(e) => {
                       changeBoard(e);
                     }}
@@ -156,7 +161,7 @@ const BoardDetail = () => {
         <Link to={"/board"}>
           <Button>목록</Button>
         </Link>
-        <Button variant="danger">글 삭제</Button>
+        {path && <Button variant="danger">글 삭제</Button>}
         {!path && (
           <Button
             onClick={() => {

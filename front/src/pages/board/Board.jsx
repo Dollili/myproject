@@ -17,9 +17,9 @@ const Board = () => {
   }, []);
 
   return (
-    <>
-      <Container id="container">
-        <div className="search-container my-2">
+    <div className="main-container">
+      <Container>
+        <div className="search-container">
           <select className="search-select">
             <option>전체</option>
             <option>작성자</option>
@@ -28,10 +28,18 @@ const Board = () => {
           <input className="search-input" type="text"/>
           <Button className="search-button">검색</Button>
         </div>
-        <Table striped bordered hover className="my-4">
+        <Table striped bordered hover className="board my-2">
+          <colgroup>
+            <col style={{width: "10%"}}/>
+            <col style={{width: "40%"}}/>
+            <col style={{width: "15%"}}/>
+            <col style={{width: "15%"}}/>
+            <col style={{width: "10%"}}/>
+            <col style={{width: "10%"}}/>
+          </colgroup>
           <thead>
-            <tr>
-              <th>번호</th>
+          <tr>
+          <th>번호</th>
               <th>제목</th>
               <th>작성자</th>
               <th>날짜</th>
@@ -64,7 +72,7 @@ const Board = () => {
           <Button>글 작성</Button>
         </Link>
       </Container>
-    </>
+    </div>
   );
 };
 
