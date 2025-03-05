@@ -37,7 +37,7 @@ const BoardDetail = () => {
         setData(res.data);
       } catch {
         customAlert("조회 오류 발생", () => {
-          nav("board");
+          nav("/board");
         });
       }
     } else {
@@ -55,7 +55,7 @@ const BoardDetail = () => {
       });
       if (res.data === 1) {
         customAlert("등록완료", () => {
-          nav("board");
+          nav("/board");
         });
       }
     } catch {
@@ -63,6 +63,18 @@ const BoardDetail = () => {
     }
   };
 
+  const deleteBoard = async (no) => {
+    try {
+      const res = await axios.delete("/api/board/detail", {
+        params: { no: no },
+      });
+      if (res) {
+        customAlert("삭제완료", () => {
+          nav("/board");
+        });
+      }
+    } catch {}
+  };
   const recommend = async (no) => {
     try {
       const res = await axios.put("/api/board/detail/recommend", { no: no });
@@ -88,7 +100,7 @@ const BoardDetail = () => {
   }, []);
 
   return (
-    <>
+    <div className="main-container">
       <Container>
         <Table bordered>
           <colgroup>
@@ -161,18 +173,29 @@ const BoardDetail = () => {
         <Link to={"/board"}>
           <Button>목록</Button>
         </Link>
-        {path && <Button variant="danger">글 삭제</Button>}
+        {path && (
+          <Button
+            className="delete-board"
+            variant="danger"
+            onClick={() => {
+              deleteBoard(data.NO);
+            }}
+          >
+            글 삭제
+          </Button>
+        )}
         {!path && (
           <Button
             onClick={() => {
               append_board();
             }}
+            style={{ float: "right" }}
           >
             등록
           </Button>
         )}
       </Container>
-    </>
+    </div>
   );
 };
 export default BoardDetail;

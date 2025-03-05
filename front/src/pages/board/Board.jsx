@@ -7,39 +7,71 @@ const Board = () => {
   const [data, setData] = useState([]);
   const nav = useNavigate();
 
+  const [search, setSearch] = useState({
+    option: "",
+    val: "",
+  });
+
+  const getBoard = async () => {
+    const res = await axios.get("api/board", {
+      params: search,
+    });
+    setData(res.data);
+  };
+
+  useEffect(() => {}, [search]);
+
   useEffect(() => {
-    const getBoard = async () => {
-      const res = await axios.get("api/board");
-      console.log("응답: ", res.data);
-      setData(res.data);
-    };
-    getBoard().then();
+    getBoard();
   }, []);
 
   return (
     <div className="main-container">
       <Container>
         <div className="search-container">
-          <select className="search-select">
-            <option>전체</option>
-            <option>작성자</option>
-            <option>제목</option>
+          <select
+            className="search-select"
+            name="option"
+            onChange={(e) => {
+              const { name, value } = e.target;
+              setSearch({ ...search, [name]: value });
+            }}
+          >
+            <option value="">전체</option>
+            <option value="author">작성자</option>
+            <option value="title">제목</option>
           </select>
-          <input className="search-input" type="text"/>
-          <Button className="search-button">검색</Button>
+          <input
+            className="search-input"
+            name="val"
+            value={search.val}
+            type="text"
+            onChange={(e) => {
+              const { name, value } = e.target;
+              setSearch({ ...search, [name]: value });
+            }}
+          />
+          <Button
+            className="search-button"
+            onClick={() => {
+              getBoard().then(() => setSearch({ ...search, val: "" }));
+            }}
+          >
+            검색
+          </Button>
         </div>
         <Table striped bordered hover className="board my-2">
           <colgroup>
-            <col style={{width: "10%"}}/>
-            <col style={{width: "40%"}}/>
-            <col style={{width: "15%"}}/>
-            <col style={{width: "15%"}}/>
-            <col style={{width: "10%"}}/>
-            <col style={{width: "10%"}}/>
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "40%" }} />
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "15%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "10%" }} />
           </colgroup>
           <thead>
-          <tr>
-          <th>번호</th>
+            <tr>
+              <th>번호</th>
               <th>제목</th>
               <th>작성자</th>
               <th>날짜</th>
@@ -69,7 +101,7 @@ const Board = () => {
       </Container>
       <Container>
         <Link to={"detail"}>
-          <Button>글 작성</Button>
+          <Button style={{ float: "right" }}>글쓰기</Button>
         </Link>
       </Container>
     </div>
