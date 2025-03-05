@@ -70,7 +70,7 @@ const Comment = ({ location, getDetail, data }) => {
             ))}
         </tbody>
       </Table>
-      <Paging />
+      {data.comment && data.comment.length > 0 && <Paging />}
       <Table bordered>
         <colgroup>
           <col style={{ width: "20%" }} />
@@ -82,10 +82,10 @@ const Comment = ({ location, getDetail, data }) => {
             <td>사용자이름</td>
             <td>
               <Form.Control
+                className="areaInput"
                 placeholder="댓글을 입력하세요"
                 name="comment"
                 as="textarea"
-                style={{ height: "100px" }}
                 onChange={(e) => {
                   changeComment(e);
                 }}
