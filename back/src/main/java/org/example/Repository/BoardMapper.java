@@ -8,9 +8,7 @@ import java.util.Map;
 @Mapper
 public interface BoardMapper {
 
-    @Select("SELECT NO, TITLE, AUTHOR, RECOMMEND, VIEW_CNT, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') " +
-            "AS APPLY_FORMAT_DATE FROM BOARD ORDER BY APPLY_DATE DESC")
-    List<Map<String, Object>> getBoardList();
+    List<Map<String, Object>> getBoardList(Map<String, Object> params);
 
     @Select("SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE FROM BOARD WHERE NO=#{no}")
     Map<String, Object> getBoardDetail(@Param("no") int no);
@@ -28,9 +26,9 @@ public interface BoardMapper {
     @Insert("INSERT INTO BOARD (TITLE, CONTENTS, AUTHOR, APPLY_DATE) VALUES (#{title},#{contents},#{author},NOW())")
     int insertBoard(Map<String, Object> param);
 
-/*    @Delete()
-    int deleteBoard();
-
+    @Delete("DELETE FROM BOARD WHERE NO=#{no}")
+    void deleteBoard(@Param("no") int no);
+/*
     @Update()
     int updateBoard();*/
 

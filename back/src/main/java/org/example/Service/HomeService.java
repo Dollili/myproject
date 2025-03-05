@@ -13,8 +13,8 @@ public class HomeService {
     @Autowired
     private BoardMapper boardMapper;
 
-    public List<Map<String, Object>> getBoardList() {
-        return boardMapper.getBoardList();
+    public List<Map<String, Object>> getBoardList(Map<String, Object> params) {
+        return boardMapper.getBoardList(params);
     }
 
     public Map<String, Object> getBoardDetail(int no) {
@@ -30,6 +30,10 @@ public class HomeService {
 
     public int insertBoard(Map<String, Object> param) {
         return boardMapper.insertBoard(param);
+    }
+
+    public void deleteBoard(int no) {
+        boardMapper.deleteBoard(no);
     }
 
     public int insertComment(Map<String, Object> param) {
