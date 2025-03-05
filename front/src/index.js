@@ -14,7 +14,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <div className="App">
     <Header />
-    <RouterProvider router={router} />
+    <div className="App-main">
+      <RouterProvider router={router} />
+    </div>
     <Footer />
   </div>,
 );

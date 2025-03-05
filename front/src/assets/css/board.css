@@ -1,22 +1,48 @@
-.search-container {
-    display: flex;
-    align-items: end;
-    gap: 8px; /* 요소 간 간격 */
+.main-container {
     width: 100%;
-    justify-content: flex-end;
+    flex-direction: column;
+}
+
+/* 메인 게시판 */
+.search-container {
+  display: flex;
+  align-items: end;
+  gap: 8px; /* 요소 간 간격 */
+  width: 100%;
+  justify-content: flex-end;
 }
 
 .search-select,
 .search-input,
 .search-button {
-    height: 40px; /* 동일한 높이 */
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
+  height: 40px; /* 동일한 높이 */
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 
 .search-button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
+}
+
+
+/* 게시글 관련 */
+.board {
+  text-align: center;
+}
+
+.areaInput {
+  height: 100px;
+  resize: none;
+}
+
+.contentsInput {
+  height: 400px;
+  resize: none;
+}
+
+.contentsInput:disabled {
+  background-color: white;
 }
