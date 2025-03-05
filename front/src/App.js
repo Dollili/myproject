@@ -7,17 +7,15 @@ function App() {
   const nav = useNavigate();
 
   return (
-    <>
-      <main className="App-contents">
-        <Button
-          onClick={() => {
-            nav("/board");
-          }}
-        >
-          시작하기
-        </Button>
-      </main>
-    </>
+    <div className="App-contents">
+      <Button
+        onClick={() => {
+          nav("/board");
+        }}
+      >
+        시작하기
+      </Button>
+    </div>
   );
 }
 
