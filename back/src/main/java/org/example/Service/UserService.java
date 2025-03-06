@@ -22,6 +22,7 @@ public class UserService {
     }
 
     public int register(Map<String, Object> params) {
+        String pwd = params.get("pwd").toString();
         return userMapper.insertUser(params);
     }
 
