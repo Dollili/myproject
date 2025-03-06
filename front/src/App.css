@@ -1,69 +1,95 @@
 .App {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .App-contents {
-  display: flex;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login {
+    display: flex;
+}
+
+.login-Form {
+    display: flex;
+    flex-direction: column;
+}
+
+.App-contents .login-Form input {
+    margin: 5px;
+}
+
+.choice-Form a, label {
+    padding: 5px;
+}
+
+.choice-Form a {
+    color: #212529;
+    text-decoration: none;
 }
 
 .App-main {
-  display: flex;
-  justify-content: center;
-  flex: 1;
+    display: flex;
+    justify-content: center;
+    flex: 1;
 }
 
 .App-side .dropdown {
-  position: absolute;
-  width: 100%;
-  background-color: grey;
-  opacity: 0.3;
-  animation: fadeIn ease-in-out 1s;
+    position: absolute;
+    width: 100%;
+    background-color: grey;
+    opacity: 0.3;
+    animation: fadeIn ease-in-out 1s;
 }
 
 .App-side .dropdown.active {
-  opacity: 0;
-  animation: fadeOut ease-in-out 1s;
+    opacity: 0;
+    animation: fadeOut ease-in-out 1s;
 }
 
-.App-side .dropdown.active @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0.3;
-  }
+.App-side .dropdown.active
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0.3;
+    }
 }
 
 @keyframes fadeOut {
-  0% {
-    opacity: 0.3;
-  }
+    0% {
+        opacity: 0.3;
+    }
 
-  100% {
-    opacity: 0;
-  }
+    100% {
+        opacity: 0;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 10vh;
-  font-size: calc(10px + 2vmin);
+    background-color: #282c34;
+    min-height: 10vh;
+    font-size: calc(10px + 2vmin);
 }
 
 .App-header .menu {
-  float: right;
-  color: white;
-  margin: 30px;
-  background-color: #282c34;
+    float: right;
+    color: white;
+    margin: 30px;
+    background-color: #282c34;
 }
 
 .App-header .logo {
-  float: left;
-  color: white;
-  margin: 30px;
+    float: left;
+    color: white;
+    margin: 30px;
 }
 
 .menu:hover, .logo:hover {
@@ -71,38 +97,38 @@
 }
 
 .App-footer {
-  width: 100%;
-  background-color: #282c34;
-  min-height: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  margin-top: 50px;
+    width: 100%;
+    background-color: #282c34;
+    min-height: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    margin-top: 50px;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
