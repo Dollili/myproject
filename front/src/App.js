@@ -20,6 +20,7 @@ function App() {
             user["role"] = "U";
         }
         console.log(user)
+        nav('board');
     };
 
     useEffect(() => {
@@ -38,6 +39,7 @@ function App() {
                         }}
                     />
                     <input
+                        type="password"
                         name="pwd"
                         value={userObj.pwd || ""}
                         placeholder="password"
