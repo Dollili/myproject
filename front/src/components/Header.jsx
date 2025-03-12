@@ -13,7 +13,7 @@ const Header = () => {
         <>
             <header className="App-header">
                 <div className="logo">
-                    <Link to={""}>홈화면</Link>
+                    <Link to={""} style={{color: "white", textDecorationLine: "none"}}>홈화면</Link>
                 </div>
                 <p className="menu" onClick={() => close()}>
                     메뉴

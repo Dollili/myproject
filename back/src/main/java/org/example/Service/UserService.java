@@ -1,29 +1,48 @@
 package org.example.Service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.Repository.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public Boolean userLogin(Map<String, Object> params) throws UsernameNotFoundException {
-        String user = userMapper.userLogin(params);
+    public Map<String, Object> userLogin(Map<String, Object> params) {
+        String pwd = (String) params.get("pwd");
+
+        Map<String, Object> user = userMapper.userLogin(params);
         if (user == null) {
-            throw new UsernameNotFoundException("user not found : " + params.get("id"));
+            return null;
         }
-        return true;
+
+        String password = (String) user.get("USER_PWD");
+        if (!bCryptPasswordEncoder.matches(pwd, password)) {
+            return null;
+        }
+        return user;
     }
 
-    public int register(Map<String, Object> params) {
-        String pwd = params.get("pwd").toString();
+    public int join(Map<String, Object> params) {
+        if (params.get("id") == null || params.get("pwd") == null) {
+            throw new RuntimeException("Required fields");
+        }
+
+        String password = bCryptPasswordEncoder.encode((String) params.get("pwd"));
+        params.put("pwd", password);
+
         return userMapper.insertUser(params);
+    }
+
+    public String findUserId(Map<String, Object> params) {
+        Map<String, Object> user = userMapper.userInfo(params);
+        return user == null ? null : (String) user.get("USER_ID");
     }
 
 }
