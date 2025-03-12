@@ -1,17 +1,17 @@
 package org.example.Service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.Repository.BoardMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Service
 public class HomeService {
 
-    @Autowired
-    private BoardMapper boardMapper;
+    private final BoardMapper boardMapper;
 
     public List<Map<String, Object>> getBoardList(Map<String, Object> params) {
         return boardMapper.getBoardList(params);
