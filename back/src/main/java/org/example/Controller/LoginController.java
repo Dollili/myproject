@@ -3,7 +3,6 @@ package org.example.Controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.Service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,25 +21,25 @@ public class LoginController {
         if (result != null) {
             result.remove("USER_PWD");
         }
-        
+
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/sameId")
+    public String sameId(@RequestParam Map<String, Object> params) {
+        return userService.findUserId(params);
     }
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody Map<String, Object> params) {
         try {
-            if (params.get("pwd") == null) {
-                return ResponseEntity.badRequest().body("password is null");
-            }
-
-            Map<String, Object> user = userService.join(params);
-            if (user == null) {
+            int user = userService.join(params);
+            if (user < 1) {
                 return ResponseEntity.internalServerError()
                         .body("cannot register");
             }
 
-            HttpStatus status = user.get("duplicate") != null && !((boolean) user.get("duplicate")) ? HttpStatus.OK : HttpStatus.CREATED;
-            return ResponseEntity.status(status).body(user);
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
