@@ -6,19 +6,14 @@ import "./assets/css/board.css";
 import router from "./router";
 
 import reportWebVitals from "./reportWebVitals";
-import { RouterProvider } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import {RouterProvider} from "react-router-dom";
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <div className="App">
-    <Header />
-    <div className="App-main">
-      <RouterProvider router={router} />
-    </div>
-    <Footer />
-  </div>,
+    <RouterProvider router={router}>
+        <App/>
+    </RouterProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function
