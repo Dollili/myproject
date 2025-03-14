@@ -6,6 +6,8 @@ import BoardDetail from "./pages/board/BoardDetail";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./pages/user/Register";
 import Home from "./pages/Home";
+import UserInfo from "./pages/user/UserInfo";
+import Error from "./pages/Error";
 
 const router = createBrowserRouter([
     {
@@ -15,6 +17,7 @@ const router = createBrowserRouter([
         children: [
             {path: "", element: <Home/>},
             {path: "register", element: <Register/>},
+            {path: "info", element: <UserInfo/>},
             {
                 path: "board",
                 element: <ProtectedRoute/>, // 보호된 경로 그룹
@@ -26,6 +29,7 @@ const router = createBrowserRouter([
                     {path: ":no", element: <BoardDetail/>},
                 ],
             },
+            {path: "/error", element: <Error/>},
         ],
     },
 ]);

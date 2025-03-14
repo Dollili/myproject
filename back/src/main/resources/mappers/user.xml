@@ -10,7 +10,7 @@
     </select>
 
     <select id="userInfo" resultType="map">
-        SELECT USER_ID, USER_NM, REGISTER_DATE, ROLE
+        SELECT USER_ID, USER_NM, DATE_FORMAT(REGISTER_DATE, '%Y-%m-%s') AS REGISTER_DATE, ROLE
         FROM USER
         WHERE UPPER(USER_ID) = UPPER(#{id})
     </select>
