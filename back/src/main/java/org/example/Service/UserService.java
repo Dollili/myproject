@@ -45,4 +45,8 @@ public class UserService {
         return user == null ? null : (String) user.get("USER_ID");
     }
 
+    public Map<String, Object> findUserInfo(Map<String, Object> params) {
+        return userMapper.userInfo(params);
+    }
+
 }

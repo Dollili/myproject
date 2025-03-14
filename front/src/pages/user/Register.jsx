@@ -1,4 +1,4 @@
-import {dbGet, dbPost} from "../../assets/api/commonApi";
+import {dbPost} from "../../assets/api/commonApi";
 import {useEffect, useState} from "react";
 import {Button, Container} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
@@ -20,7 +20,7 @@ const Register = () => {
     };
 
     const sameId = async () => {
-        const res = await dbGet("login/sameId", {id: user.id});
+        const res = await dbPost("login/idCheck", user);
         if (res) {
             alert("중복");
             setIdCheck(false);
@@ -43,7 +43,6 @@ const Register = () => {
     };
 
     const join = async () => {
-        console.log(join_check())
         if (join_check()) {
             const res = await dbPost("login/join", user);
             if (res === 1) {
@@ -60,7 +59,6 @@ const Register = () => {
     }, [inf, user]);
 
     useEffect(() => {
-        console.log(user)
     }, [user, id_check]);
 
     return (

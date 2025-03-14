@@ -1,8 +1,8 @@
 import {Button, Table} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import Paging from "../../components/Paging";
+import {dbDelete, dbPost} from "../../assets/api/commonApi";
 
 const Comment = ({location, getDetail, data}) => {
     const [comment, setComment] = useState({user: "테스터댓글러"});
@@ -15,11 +15,7 @@ const Comment = ({location, getDetail, data}) => {
     const append_comment = async () => {
         comment["no"] = location.state;
         try {
-            const res = await axios.post("/api/board/comment", comment, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            const res = await dbPost("/api/board/comment", comment);
             if (res.data === 1) {
                 getDetail();
             }
@@ -29,7 +25,7 @@ const Comment = ({location, getDetail, data}) => {
     };
     const deleteComment = async (id) => {
         try {
-            const res = await axios.delete("/api/board/comment/delete", {
+            const res = await dbDelete("/api/board/comment/delete", {
                 params: {id: id},
             });
             if (res.status === 204) {
@@ -62,7 +58,8 @@ const Comment = ({location, getDetail, data}) => {
                                     className="delete-btn btn-danger"
                                     onClick={() => {
                                         deleteComment(com.ID);
-                                    }}>
+                                    }}
+                                >
                                     -
                                 </Button>
                             </td>
