@@ -1,7 +1,7 @@
-import React, {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import React, {useEffect} from "react";
 
-const NotFound = () => {
+const Error = () => {
     const nav = useNavigate();
 
     useEffect(() => {
@@ -25,15 +25,14 @@ const NotFound = () => {
             <h1
                 style={{fontSize: "2.5rem", color: "red.600", marginBottom: "20px"}}
             >
-                페이지를 찾을 수 없습니다. 이전 화면으로 이동합니다.
+                요청 오류 발생. 이전 화면으로 이동합니다.
             </h1>
             <h2
                 style={{fontSize: "1.5rem", color: "gray.600", marginBottom: "20px"}}
             >
-                Page not found.
+                UnAuthorization
             </h2>
         </div>
     );
 };
-
-export default NotFound;
+export default Error;

@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import axios from "axios";
 import Form from "react-bootstrap/Form";
 import {Button, Container, ListGroup, Table} from "react-bootstrap";
 import customAlert from "../../components/customAlert";
 import Comment from "./Comment";
+import {dbDelete, dbGet, dbPost, dbPut} from "../../assets/api/commonApi";
 
 const BoardDetail = () => {
     const nav = useNavigate();
@@ -31,10 +31,8 @@ const BoardDetail = () => {
         if (location.state) {
             setPath(true);
             try {
-                const res = await axios.get("/api/board/detail", {
-                    params: {no: location.state},
-                });
-                setData(res.data);
+                const res = await dbGet("board/detail", {no: location.state});
+                setData(res);
             } catch {
                 customAlert("조회 오류 발생", () => {
                     nav("/board");
@@ -48,11 +46,7 @@ const BoardDetail = () => {
 
     const append_board = async () => {
         try {
-            const res = await axios.post("/api/board/detail", param, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            const res = await dbPost("board/detail", param);
             if (res.data === 1) {
                 customAlert("등록완료", () => {
                     nav("/board");
@@ -65,9 +59,7 @@ const BoardDetail = () => {
 
     const deleteBoard = async (no) => {
         try {
-            const res = await axios.delete("/api/board/detail", {
-                params: {no: no},
-            });
+            const res = await dbDelete("board/detail", {no: no});
             if (res.status === 204) {
                 customAlert("삭제완료", () => {
                     nav("/board");
@@ -78,7 +70,7 @@ const BoardDetail = () => {
     };
     const recommend = async (no) => {
         try {
-            const res = await axios.put("/api/board/detail/recommend", {no: no});
+            const res = await dbPut("board/detail/recommend", {no: no});
             if (res.status === 204) {
                 getDetail();
             }
@@ -87,7 +79,7 @@ const BoardDetail = () => {
         }
     };
     useEffect(() => {
-    }, [cnt]);
+    }, [cnt, data]);
 
     const commonProps = {
         location,
