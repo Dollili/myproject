@@ -22,7 +22,7 @@ public class HomeController {
     }
 
     @GetMapping("/detail")
-    public Map<String, Object> boardDetail(@RequestParam int no) {
+    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> no) {
         return homeService.getBoardDetail(no);
     }
 

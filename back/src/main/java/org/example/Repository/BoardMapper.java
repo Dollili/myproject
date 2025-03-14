@@ -11,17 +11,17 @@ public interface BoardMapper {
     List<Map<String, Object>> getBoardList(Map<String, Object> params);
 
     @Select("SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE FROM BOARD WHERE NO=#{no}")
-    Map<String, Object> getBoardDetail(@Param("no") int no);
+    Map<String, Object> getBoardDetail(Map<String, Object> no);
 
     @Update("UPDATE BOARD SET VIEW_CNT = VIEW_CNT + 1 WHERE NO=#{no}")
-    void viewCount(@Param("no") int no);
+    void viewCount(Map<String, Object> no);
 
     @Update("UPDATE BOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO=#{no}")
     int recommendUp(Map<String, Object> param);
 
     @Select("SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%m:%s') AS APPLY_FORMAT_DATE " +
             "FROM COMMENT WHERE BOARD_NO=#{no}")
-    List<Map<String, Object>> getBoardComment(int no);
+    List<Map<String, Object>> getBoardComment(Map<String, Object> no);
 
     @Insert("INSERT INTO BOARD (TITLE, CONTENTS, AUTHOR, APPLY_DATE) VALUES (#{title},#{contents},#{author},NOW())")
     int insertBoard(Map<String, Object> param);
