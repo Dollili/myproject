@@ -1,6 +1,10 @@
 package org.example.Controller;
 
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +19,43 @@ public class LoginController {
 
     private final UserService userService;
 
-    @GetMapping("")
-    public ResponseEntity<?> login(@RequestParam Map<String, Object> params) {
+    @PostMapping("")
+    public ResponseEntity<?> login(@RequestBody Map<String, Object> params, HttpSession session) {
         Map<String, Object> result = userService.userLogin(params);
+
         if (result != null) {
             result.remove("USER_PWD");
+            session.setAttribute("user", result);
+            System.out.println("######" + session.getAttribute("user"));
         }
 
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/sameId")
-    public String sameId(@RequestParam Map<String, Object> params) {
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/idCheck")
+    public String sameId(@RequestBody Map<String, Object> params) {
         return userService.findUserId(params);
+    }
+
+    @GetMapping("/user")
+    public Map<String, Object> getUserInfo(@RequestParam Map<String, Object> params) {
+        return userService.findUserInfo(params);
     }
 
     @PostMapping("/join")

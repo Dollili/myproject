@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
-import {dbGet} from "../assets/api/commonApi";
+import {dbPost} from "../assets/api/commonApi";
 
 const Home = () => {
     const nav = useNavigate();
@@ -27,11 +27,11 @@ const Home = () => {
 
     const login = async () => {
         role_check();
-        const res = await dbGet("login", user);
+        const res = await dbPost("login", user);
         if (res) {
             alert("로그인 성공");
-            localStorage.setItem("user_Token", JSON.stringify(res));
-            nav("/board");
+            sessionStorage.setItem("user_Token", JSON.stringify(res));
+            nav("board");
         } else {
             alert("로그인 실패");
         }
@@ -39,10 +39,6 @@ const Home = () => {
 
     useEffect(() => {
     }, [check, user]);
-
-    useEffect(() => {
-        localStorage.removeItem("user_Token");
-    }, []);
 
     return (
         <>

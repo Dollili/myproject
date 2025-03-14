@@ -17,7 +17,7 @@ public class HomeService {
         return boardMapper.getBoardList(params);
     }
 
-    public Map<String, Object> getBoardDetail(int no) {
+    public Map<String, Object> getBoardDetail(Map<String, Object> no) {
         boardMapper.viewCount(no);
         Map<String, Object> board = boardMapper.getBoardDetail(no);
         board.put("comment", boardMapper.getBoardComment(no));
