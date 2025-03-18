@@ -2,14 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.Repository.UserMapper">
 
-    <select id="userLogin" resultType="map">
+    <select id="userLogin" parameterType="string" resultType="map">
         SELECT USER_ID, USER_PWD, ROLE, USER_NM
         FROM USER
         WHERE UPPER(USER_ID) = UPPER(#{id})
-          AND ROLE = #{role}
     </select>
 
-    <select id="userInfo" resultType="map">
+    <select id="userInfo" parameterType="string" resultType="map">
         SELECT USER_ID, USER_NM, DATE_FORMAT(REGISTER_DATE, '%Y-%m-%s') AS REGISTER_DATE, ROLE
         FROM USER
         WHERE UPPER(USER_ID) = UPPER(#{id})
