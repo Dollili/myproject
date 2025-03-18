@@ -19,9 +19,8 @@ public class CorsConfig {
         config.addAllowedOrigin("http://localhost:3000"); // 허용할 URL
         config.addAllowedHeader("*"); // 허용할 Header
         config.addAllowedMethod("*"); // 허용할 Http Method
-        // ⭐CORS 는 해결했지만 프론트에 응답 헤더에 추가한 Authorization 이 전달되지 않는 문제 해결
-        config.setExposedHeaders(Arrays.asList("Authorization", "Authorization-refresh"));
-        source.registerCorsConfiguration("/**", config); // 모든 Url에 대해 설정한 CorsConfiguration 등록
+        config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 }
