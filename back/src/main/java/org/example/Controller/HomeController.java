@@ -16,7 +16,7 @@ public class HomeController {
     @Autowired
     private HomeService homeService;
 
-    @GetMapping("")
+    @GetMapping("/list")
     public List<Map<String, Object>> board(@RequestParam Map<String, Object> params) {
         return homeService.getBoardList(params);
     }

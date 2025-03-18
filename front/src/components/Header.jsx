@@ -15,7 +15,7 @@ const Header = () => {
 
     const info = () => {
         if (item) {
-            nav("/info", {state: {id: JSON.parse(item).USER_ID}});
+            nav("/info", {state: {id: JSON.parse(item).username}});
         } else {
             nav("/register");
         }
@@ -23,7 +23,7 @@ const Header = () => {
 
     const logout = async () => {
         try {
-            await dbPost("login/logout", {});
+            await dbPost("/auth/logout", {});
             sessionStorage.removeItem("user_Token");
             nav("/");
         } catch (e) {

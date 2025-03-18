@@ -12,7 +12,7 @@ const UserInfo = () => {
     });
 
     const getInfo = async () => {
-        const res = await dbGet("/login/user", location.state);
+        const res = await dbGet("/auth/user", location.state);
         if (res) {
             setRes(res);
         } else {
