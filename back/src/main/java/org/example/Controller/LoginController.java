@@ -8,33 +8,42 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/login")
+@RequestMapping("/auth")
 public class LoginController {
 
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
-    @PostMapping("")
-    public ResponseEntity<?> login(@RequestBody Map<String, Object> params, HttpSession session) {
-        Map<String, Object> result = userService.userLogin(params);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, Object> params, HttpServletRequest request) {
+        String id = params.get("id").toString();
+        String pwd = params.get("pwd").toString();
 
-        if (result != null) {
-            result.remove("USER_PWD");
-            session.setAttribute("user", result);
-            System.out.println("######" + session.getAttribute("user"));
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, pwd));
+
+            HttpSession session = request.getSession();
+            session.setAttribute("user", authentication.getName());
+
+            return ResponseEntity.ok(authentication.getPrincipal());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
+
         if (session != null) {
             session.invalidate();
         }
