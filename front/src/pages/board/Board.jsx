@@ -13,7 +13,7 @@ const Board = () => {
     });
 
     const getBoard = async () => {
-        const res = await dbGet("board", search);
+        const res = await dbGet("/board/list", search);
         if (res) {
             setData(res);
         }

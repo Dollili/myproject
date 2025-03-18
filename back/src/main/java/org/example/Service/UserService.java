@@ -14,21 +14,6 @@ public class UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public Map<String, Object> userLogin(Map<String, Object> params) {
-        String pwd = (String) params.get("pwd");
-
-        Map<String, Object> user = userMapper.userLogin(params);
-        if (user == null) {
-            return null;
-        }
-
-        String password = (String) user.get("USER_PWD");
-        if (!bCryptPasswordEncoder.matches(pwd, password)) {
-            return null;
-        }
-        return user;
-    }
-
     public int join(Map<String, Object> params) {
         if (params.get("id") == null || params.get("pwd") == null) {
             throw new RuntimeException("Required fields");
@@ -41,12 +26,14 @@ public class UserService {
     }
 
     public String findUserId(Map<String, Object> params) {
-        Map<String, Object> user = userMapper.userInfo(params);
+        String userId = (String) params.get("id");
+        Map<String, Object> user = userMapper.userInfo(userId);
         return user == null ? null : (String) user.get("USER_ID");
     }
 
     public Map<String, Object> findUserInfo(Map<String, Object> params) {
-        return userMapper.userInfo(params);
+        String userId = (String) params.get("id");
+        return userMapper.userInfo(userId);
     }
 
 }

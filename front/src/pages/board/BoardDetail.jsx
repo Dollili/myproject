@@ -31,7 +31,7 @@ const BoardDetail = () => {
         if (location.state) {
             setPath(true);
             try {
-                const res = await dbGet("board/detail", {no: location.state});
+                const res = await dbGet("/board/detail", {no: location.state});
                 setData(res);
             } catch {
                 customAlert("조회 오류 발생", () => {

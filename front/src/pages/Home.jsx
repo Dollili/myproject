@@ -27,7 +27,7 @@ const Home = () => {
 
     const login = async () => {
         role_check();
-        const res = await dbPost("login", user);
+        const res = await dbPost("/auth/login", user);
         if (res) {
             alert("로그인 성공");
             sessionStorage.setItem("user_Token", JSON.stringify(res));
@@ -42,55 +42,57 @@ const Home = () => {
 
     return (
         <>
-            <div className="App-contents">
-                <div className="login">
-                    <div className="login-Form">
-                        <input
-                            name="id"
-                            value={userObj.id}
-                            placeholder="id"
-                            onChange={(e) => {
-                                userObj(e);
+            {sessionStorage.getItem("user_Token") == null && (
+                <div className="App-contents">
+                    <div className="login">
+                        <div className="login-Form">
+                            <input
+                                name="id"
+                                value={userObj.id}
+                                placeholder="id"
+                                onChange={(e) => {
+                                    userObj(e);
+                                }}
+                            />
+                            <input
+                                type="password"
+                                name="pwd"
+                                value={userObj.pwd}
+                                placeholder="password"
+                                onChange={(e) => {
+                                    userObj(e);
+                                }}
+                            />
+                        </div>
+                        <Button
+                            onClick={() => {
+                                login();
                             }}
-                        />
-                        <input
-                            type="password"
-                            name="pwd"
-                            value={userObj.pwd}
-                            placeholder="password"
-                            onChange={(e) => {
-                                userObj(e);
-                            }}
-                        />
+                        >
+                            로그인
+                        </Button>
                     </div>
-                    <Button
-                        onClick={() => {
-                            login();
-                        }}
-                    >
-                        로그인
-                    </Button>
-                </div>
-                <div className="choice-Form">
-                    <Button
-                        onClick={() => {
-                            nav("/register");
-                        }}
-                    >
-                        회원가입
-                    </Button>
-                    <label>
-                        관리자
-                        <input
-                            type="checkbox"
-                            checked={check}
-                            onChange={() => {
-                                setCheck(!check);
+                    <div className="choice-Form">
+                        <Button
+                            onClick={() => {
+                                nav("/register");
                             }}
-                        />
-                    </label>
+                        >
+                            회원가입
+                        </Button>
+                        <label>
+                            관리자
+                            <input
+                                type="checkbox"
+                                checked={check}
+                                onChange={() => {
+                                    setCheck(!check);
+                                }}
+                            />
+                        </label>
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 };
