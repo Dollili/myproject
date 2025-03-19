@@ -1,10 +1,27 @@
-import {useNavigate} from "react-router-dom";
-import React, {useEffect} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 
 const Error = () => {
     const nav = useNavigate();
+    const code = useLocation();
+    const [msg, setMsg] = useState("");
 
     useEffect(() => {
+        if (code) {
+            switch (code.state) {
+                case 400:
+                    setMsg("BAD REQUEST: " + code.state);
+                    break;
+                case 401:
+                    setMsg("UNAUTHORIZED: " + code.state);
+                    break;
+                case 403:
+                    setMsg("FORBIDDEN: " + code.state);
+                    break;
+                default:
+                    setMsg("그외의 문제: " + code.state);
+            }
+        }
         setTimeout(() => {
             nav(-1);
         }, 2000);
@@ -23,14 +40,14 @@ const Error = () => {
             }}
         >
             <h1
-                style={{fontSize: "2.5rem", color: "red.600", marginBottom: "20px"}}
+                style={{fontSize: "1.5rem", color: "red.600", marginBottom: "20px"}}
             >
                 요청 오류 발생. 이전 화면으로 이동합니다.
             </h1>
             <h2
-                style={{fontSize: "1.5rem", color: "gray.600", marginBottom: "20px"}}
+                style={{fontSize: "1.0rem", color: "gray.600", marginBottom: "20px"}}
             >
-                UnAuthorization
+                {msg}
             </h2>
         </div>
     );

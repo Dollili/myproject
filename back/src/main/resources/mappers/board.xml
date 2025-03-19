@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.Repository.BoardMapper">
+
     <select id="getBoardList" resultType="map">
         SELECT NO, TITLE, AUTHOR, RECOMMEND, VIEW_CNT, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d')
         AS APPLY_FORMAT_DATE
         FROM BOARD
         WHERE
-        1=1
+        1=1 AND DEL_YN IS NULL
         <if test="val != null and val !=''">
             <choose>
                 <when test="option != null and option != ''">

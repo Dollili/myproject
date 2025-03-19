@@ -1,13 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Form from "react-bootstrap/Form";
-import {Button, Container, ListGroup, Table} from "react-bootstrap";
-import customAlert from "../../components/customAlert";
+import {Container, ListGroup, Table} from "react-bootstrap";
+import {showAlert} from "../../components/alert/customAlert";
 import Comment from "./Comment";
-import {dbDelete, dbGet, dbPost, dbPut} from "../../assets/api/commonApi";
+import {dbGet, dbPost, dbPut} from "../../assets/api/commonApi";
+import {UserContext} from "../../components/UserContext";
+import {toast, ToastContainer} from "react-toastify";
+import thumb from "../../assets/img/thumbs_16019896.png";
 
 const BoardDetail = () => {
     const nav = useNavigate();
+    const {user} = useContext(UserContext);
+    const [role, setRole] = useState(false);
+
     const location = useLocation();
     const [data, setData] = useState({});
     const init_data = {
@@ -17,10 +23,9 @@ const BoardDetail = () => {
     };
 
     const [path, setPath] = useState(false);
-    //게시글
-    const [param, setParam] = useState({author: "하드코딩"});
-
-    const [cnt, setCnt] = useState(0);
+    const [param, setParam] = useState(() => {
+        return user.ROLE === "M" ? {author: "관리자"} : {author: user.USER_ID};
+    });
 
     const changeBoard = (e) => {
         const {name, value} = e.target;
@@ -32,11 +37,17 @@ const BoardDetail = () => {
             setPath(true);
             try {
                 const res = await dbGet("/board/detail", {no: location.state});
-                setData(res);
-            } catch {
-                customAlert("조회 오류 발생", () => {
-                    nav("/board");
-                });
+                if (res) {
+                    setData(res);
+                } else {
+                    toast.error("조회 오류 발생", {
+                        onClose: () => {
+                            nav("/board");
+                        },
+                    });
+                }
+            } catch (e) {
+                nav("/error", {state: e.status});
             }
         } else {
             setPath(false);
@@ -44,42 +55,73 @@ const BoardDetail = () => {
         }
     };
 
+    const validation = (param) => {
+        if (
+            !param ||
+            !["title", "contents"].every((key) => param[key] && param[key].length > 0)
+        ) {
+            return true;
+        }
+    };
+
     const append_board = async () => {
         try {
-            const res = await dbPost("board/detail", param);
-            if (res.data === 1) {
-                customAlert("등록완료", () => {
-                    nav("/board");
-                });
+            if (validation(param)) {
+                return toast.info("제목과 내용을 모두 입력해주세요.");
             }
-        } catch {
-            alert("등록실패");
+
+            const res = await dbPost("/board/detail", param);
+            if (res === 1) {
+                toast.info("등록완료", {
+                    autoClose: 500,
+                    onClose: () => {
+                        nav("/board");
+                    },
+                });
+            } else {
+                toast.error("등록실패");
+            }
+        } catch (e) {
+            nav("/error", {state: e.status});
         }
     };
 
     const deleteBoard = async (no) => {
         try {
-            const res = await dbDelete("board/detail", {no: no});
-            if (res.status === 204) {
-                customAlert("삭제완료", () => {
-                    nav("/board");
+            const res = await dbPut("/board/detail", {no});
+            if (res === 204) {
+                toast.info("삭제완료", {
+                    autoClose: 500,
+                    onClose: () => {
+                        nav("/board");
+                    },
                 });
+            } else {
+                toast.error("삭제실패");
             }
-        } catch {
+        } catch (e) {
+            nav("/error", {state: e.status});
         }
     };
+
     const recommend = async (no) => {
+        if (role) {
+            return showAlert("본인이 작성한 글에는 추천할 수 없습니다.");
+        }
+
         try {
-            const res = await dbPut("board/detail/recommend", {no: no});
-            if (res.status === 204) {
+            const res = await dbPut("/board/detail/recommend", {no: no});
+            if (res === 204) {
                 getDetail();
             }
-        } catch {
-            alert("추천실패");
+        } catch (e) {
+            nav("/error", {state: e.status});
         }
     };
-    useEffect(() => {
-    }, [cnt, data]);
+
+    const userCheck = () => {
+        setRole(user.USER_ID === data.AUTHOR || user.ROLE === "M");
+    };
 
     const commonProps = {
         location,
@@ -88,7 +130,8 @@ const BoardDetail = () => {
     };
 
     useEffect(() => {
-    }, [param]);
+        userCheck();
+    }, [data, param]);
 
     useEffect(() => {
         getDetail();
@@ -124,11 +167,11 @@ const BoardDetail = () => {
                         <td>{path ? data.AUTHOR : param.author}</td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td>
+                        <td colSpan={2}>
                             {path ? (
                                 <Form.Control
                                     className="contentsInput disabled"
+                                    style={{borderStyle: "unset"}}
                                     value={data.CONTENTS}
                                     as="textarea"
                                     disabled
@@ -150,13 +193,16 @@ const BoardDetail = () => {
                 </Table>
                 {path && (
                     <Container className="text-center">
-                        <Button
+                        <img
+                            className="thumb_btn"
+                            src={thumb}
+                            alt="추천"
+                            style={{width: "40px", height: "40px"}}
                             onClick={() => {
                                 recommend(data.NO);
                             }}
-                        >
-                            추천 {data.RECOMMEND}
-                        </Button>
+                        />
+                        <div>{data.RECOMMEND}</div>
                     </Container>
                 )}
                 {path && (
@@ -166,30 +212,41 @@ const BoardDetail = () => {
                     </ListGroup>
                 )}
                 <Link to={"/board"}>
-                    <Button>목록</Button>
+                    <button className="common_btn">목록</button>
                 </Link>
-                {path && (
-                    <Button
-                        className="delete-board"
-                        variant="danger"
-                        onClick={() => {
-                            deleteBoard(data.NO);
-                        }}
-                    >
-                        글 삭제
-                    </Button>
+                {path && role && (
+                    <div className="user_board_btn">
+                        <button className="common_btn">수정</button>
+                        <button
+                            className="common_btn"
+                            onClick={() => {
+                                deleteBoard(data.NO);
+                            }}
+                        >
+                            삭제
+                        </button>
+                    </div>
                 )}
                 {!path && (
-                    <Button
+                    <button
+                        className="common_btn append"
                         onClick={() => {
                             append_board();
                         }}
-                        style={{float: "right"}}
                     >
                         등록
-                    </Button>
+                    </button>
                 )}
             </Container>
+            <ToastContainer
+                toastStyle={{maxWidth: "100%", width: "auto", whiteSpace: "nowrap"}}
+                theme="light"
+                position="top-center"
+                limit={1}
+                closeButton={false}
+                autoClose={2000}
+                hideProgressBar
+            />
         </div>
     );
 };
