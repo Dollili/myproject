@@ -1,10 +1,11 @@
 import {Container} from "react-bootstrap";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {dbGet} from "../../assets/api/commonApi";
 import {useEffect, useState} from "react";
 
 const UserInfo = () => {
     const location = useLocation();
+    const nav = useNavigate();
 
     const [res, setRes] = useState({
         USER_NM: "",
@@ -12,11 +13,16 @@ const UserInfo = () => {
     });
 
     const getInfo = async () => {
-        const res = await dbGet("/auth/user", location.state);
-        if (res) {
-            setRes(res);
-        } else {
-            alert("정보를 가져올 수 없습니다.");
+        try {
+            const res = await dbGet("/auth/user", location.state);
+            console.log(location.state)
+            if (res) {
+                setRes(res);
+            } else {
+                alert("정보를 가져올 수 없습니다.");
+            }
+        } catch (e) {
+            nav("/error", {state: e.status});
         }
     };
 

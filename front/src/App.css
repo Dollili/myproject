@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    font-family: GmarketSansMedium;
 }
 
 .App-contents {
@@ -74,16 +75,15 @@
 }
 
 .App-header {
-    background-color: #282c34;
+    background-color: black;
     min-height: 10vh;
-    font-size: calc(10px + 2vmin);
+    font-size: calc(5px + 2vmin);
 }
 
 .App-header .menu {
     float: right;
     color: white;
     margin: 30px;
-    background-color: #282c34;
 }
 
 .App-header .logo {
@@ -98,7 +98,7 @@
 
 .App-footer {
     width: 100%;
-    background-color: #282c34;
+    background-color: black;
     min-height: 10vh;
     display: flex;
     flex-direction: column;

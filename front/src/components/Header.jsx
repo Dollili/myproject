@@ -1,21 +1,18 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import SideMenu from "./SideMenu";
 import {Link, useNavigate} from "react-router-dom";
 import {dbPost} from "../assets/api/commonApi";
+import {UserContext} from "./UserContext";
 
 const Header = () => {
-    const item = sessionStorage.getItem("user_Token");
+    const {user} = useContext(UserContext);
     const nav = useNavigate();
 
-    const [onOff, SetOn] = useState(true);
-
-    const close = () => {
-        SetOn(!onOff);
-    };
+    const [onOff, setOn] = useState(true);
 
     const info = () => {
-        if (item) {
-            nav("/info", {state: {id: JSON.parse(item).username}});
+        if (user) {
+            nav("/info", {state: {id: user.USER_ID}});
         } else {
             nav("/register");
         }
@@ -25,9 +22,9 @@ const Header = () => {
         try {
             await dbPost("/auth/logout", {});
             sessionStorage.removeItem("user_Token");
-            nav("/");
+            window.location.href = "/";
         } catch (e) {
-            console.log("Logout Failed", e);
+            nav("/error", e.status);
         }
     };
 
@@ -36,12 +33,12 @@ const Header = () => {
             <header className="App-header">
                 <Link
                     className="logo"
-                    to={"board"}
+                    to={"/board"}
                     style={{color: "white", textDecorationLine: "none"}}
                 >
                     홈화면
                 </Link>
-                {item && (
+                {user && (
                     <p className="menu" onClick={() => logout()}>
                         로그아웃
                     </p>
@@ -49,7 +46,8 @@ const Header = () => {
                 <p className="menu" onClick={() => info()}>
                     내정보
                 </p>
-                <p className="menu" onClick={() => close()}>
+                <p className="menu" onClick={() => {
+                }}>
                     메뉴
                 </p>
             </header>

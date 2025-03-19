@@ -5,15 +5,17 @@ const api = axios.create({
     withCredentials: true,
 });
 
-/*api.interceptors.response.use(
+api.interceptors.response.use(
     function (res) {
         return res;
     },
     function (error) {
         if (error.response && error.response.status === 401) {
+            sessionStorage.clear();
+            window.location.href = "/";
         }
         return Promise.reject(error);
     },
-);*/
+);
 
 export default api;

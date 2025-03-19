@@ -1,11 +1,21 @@
-import {Button, Table} from "react-bootstrap";
+import {Table} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import Paging from "../../components/Paging";
-import {dbDelete, dbPost} from "../../assets/api/commonApi";
+import {dbPost, dbPut} from "../../assets/api/commonApi";
+import {UserContext} from "../../components/UserContext";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 
 const Comment = ({location, getDetail, data}) => {
-    const [comment, setComment] = useState({user: "테스터댓글러"});
+    const {user} = useContext(UserContext);
+    const nav = useNavigate();
+    const textareaRef = useRef();
+
+    const [comment, setComment] = useState(() => {
+        return user.ROLE === "M" ? {user: "관리자"} : {user: user.USER_ID};
+    });
 
     const changeComment = (e) => {
         const {name, value} = e.target;
@@ -13,28 +23,34 @@ const Comment = ({location, getDetail, data}) => {
     };
 
     const append_comment = async () => {
+        if (comment?.comment == null || comment?.comment.length === 0) return toast.info("내용을 입력해주세요.");
         comment["no"] = location.state;
         try {
-            const res = await dbPost("/api/board/comment", comment);
-            if (res.data === 1) {
+            const res = await dbPost("/board/comment", comment);
+            if (res === 1) {
                 getDetail();
+                textareaRef.current.value = '';
+            } else {
+                toast.error("등록실패");
             }
-        } catch {
-            alert("등록실패");
+        } catch (e) {
+            nav("/error", {state: e.status});
         }
     };
+
     const deleteComment = async (id) => {
         try {
-            const res = await dbDelete("/api/board/comment/delete", {
-                params: {id: id},
-            });
-            if (res.status === 204) {
+            const res = await dbPut("/board/comment/delete", {id: id});
+            if (res === 204) {
                 getDetail();
+            } else {
+                toast.error("삭제실패");
             }
-        } catch {
-            alert("삭제실패");
+        } catch (e) {
+            nav("/error", {state: e.status});
         }
     };
+
     useEffect(() => {
     }, [comment]);
 
@@ -50,18 +66,18 @@ const Comment = ({location, getDetail, data}) => {
                 {data.comment &&
                     data.comment.map((com, index) => (
                         <tr key={index}>
-                            <th>{com.USER_NM}</th>
+                            <td>{com.USER_NM}</td>
                             <td>{com.COMMENT}</td>
                             <td>
                                 {com.APPLY_FORMAT_DATE}
-                                <Button
-                                    className="delete-btn btn-danger"
+                                <img
+                                    className="comment_del"
+                                    src={del_icon}
+                                    alt="삭제"
                                     onClick={() => {
                                         deleteComment(com.ID);
                                     }}
-                                >
-                                    -
-                                </Button>
+                                />
                             </td>
                         </tr>
                     ))}
@@ -76,10 +92,11 @@ const Comment = ({location, getDetail, data}) => {
                 </colgroup>
                 <tbody>
                 <tr>
-                    <td>사용자이름</td>
+                    <td>{comment.user}</td>
                     <td>
                         <Form.Control
                             className="areaInput"
+                            ref={textareaRef}
                             placeholder="댓글을 입력하세요"
                             name="comment"
                             as="textarea"
@@ -89,13 +106,14 @@ const Comment = ({location, getDetail, data}) => {
                         />
                     </td>
                     <td className="td3">
-                        <Button
+                        <button
+                            className="common_btn comment"
                             onClick={() => {
                                 append_comment();
                             }}
                         >
                             등록
-                        </Button>
+                        </button>
                     </td>
                 </tr>
                 </tbody>
