@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Button} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {dbPost} from "../assets/api/commonApi";
+import {toast, ToastContainer} from "react-toastify";
 
 const Home = () => {
     const nav = useNavigate();
@@ -27,18 +28,21 @@ const Home = () => {
 
     const login = async () => {
         role_check();
-        const res = await dbPost("/auth/login", user);
-        if (res) {
-            alert("로그인 성공");
-            sessionStorage.setItem("user_Token", JSON.stringify(res));
-            nav("board");
-        } else {
-            alert("로그인 실패");
+        try {
+            const res = await dbPost("/auth/login", user);
+            if (res) {
+                sessionStorage.setItem("user_Token", JSON.stringify(res));
+                toast.success("로그인 성공", {
+                    autoClose: 500,
+                    onClose: () => nav("/board"),
+                });
+            } else {
+                toast.error("로그인 실패");
+            }
+        } catch (e) {
+            nav("/error", {state: e.status});
         }
     };
-
-    useEffect(() => {
-    }, [check, user]);
 
     return (
         <>
@@ -71,6 +75,7 @@ const Home = () => {
                         >
                             로그인
                         </Button>
+                        <ToastContainer limit={1} position="top-center" theme="light"/>
                     </div>
                     <div className="choice-Form">
                         <Button

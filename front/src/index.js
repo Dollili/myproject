@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "./assets/css/board.css";
+import "react-toastify/dist/ReactToastify.css";
+
 import router from "./router";
 
 import reportWebVitals from "./reportWebVitals";

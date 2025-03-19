@@ -6,68 +6,116 @@
 
 /* 메인 게시판 */
 .search-container {
-  display: flex;
-  gap: 8px; /* 요소 간 간격 */
-  width: 100%;
-  justify-content: flex-end;
+    display: flex;
+    gap: 8px; /* 요소 간 간격 */
+    width: 100%;
+    justify-content: flex-end;
 }
 
 .search-select,
 .search-input,
 .search-button {
-  height: 40px; /* 동일한 높이 */
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
+    height: 40px; /* 동일한 높이 */
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
-
-.search-button:hover {
-  background-color: #0056b3;
-}
-
 
 /* 게시글 관련 */
 .board {
-  text-align: center;
-}
-
-.areaInput {
-  height: 100px;
-  resize: none;
-}
-
-.contentsInput {
-  height: 400px;
-  resize: none;
-}
-
-.contentsInput:disabled {
-  background-color: white;
-}
-
-.comment th, td {
-    vertical-align: middle;
-}
-
-.comment .td3{
     text-align: center;
 }
 
-.delete-btn {
-    float: right;
-    padding: 0 5px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+.areaInput {
+    height: 100px;
+    resize: none;
 }
 
-.delete-board {
-    float: right;
+.contentsInput {
+    height: 400px;
+    resize: none;
+}
+
+.contentsInput:disabled {
+    background-color: white;
+}
+
+/*댓글 열 정렬*/
+.comment th,
+td {
+    vertical-align: middle;
+}
+
+/*댓글 등록버튼*/
+.comment .td3 {
+    text-align: center;
+}
+
+/*공통 버튼*/
+.common_btn {
+    height: 40px; /* 동일한 높이 */
+    padding: 8px;
+    font-size: 16px;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    box-sizing: border-box;
+    color: black;
+    border-style: unset;
+}
+
+.common_btn:hover {
+    color: white;
+    background-color: grey;
+}
+
+.user_board_btn {
+    float: right;
+}
+
+.user_board_btn button {
+    margin: 3px;
+}
+
+.append {
+    float: right;
+}
+
+.comment {
+    background-color: unset;
+    color: black;
+}
+
+.comment:hover {
+    background-color: unset;
+    color: grey;
+}
+
+.recommend {
+    background-color: palegreen;
+}
+
+.recommend:hover {
+    background-color: mediumseagreen;
+}
+
+.thumb_btn {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+}
+
+.thumb_btn:hover, .comment_del:hover {
+    cursor: pointer;
+}
+
+.comment_del {
+    float: right;
+    width: 20px;
+    height: 20px;
 }
 
 .pagination {
     justify-content: center;
 }
+

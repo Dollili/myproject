@@ -20,13 +20,17 @@ const Register = () => {
     };
 
     const sameId = async () => {
-        const res = await dbPost("login/idCheck", user);
-        if (res) {
-            alert("중복");
-            setIdCheck(false);
-        } else {
-            alert("사용가능");
-            setIdCheck(true);
+        try {
+            const res = await dbPost("/login/idCheck", user);
+            if (res) {
+                alert("중복");
+                setIdCheck(false);
+            } else {
+                alert("사용가능");
+                setIdCheck(true);
+            }
+        } catch (e) {
+            nav("/error");
         }
     };
 

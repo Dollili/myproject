@@ -12,6 +12,8 @@ public interface UserMapper {
 
     Map<String, Object> userInfo(String id);
 
+    Map<String, Object> userInfo(Map<String, Object> user);
+
     @Insert("INSERT INTO USER (USER_NM, USER_ID, USER_PWD, REGISTER_DATE, ROLE) VALUES (#{name}, #{id}, #{pwd}, NOW(), 'U')")
     int insertUser(Map<String, Object> user);
 

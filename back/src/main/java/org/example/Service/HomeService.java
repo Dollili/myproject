@@ -32,15 +32,15 @@ public class HomeService {
         return boardMapper.insertBoard(param);
     }
 
-    public int deleteBoard(int no) {
-        return boardMapper.deleteBoard(no);
+    public int deleteBoard(Map<String, Object> param) {
+        return boardMapper.deleteBoard(param);
     }
 
     public int insertComment(Map<String, Object> param) {
         return boardMapper.insertComment(param);
     }
 
-    public int deleteComment(int id) {
-        return boardMapper.deleteComment(id);
+    public int deleteComment(Map<String, Object> param) {
+        return boardMapper.deleteComment(param);
     }
 }
