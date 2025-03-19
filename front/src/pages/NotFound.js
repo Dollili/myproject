@@ -23,12 +23,12 @@ const NotFound = () => {
             }}
         >
             <h1
-                style={{fontSize: "2.5rem", color: "red.600", marginBottom: "20px"}}
+                style={{fontSize: "1.5rem", color: "red.600", marginBottom: "20px"}}
             >
                 페이지를 찾을 수 없습니다. 이전 화면으로 이동합니다.
             </h1>
             <h2
-                style={{fontSize: "1.5rem", color: "gray.600", marginBottom: "20px"}}
+                style={{fontSize: "1.0rem", color: "gray.600", marginBottom: "20px"}}
             >
                 Page not found.
             </h2>

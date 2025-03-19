@@ -8,10 +8,13 @@
         WHERE UPPER(USER_ID) = UPPER(#{id})
     </select>
 
-    <select id="userInfo" parameterType="string" resultType="map">
-        SELECT USER_ID, USER_NM, DATE_FORMAT(REGISTER_DATE, '%Y-%m-%s') AS REGISTER_DATE, ROLE
+    <select id="userInfo" resultType="map">
+        SELECT USER_ID, USER_NM, DATE_FORMAT(REGISTER_DATE, '%Y-%m-%d') AS REGISTER_DATE, ROLE
         FROM USER
         WHERE UPPER(USER_ID) = UPPER(#{id})
+        <if test="role != null and role != ''">
+            AND ROLE = #{role}
+        </if>
     </select>
 
 </mapper>

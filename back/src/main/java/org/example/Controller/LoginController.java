@@ -34,7 +34,8 @@ public class LoginController {
             HttpSession session = request.getSession();
             session.setAttribute("user", authentication.getName());
 
-            return ResponseEntity.ok(authentication.getPrincipal());
+            Map<String, Object> result = userService.findUserInfo(params);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
