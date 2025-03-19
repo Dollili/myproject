@@ -40,7 +40,8 @@ public class SecurityConfig {
                 .addFilterBefore(sessionFilter, SecurityContextPersistenceFilter.class)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**")
                         .permitAll()
-                        .requestMatchers("/board", "/board/**").hasRole("U")
+                        .requestMatchers("/board", "/board/**")
+                        .hasAnyRole("U", "M")
                         .anyRequest()
                         .authenticated());
 

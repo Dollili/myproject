@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Button, Container, Table} from "react-bootstrap";
+import {Container, Table} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {dbGet} from "../../assets/api/commonApi";
+import eyeIcon from "../../assets/img/free-icon-eye-4818558.png";
+import Paging from "../../components/Paging";
 
 const Board = () => {
     const [data, setData] = useState([]);
+    const [cnt, setCnt] = useState(0);
     const nav = useNavigate();
 
     const [search, setSearch] = useState({
@@ -13,9 +16,14 @@ const Board = () => {
     });
 
     const getBoard = async () => {
-        const res = await dbGet("/board/list", search);
-        if (res) {
-            setData(res);
+        try {
+            const res = await dbGet("/board/list", search);
+            if (res) {
+                setCnt(res.length);
+                setData(res);
+            }
+        } catch (e) {
+            nav("/error");
         }
     };
 
@@ -52,14 +60,14 @@ const Board = () => {
                             setSearch({...search, [name]: value});
                         }}
                     />
-                    <Button
+                    <button
                         className="search-button"
                         onClick={() => {
                             getBoard().then(() => setSearch({...search, val: ""}));
                         }}
                     >
                         검색
-                    </Button>
+                    </button>
                 </div>
                 <Table striped bordered hover className="board my-2">
                     <colgroup>
@@ -77,32 +85,48 @@ const Board = () => {
                         <th>작성자</th>
                         <th>날짜</th>
                         <th>추천</th>
-                        <th>조회</th>
+                        <th>
+                            <img
+                                src={eyeIcon}
+                                alt="조회수"
+                                style={{width: "20px", height: "20px"}}
+                            />
+                        </th>
                     </tr>
                     </thead>
+
                     <tbody>
-                    {data.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.NO}</td>
-                            <td
-                                onClick={() => {
-                                    nav(`/board/${item.NO}`, {state: item.NO});
-                                }}
-                            >
-                                {item.TITLE}
-                            </td>
-                            <td>{item.AUTHOR}</td>
-                            <td>{item.APPLY_FORMAT_DATE}</td>
-                            <td>{item.RECOMMEND}</td>
-                            <td>{item.VIEW_CNT}</td>
+                    {data == null ? (
+                        <tr>
+                            <td colSpan={6}>게시글이 존재하지 않습니다.</td>
                         </tr>
-                    ))}
+                    ) : (
+                        data.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.NO}</td>
+                                <td
+                                    onClick={() => {
+                                        nav(`/board/${item.NO}`, {state: item.NO});
+                                    }}
+                                >
+                                    {item.TITLE}
+                                </td>
+                                <td>{item.AUTHOR}</td>
+                                <td>{item.APPLY_FORMAT_DATE}</td>
+                                <td>{item.RECOMMEND}</td>
+                                <td>{item.VIEW_CNT}</td>
+                            </tr>
+                        ))
+                    )}
                     </tbody>
                 </Table>
             </Container>
+            <Paging cnt={cnt}/>
             <Container>
                 <Link to={"detail"}>
-                    <Button style={{float: "right"}}>글쓰기</Button>
+                    <button className="common_btn" style={{float: "right"}}>
+                        글쓰기
+                    </button>
                 </Link>
             </Container>
         </div>

@@ -31,9 +31,10 @@ public class HomeController {
         return homeService.insertBoard(param);
     }
 
-    @DeleteMapping("/detail")
-    public ResponseEntity<Void> boardDelete(@RequestParam int no) {
-        int result = homeService.deleteBoard(no);
+    @PutMapping("/detail")
+    public ResponseEntity<Void> boardDelete(@RequestBody Map<String, Object> param) {
+        int result = homeService.deleteBoard(param);
+
         if (result == 1) {
             return ResponseEntity.noContent().build();
         } else {
@@ -56,9 +57,9 @@ public class HomeController {
         return homeService.insertComment(param);
     }
 
-    @DeleteMapping("/comment/delete")
-    public ResponseEntity<Void> commentDelete(@RequestParam int id) {
-        int result = homeService.deleteComment(id);
+    @PutMapping("/comment/delete")
+    public ResponseEntity<Void> commentDelete(@RequestBody Map<String, Object> param) {
+        int result = homeService.deleteComment(param);
         if (result == 1) {
             return ResponseEntity.noContent().build();
         } else {
