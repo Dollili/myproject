@@ -1,9 +1,11 @@
-import {dbPost} from "../../assets/api/commonApi";
-import {useEffect, useState} from "react";
-import {Button, Container} from "react-bootstrap";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {toast, ToastContainer} from "react-toastify";
+import del_icon from "../../assets/img/free-icon-remove-1828843.png";
+import suc_icon from "../../assets/img/free-icon-success-11433360.png";
+import {dbPost} from "../../assets/api/commonApi";
 
-const Register = () => {
+const Register = ({toggle}) => {
     const nav = useNavigate();
     const [user, setUser] = useState({
         name: "",
@@ -12,26 +14,17 @@ const Register = () => {
         pwd2: "",
     });
     const [inf, setInf] = useState(false);
-    const [id_check, setIdCheck] = useState(false);
+    const [shake, setShake] = useState(false);
 
     const objChange = (e) => {
         const {name, value} = e.target;
-        setUser({...user, [name]: value});
-    };
-
-    const sameId = async () => {
-        try {
-            const res = await dbPost("/login/idCheck", user);
-            if (res) {
-                alert("중복");
-                setIdCheck(false);
-            } else {
-                alert("사용가능");
-                setIdCheck(true);
-            }
-        } catch (e) {
-            nav("/error");
+        if (name === "pwd2") {
+            setShake(true);
+            setTimeout(() => {
+                setShake(false);
+            }, 300);
         }
+        setUser({...user, [name]: value});
     };
 
     const crossPwd = () => {
@@ -43,18 +36,39 @@ const Register = () => {
     const join_check = () => {
         const name = !!user.name;
         const pwd = user.pwd.length >= 6;
-        return name && pwd && inf && id_check;
+        return name && pwd && inf;
     };
 
     const join = async () => {
         if (join_check()) {
-            const res = await dbPost("login/join", user);
-            if (res === 1) {
-                alert("가입 완료");
-                nav("/");
+            try {
+                const res = await dbPost("/auth/join", user);
+                if (res === "success") {
+                    toast.info("회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.", {
+                        onClose: () => {
+                            window.location.href = "/";
+                        },
+                    });
+                } else {
+                    toast.error("회원가입 실패");
+                }
+            } catch (e) {
+                if (e.status === 409) {
+                    return toast.warn("이미 사용중인 ID 입니다.", {
+                        autoClose: 1500,
+                    });
+                } else if (e.status === 418) {
+                    return toast.warn("이미 사용중인 닉네임 입니다.", {
+                        autoClose: 1500,
+                    });
+                }
+                nav("/error", {state: e.status});
             }
         } else {
-            alert("재확인 필요");
+            if (user.pwd.length < 6) {
+                return toast.info("비밀번호는 6자리 이상 입력바랍니다.");
+            }
+            toast.info("모든 정보는 필수 입력입니다.");
         }
     };
 
@@ -63,73 +77,105 @@ const Register = () => {
     }, [inf, user]);
 
     useEffect(() => {
-    }, [user, id_check]);
+    }, [user]);
 
     return (
         <>
-            <div className="main-container">
-                <Container>
-                    <h3>회원가입</h3>
-                    <div>
-                        <label>
-                            이름
-                            <input
-                                name="name"
-                                onChange={(e) => {
-                                    objChange(e);
-                                }}
-                            />
-                        </label>
-                        <br/>
-                        <label>
-                            아이디
+            <div className="col align-items-center flex-col sign-up">
+                <div className="form-wrapper align-items-center">
+                    <div className="form sign-up">
+                        <div className="input-group">
+                            <i className="bx bx-mail-send"></i>
                             <input
                                 name="id"
+                                type="email"
+                                placeholder="아이디"
                                 onChange={(e) => {
                                     objChange(e);
                                 }}
                             />
-                        </label>
-                        <Button
+                        </div>
+                        <div className="input-group">
+                            <i className="bx bxs-user"></i>
+                            <input
+                                name="name"
+                                type="text"
+                                placeholder="이름"
+                                onChange={(e) => {
+                                    objChange(e);
+                                }}
+                            />
+                        </div>
+                        <div className="input-group">
+                            <i className="bx bxs-user"></i>
+                            <input
+                                name="nic"
+                                type="text"
+                                placeholder="닉네임 (미입력 시 아이디로 대체됩니다)"
+                                onChange={(e) => {
+                                    objChange(e);
+                                }}
+                            />
+                        </div>
+                        <div className="input-group">
+                            <i className="bx bxs-lock-alt"></i>
+                            <input
+                                name="pwd"
+                                type="password"
+                                placeholder="비밀번호"
+                                onChange={(e) => {
+                                    objChange(e);
+                                }}
+                            />
+                        </div>
+                        <div className="input-group">
+                            <i className="bx bxs-lock-alt"></i>
+                            <input
+                                name="pwd2"
+                                type="password"
+                                placeholder="비밀번호 확인"
+                                onChange={(e) => {
+                                    objChange(e);
+                                }}
+                            />
+                        </div>
+                        {user.pwd2.length !== 0 && (
+                            <div className="pwd_checking">
+                                {inf ? (
+                                    <div>
+                                        <span>Password Correct</span>
+                                        <img className="check_fail" src={suc_icon} alt="success"/>
+                                    </div>
+                                ) : (
+                                    <div className={shake ? "shake-text" : ""}>
+                                        <span>Password Encorrect</span>
+                                        <img className="check_fail" src={del_icon} alt="fail"/>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        <button
                             onClick={() => {
-                                sameId();
+                                join();
                             }}
                         >
-                            중복확인
-                        </Button>
-                        <br/>
-                        <label>
-                            비밀번호
-                            <input
-                                type="password"
-                                name="pwd"
-                                onChange={(e) => {
-                                    objChange(e);
-                                }}
-                            />
-                            <p>비밀번호는 6자리 이상</p>
-                        </label>
-                        <br/>
-                        <label>
-                            비밀번호 확인
-                            <input
-                                type="password"
-                                name="pwd2"
-                                onChange={(e) => {
-                                    objChange(e);
-                                }}
-                            />
-                            <p>{inf ? "일치" : "불일치"}</p>
-                        </label>
+                            회원 가입
+                        </button>
+                        <p>
+                            <b onClick={() => toggle()} className="pointer">
+                                LOGIN
+                            </b>
+                        </p>
                     </div>
-                    <Button
-                        onClick={() => {
-                            join();
-                        }}
-                    >
-                        회원가입
-                    </Button>
-                </Container>
+                </div>
+                <ToastContainer
+                    theme="light"
+                    position="top-center"
+                    limit={1}
+                    closeButton={false}
+                    autoClose={1000}
+                    hideProgressBar
+                />
             </div>
         </>
     );

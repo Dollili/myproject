@@ -58,11 +58,6 @@ public class LoginController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/idCheck")
-    public String sameId(@RequestBody Map<String, Object> params) {
-        return userService.findUserId(params);
-    }
-
     @GetMapping("/user")
     public Map<String, Object> getUserInfo(@RequestParam Map<String, Object> params) {
         return userService.findUserInfo(params);
@@ -70,17 +65,7 @@ public class LoginController {
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody Map<String, Object> params) {
-        try {
-            int user = userService.join(params);
-            if (user < 1) {
-                return ResponseEntity.internalServerError()
-                        .body("cannot register");
-            }
-
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return userService.join(params);
     }
 
 }
