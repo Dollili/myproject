@@ -14,11 +14,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class SessionFilter extends OncePerRequestFilter {
 
     private final TestUserDetailService testUserDetailService;
+
+    private final List<String> EXCLUED_URIS = Arrays.asList(
+            "/login", "/logout", "/join"
+    );
 
     @Autowired
     public SessionFilter(TestUserDetailService testUserDetailService) {
@@ -28,7 +34,7 @@ public class SessionFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        if (requestURI.contains("/login") || requestURI.contains("/logout")) {
+        if (EXCLUED_URIS.stream().anyMatch(requestURI::contains)) {
             filterChain.doFilter(request, response);
             return;
         }
