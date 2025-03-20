@@ -1,5 +1,4 @@
 import React, {useContext, useState} from "react";
-import SideMenu from "./SideMenu";
 import {Link, useNavigate} from "react-router-dom";
 import {dbPost} from "../assets/api/commonApi";
 import {UserContext} from "./UserContext";
@@ -51,7 +50,7 @@ const Header = () => {
                     메뉴
                 </p>
             </header>
-            <SideMenu onOff={onOff}/>
+            {/*<SideMenu onOff={onOff}/>*/}
         </>
     );
 };
