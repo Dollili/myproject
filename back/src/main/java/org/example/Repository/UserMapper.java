@@ -10,11 +10,13 @@ public interface UserMapper {
 
     Map<String, Object> userLogin(String id);
 
-    Map<String, Object> userInfo(String id);
+    Map<String, Object> findUserId(String id);
+
+    Map<String, Object> findUserNic(String nic);
 
     Map<String, Object> userInfo(Map<String, Object> user);
 
-    @Insert("INSERT INTO USER (USER_NM, USER_ID, USER_PWD, REGISTER_DATE, ROLE) VALUES (#{name}, #{id}, #{pwd}, NOW(), 'U')")
+    @Insert("INSERT INTO USER (USER_NM, USER_ID, USER_PWD, REGISTER_DATE, ROLE, USER_NIC) VALUES (#{name}, #{id}, #{pwd}, NOW(), 'U', #{nic})")
     int insertUser(Map<String, Object> user);
 
 }
