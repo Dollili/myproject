@@ -17,4 +17,16 @@
         </if>
     </select>
 
+    <select id="findUserId" parameterType="string" resultType="map">
+        SELECT USER_ID
+        FROM USER
+        WHERE UPPER(USER_ID) = UPPER(#{id})
+    </select>
+
+    <select id="findUserNic" parameterType="string" resultType="map">
+        SELECT USER_NIC
+        FROM USER
+        WHERE UPPER(USER_ID) = UPPER(#{nick})
+    </select>
+
 </mapper>

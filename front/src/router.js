@@ -4,7 +4,6 @@ import NotFound from "./pages/NotFound";
 import Board from "./pages/board/Board";
 import BoardDetail from "./pages/board/BoardDetail";
 import ProtectedRoute from "./ProtectedRoute";
-import Register from "./pages/user/Register";
 import Home from "./pages/Home";
 import UserInfo from "./pages/user/UserInfo";
 import Error from "./pages/Error";
@@ -16,7 +15,6 @@ const router = createBrowserRouter([
         errorElement: <NotFound/>,
         children: [
             {path: "", element: <Home/>},
-            {path: "register", element: <Register/>},
             {path: "info", element: <UserInfo/>},
             {
                 path: "board",
