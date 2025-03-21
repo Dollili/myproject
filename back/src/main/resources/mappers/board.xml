@@ -3,7 +3,13 @@
 <mapper namespace="org.example.Repository.BoardMapper">
 
     <select id="getBoardList" resultType="map">
-        SELECT NO, TITLE, AUTHOR, RECOMMEND, VIEW_CNT, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d')
+        SELECT *, (
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE DEL_YN IS NULL) AS TOTAL
+        FROM (
+        SELECT NO, TITLE, AUTHOR, RECOMMEND, VIEW_CNT, DATE_FORMAT(APPLY_DATE,
+        '%Y-%m-%d')
         AS APPLY_FORMAT_DATE
         FROM BOARD
         WHERE
@@ -26,7 +32,8 @@
                 </otherwise>
             </choose>
         </if>
-        ORDER BY APPLY_DATE DESC
+        ORDER BY APPLY_DATE DESC) A
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
 </mapper>

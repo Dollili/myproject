@@ -1,5 +1,7 @@
 package org.example.Controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.example.Service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,19 +54,21 @@ public class HomeController {
         }
     }
 
+    @GetMapping("/comment")
+    public List<Map<String, Object>> commentGet(@RequestParam Map<String, Object> param) {
+        return homeService.getBoardComment(param);
+    }
+
     @PostMapping("/comment")
     public int commentInsert(@RequestBody Map<String, Object> param) {
         return homeService.insertComment(param);
     }
 
     @PutMapping("/comment/delete")
-    public ResponseEntity<Void> commentDelete(@RequestBody Map<String, Object> param) {
-        int result = homeService.deleteComment(param);
-        if (result == 1) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<?> commentDelete(@RequestBody Map<String, Object> param, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        param.put("user", session.getAttribute("user"));
+        return homeService.deleteComment(param);
     }
 
 }
