@@ -1,13 +1,13 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {dbPost} from "../assets/api/commonApi";
 import {UserContext} from "./UserContext";
 
 const Header = () => {
-    const {user} = useContext(UserContext);
+    const {user, setUser} = useContext(UserContext);
     const nav = useNavigate();
 
-    const [onOff, setOn] = useState(true);
+    const [onOff, setOn] = useState(false);
 
     const info = () => {
         if (user) {
@@ -27,17 +27,21 @@ const Header = () => {
         }
     };
 
+    useEffect(() => {
+        setOn(true);
+    }, [user]);
+
     return (
         <>
             <header className="App-header">
                 <Link
                     className="logo"
-                    to={"/board"}
+                    to="/board"
                     style={{color: "white", textDecorationLine: "none"}}
                 >
-                    홈화면
+                    TEST
                 </Link>
-                {user && (
+                {onOff && (
                     <p className="menu" onClick={() => logout()}>
                         로그아웃
                     </p>

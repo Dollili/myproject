@@ -8,7 +8,7 @@ export function UserProvider({children}) {
     useEffect(() => {
         const store = sessionStorage.getItem("user_Token");
         if (store) {
-            setUser(JSON.stringify(store));
+            setUser(JSON.parse(store));
         }
     }, []);
 

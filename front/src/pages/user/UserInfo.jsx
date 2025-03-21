@@ -1,4 +1,3 @@
-import {Container} from "react-bootstrap";
 import {useLocation, useNavigate} from "react-router-dom";
 import {dbGet} from "../../assets/api/commonApi";
 import {useEffect, useState} from "react";
@@ -15,7 +14,6 @@ const UserInfo = () => {
     const getInfo = async () => {
         try {
             const res = await dbGet("/auth/user", location.state);
-            console.log(location.state)
             if (res) {
                 setRes(res);
             } else {
@@ -31,26 +29,24 @@ const UserInfo = () => {
     }, []);
 
     return (
-        <>
-            <div className="main-container">
-                <Container>
-                    <h3>회원정보</h3>
-                    <div>
-                        <label>
-                            이름
-                            <input name="name" value={res.USER_NM}/>
-                        </label>
-                        <br/>
-                        <label>
-                            아이디
-                            <input name="id" value={res.USER_ID}/>
-                        </label>
-                        <br/>
-                        <label>
-                            가입일자
-                            <input name="date" value={res.REGISTER_DATE}/>
-                        </label>
-                        {/*<label>
+        <div className="main-container">
+            <h3>회원정보</h3>
+            <div>
+                <label>
+                    이름
+                    <input name="name" value={res.USER_NM}/>
+                </label>
+                <br/>
+                <label>
+                    아이디
+                    <input name="id" value={res.USER_ID}/>
+                </label>
+                <br/>
+                <label>
+                    가입일자
+                    <input name="date" value={res.REGISTER_DATE}/>
+                </label>
+                {/*<label>
               비밀번호
               <input
                 type="password"
@@ -58,10 +54,8 @@ const UserInfo = () => {
             value={res.USER}
               />
             </label>*/}
-                    </div>
-                </Container>
             </div>
-        </>
+        </div>
     );
 };
 
