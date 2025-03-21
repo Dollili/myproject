@@ -10,12 +10,15 @@ import router from "./router";
 import reportWebVitals from "./reportWebVitals";
 import {RouterProvider} from "react-router-dom";
 import App from "./App";
+import {UserProvider} from "./components/UserContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <RouterProvider router={router}>
-        <App/>
-    </RouterProvider>,
+    <UserProvider>
+        <RouterProvider router={router}>
+            <App/>
+        </RouterProvider>
+    </UserProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function
