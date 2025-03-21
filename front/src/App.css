@@ -1,8 +1,13 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
 .App {
     display: flex;
     flex-direction: column;
     height: 100vh;
     font-family: GmarketSansMedium;
+    overflow-y: auto;
 }
 
 .App-contents {
@@ -110,14 +115,12 @@
 }
 
 .App-footer {
-    width: 100%;
-    background-color: black;
-    min-height: 10vh;
     display: flex;
-    flex-direction: column;
+    background-color: black;
     align-items: center;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
+    min-height: 17vh;
+    font-size: 2vmin;
     color: white;
 }
 
