@@ -2,7 +2,7 @@ import {Table} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import Paging from "../../components/Paging";
-import {dbPost, dbPut} from "../../assets/api/commonApi";
+import {dbGet, dbPost, dbPut} from "../../assets/api/commonApi";
 import {UserContext} from "../../components/UserContext";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
@@ -13,6 +13,11 @@ const Comment = ({location, getDetail, data}) => {
     const nav = useNavigate();
     const textareaRef = useRef();
 
+    const [item, setItem] = useState(5);
+    const [current, setCurrent] = useState(1);
+
+    const [cmt, setCmt] = useState([]);
+
     const [comment, setComment] = useState(() => {
         return user.ROLE === "M" ? {user: "관리자"} : {user: user.USER_ID};
     });
@@ -22,16 +27,37 @@ const Comment = ({location, getDetail, data}) => {
         setComment({...comment, [name]: value});
     };
 
+    const getComment = async () => {
+        const param = {};
+        param["no"] = location.state;
+        param["page"] = current;
+        param["size"] = item;
+        try {
+            const res = await dbGet("/board/comment", param);
+            if (res) {
+                setCmt(res);
+            } else {
+                toast.error("조회 오류 발생", {
+                    onClose: () => {
+                        nav("/board");
+                    },
+                });
+            }
+        } catch (e) {
+            nav("/error", {state: e.status});
+        }
+    };
+
     const append_comment = async () => {
-        if (comment?.comment == null || comment?.comment.length === 0) return toast.info("내용을 입력해주세요.");
+        if (comment?.comment == null || comment?.comment.length === 0)
+            return toast.info("내용을 입력해주세요.");
         comment["no"] = location.state;
         try {
             const res = await dbPost("/board/comment", comment);
             if (res === 1) {
                 getDetail();
-                textareaRef.current.value = '';
-            } else {
-                toast.error("등록실패");
+                getComment();
+                textareaRef.current.value = "";
             }
         } catch (e) {
             nav("/error", {state: e.status});
@@ -41,18 +67,21 @@ const Comment = ({location, getDetail, data}) => {
     const deleteComment = async (id) => {
         try {
             const res = await dbPut("/board/comment/delete", {id: id});
-            if (res === 204) {
+            if (res === 200) {
                 getDetail();
-            } else {
-                toast.error("삭제실패");
+                getComment();
             }
         } catch (e) {
+            if (e.status === 409) {
+                return toast.warn("삭제 권한이 없습니다.");
+            }
             nav("/error", {state: e.status});
         }
     };
 
     useEffect(() => {
-    }, [comment]);
+        getComment();
+    }, [current]);
 
     return (
         <div className="comment">
@@ -63,8 +92,8 @@ const Comment = ({location, getDetail, data}) => {
                     <col style={{width: "20%"}}/>
                 </colgroup>
                 <tbody>
-                {data.comment &&
-                    data.comment.map((com, index) => (
+                {cmt &&
+                    cmt.map((com, index) => (
                         <tr key={index}>
                             <td>{com.USER_NM}</td>
                             <td>{com.COMMENT}</td>
@@ -83,7 +112,13 @@ const Comment = ({location, getDetail, data}) => {
                     ))}
                 </tbody>
             </Table>
-            {data.comment && data.comment.length > 0 && <Paging/>}
+            {cmt[0] && (
+                <Paging
+                    total={cmt[0].TOTAL}
+                    pageItem={item}
+                    currentPage={setCurrent}
+                />
+            )}
             <Table bordered>
                 <colgroup>
                     <col style={{width: "20%"}}/>

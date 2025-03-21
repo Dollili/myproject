@@ -1,7 +1,7 @@
 .main-container {
-    width: 100%;
-    margin-top: 30px;
+    margin: 40px;
     flex-direction: column;
+    flex: 1;
 }
 
 /* 메인 게시판 */
@@ -105,7 +105,8 @@ td {
     margin: 5px;
 }
 
-.thumb_btn:hover, .comment_del:hover {
+.thumb_btn:hover,
+.comment_del:hover {
     cursor: pointer;
 }
 
@@ -115,7 +116,25 @@ td {
     height: 20px;
 }
 
-.pagination {
+.pagination-custom {
     justify-content: center;
+    margin: 10px;
 }
 
+.pagination-custom .page-item {
+    background-color: unset;
+    border-radius: 0;
+    min-width: 40px;
+    text-align: center;
+}
+
+.pagination-custom .page-item .page-link {
+    border-color: beige;
+    color: black;
+}
+
+.pagination-custom .page-item.active .page-link {
+    border-color: beige;
+    color: white;
+    background-color: #757575;
+}

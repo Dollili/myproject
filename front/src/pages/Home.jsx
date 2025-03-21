@@ -13,10 +13,12 @@ const Home = () => {
         id: "",
         pwd: "",
     });
-    const [check, setCheck] = useState(false);
 
     const userObj = (e) => {
-        const {name, value} = e.target;
+        let {name, value} = e.target;
+        if (name === 'id') {
+            value = value.toUpperCase();
+        }
         setUser({...user, [name]: value});
     };
 
@@ -30,6 +32,9 @@ const Home = () => {
 
     const login = async () => {
         role_check();
+        if (user.id.length === 0 || user.pwd.length === 0) {
+            return toast.warn("아이디 혹은 비밀번호를 입력해주세요.");
+        }
         try {
             const res = await dbPost("/auth/login", user);
             if (res) {
@@ -42,32 +47,37 @@ const Home = () => {
                 toast.error("로그인 실패");
             }
         } catch (e) {
+            if (e.status === 400) {
+                return toast.warn("로그인 실패");
+            }
             nav("/error", {state: e.status});
         }
     };
 
-    const toggle = () => {
-        if (container) {
-            container.classList.toggle("sign-in");
-            container.classList.toggle("sign-up");
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            login();
         }
     };
 
-    useEffect(() => {
-        const containerEl = document.getElementById("container");
-        setContainer(containerEl);
+    const toggle = () => {
+        setContainer((prev) => !prev);
+    };
 
-        if (containerEl) {
-            setTimeout(() => {
-                containerEl.classList.add("sign-in");
-            }, 200);
-        }
+    useEffect(() => {
+        const toggle = setTimeout(() => {
+            setContainer(true);
+        }, 200);
+        return () => clearTimeout(toggle);
     }, []);
 
     return (
         <>
             {sessionStorage.getItem("user_Token") == null && (
-                <div id="container" className="container">
+                <div
+                    id="container"
+                    className={`container ${container === null ? "" : container ? "sign-in" : "sign-up"}`}
+                >
                     <div className="row">
                         <Register toggle={toggle}/>
                         <div className="col align-items-center flex-col sign-in">
@@ -78,10 +88,12 @@ const Home = () => {
                                         <input
                                             name="id"
                                             type="text"
-                                            placeholder="Username"
+                                            value={user.id}
+                                            placeholder="아이디"
                                             onChange={(e) => {
                                                 userObj(e);
                                             }}
+                                            onKeyDown={handleKeyDown}
                                         />
                                     </div>
                                     <div className="input-group">
@@ -89,10 +101,11 @@ const Home = () => {
                                         <input
                                             name="pwd"
                                             type="password"
-                                            placeholder="Password"
+                                            placeholder="비밀번호"
                                             onChange={(e) => {
                                                 userObj(e);
                                             }}
+                                            onKeyDown={handleKeyDown}
                                         />
                                     </div>
                                     <button
@@ -103,12 +116,12 @@ const Home = () => {
                                         로그인
                                     </button>
                                     <p>
-                                        <b>Forgot password?</b>
+                                        <b>비밀번호를 잊으셨나요?</b>
                                     </p>
                                     <p>
-                                        <span>Don't have an account? </span>
+                                        <span>계정이 없으신가요? </span>
                                         <b onClick={() => toggle()} className="pointer">
-                                            Sign up here
+                                            회원 가입
                                         </b>
                                     </p>
                                 </div>
