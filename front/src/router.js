@@ -13,7 +13,11 @@ import Footer from "./components/Footer";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <App/>,
+        element: (
+            <>
+                <App/>
+            </>
+        ),
         errorElement: <NotFound/>,
         children: [
             {path: "", element: <Home/>},

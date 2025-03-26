@@ -1,47 +1,52 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {dbPost} from "../assets/api/commonApi";
 import {toast} from "react-toastify";
 import Register from "./user/Register";
 import "../assets/css/login.css";
+import {UserContext} from "../components/UserContext";
 
 const Home = () => {
+    const {user, setUser} = useContext(UserContext);
     const nav = useNavigate();
     const [container, setContainer] = useState(null);
 
-    const [user, setUser] = useState({
+    const [userlogin, setLogin] = useState({
         id: "",
         pwd: "",
     });
 
     const userObj = (e) => {
         let {name, value} = e.target;
-        if (name === 'id') {
+        if (name === "id") {
             value = value.toUpperCase();
         }
-        setUser({...user, [name]: value});
+        setLogin({...userlogin, [name]: value});
     };
 
     const role_check = () => {
-        if (user.id === "testadmin") {
-            user["role"] = "M";
+        if (userlogin.id === "testadmin") {
+            userlogin["role"] = "M";
         } else {
-            user["role"] = "U";
+            userlogin["role"] = "U";
         }
     };
 
     const login = async () => {
         role_check();
-        if (user.id.length === 0 || user.pwd.length === 0) {
+        if (userlogin.id.length === 0 || userlogin.pwd.length === 0) {
             return toast.warn("아이디 혹은 비밀번호를 입력해주세요.");
         }
         try {
-            const res = await dbPost("/auth/login", user);
-            if (res) {
-                sessionStorage.setItem("user_Token", JSON.stringify(res));
+            const res = await dbPost("/auth/login", userlogin);
+            if (res.info) {
                 toast.success("로그인 성공", {
                     autoClose: 500,
-                    onClose: () => nav("/board"),
+                    onClose: () => {
+                        setUser(res.info);
+                        sessionStorage.setItem("user_Token", JSON.stringify(res.info));
+                        nav("/board")
+                    },
                 });
             } else {
                 toast.error("로그인 실패");
@@ -73,11 +78,11 @@ const Home = () => {
 
     return (
         <>
-            {sessionStorage.getItem("user_Token") == null && (
-                <div
-                    id="container"
-                    className={`container ${container === null ? "" : container ? "sign-in" : "sign-up"}`}
-                >
+            <div
+                id="container"
+                className={`container ${container === null ? "" : container ? "sign-in" : "sign-up"}`}
+            >
+                {sessionStorage.getItem("user_Token") == null ? (
                     <div className="row">
                         <Register toggle={toggle}/>
                         <div className="col align-items-center flex-col sign-in">
@@ -88,7 +93,6 @@ const Home = () => {
                                         <input
                                             name="id"
                                             type="text"
-                                            value={user.id}
                                             placeholder="아이디"
                                             onChange={(e) => {
                                                 userObj(e);
@@ -126,25 +130,39 @@ const Home = () => {
                                     </p>
                                 </div>
                             </div>
-                            <div className="form-wrapper"></div>
                         </div>
                     </div>
-                    <div className="row content-row">
-                        <div className="col align-items-center flex-col">
-                            <div className="text sign-in">
-                                <h2>TEST PAGE</h2>
-                            </div>
-                            <div className="img sign-in"></div>
+                ) : (
+                    <div className="row">
+                        <div className="col align-items-center flex-col sign-up"></div>
+                        <div className="col align-items-center flex-col sign-in">
+                            <p>Go to board</p>
+                            <h4
+                                className="goHome"
+                                onClick={() => {
+                                    nav("board");
+                                }}
+                            >
+                                Click
+                            </h4>
                         </div>
-                        <div className="col align-items-center flex-col">
-                            <div className="img sign-up"></div>
-                            <div className="text sign-up">
-                                <h2>회원 가입</h2>
-                            </div>
+                    </div>
+                )}
+                <div className="row content-row">
+                    <div className="col align-items-center flex-col">
+                        <div className="text sign-in">
+                            <h2>I-CURSOR</h2>
+                        </div>
+                        <div className="img sign-in"></div>
+                    </div>
+                    <div className="col align-items-center flex-col">
+                        <div className="img sign-up"></div>
+                        <div className="text sign-up">
+                            <h2>회원 가입</h2>
                         </div>
                     </div>
                 </div>
-            )}
+            </div>
         </>
     );
 };

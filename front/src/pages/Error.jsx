@@ -1,7 +1,9 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
+import {UserContext} from "../components/UserContext";
 
 const Error = () => {
+    const {user} = useContext(UserContext);
     const nav = useNavigate();
     const code = useLocation();
     const [msg, setMsg] = useState("");
@@ -16,16 +18,17 @@ const Error = () => {
                     setMsg("UNAUTHORIZED: " + code.state);
                     break;
                 case 403:
-                    setMsg("FORBIDDEN: " + code.state);
+                    setMsg("인증 실패 FORBIDDEN: " + code.state);
+                    sessionStorage.clear();
                     break;
                 default:
                     setMsg("그외의 문제: " + code.state);
             }
         }
         setTimeout(() => {
-            nav(-1);
+            nav('/')
         }, 2000);
-    }, [nav]);
+    }, []);
 
     return (
         <div
