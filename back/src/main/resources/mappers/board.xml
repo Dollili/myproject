@@ -2,18 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.Repository.BoardMapper">
 
-    <select id="getBoardList" resultType="map">
-        SELECT *, (
+    <select id="getBoardListCnt" resultType="integer">
         SELECT COUNT(*)
         FROM BOARD
-        WHERE DEL_YN IS NULL) AS TOTAL
+        WHERE DEL_YN IS NULL
+        <if test="val != null and val !=''">
+            <choose>
+                <when test="option != null and option != ''">
+                    <choose>
+                        <when test="option == 'author'">
+                            AND UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                        </when>
+                        <otherwise>
+                            AND TITLE LIKE CONCAT('%',#{val},'%')
+                        </otherwise>
+                    </choose>
+                </when>
+                <otherwise>
+                    AND (UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                    OR TITLE LIKE CONCAT('%',#{val},'%'))
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="getBoardList" resultType="map">
+        --ROWNUM 대체 MYSQL 8버전 필요
+        SELECT (SELECT COUNT(*) FROM BOARD B WHERE B.DEL_YN IS NULL AND B.NO &lt;= A.NO) AS ROWNUM, A.*
         FROM (
         SELECT NO, TITLE, AUTHOR, RECOMMEND, VIEW_CNT, DATE_FORMAT(APPLY_DATE,
         '%Y-%m-%d')
         AS APPLY_FORMAT_DATE
         FROM BOARD
         WHERE
-        1=1 AND DEL_YN IS NULL
+        DEL_YN IS NULL
         <if test="val != null and val !=''">
             <choose>
                 <when test="option != null and option != ''">
