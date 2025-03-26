@@ -34,8 +34,11 @@ const Register = ({toggle}) => {
     };
 
     const join_check = () => {
+        if (user.nic && user.nic.trim() === "관리자") {
+            return toast.warn("사용하실 수 없는 닉네임입니다.");
+        }
         const name = !!user.name;
-        const pwd = user.pwd.length >= 6;
+        const pwd = user.pwd.length >= 1;
         return name && pwd && inf;
     };
 

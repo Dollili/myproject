@@ -1,12 +1,13 @@
 package org.example.Service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Repository.BoardMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -14,18 +15,36 @@ public class HomeService {
 
     private final BoardMapper boardMapper;
 
-    public List<Map<String, Object>> getBoardList(Map<String, Object> params) {
+    public Map<String, Object> getBoardList(Map<String, Object> params) {
         int page = params.get("page") == null ? 1 : Integer.parseInt((String) params.get("page"));
         int size = params.get("size") == null ? 10 : Integer.parseInt((String) params.get("size"));
 
         params.put("offset", (page - 1) * size);
         params.put("limit", size);
 
-        return boardMapper.getBoardList(params);
+        List<Map<String, Object>> resultList = boardMapper.getBoardList(params);
+        int total = boardMapper.getBoardListCnt(params);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("total", total);
+        result.put("data", resultList);
+
+        return result;
     }
 
-    public Map<String, Object> getBoardDetail(Map<String, Object> no) {
-        boardMapper.viewCount(no);
+    public Map<String, Object> getBoardDetail(Map<String, Object> no, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Set<String> view = (Set<String>) session.getAttribute("view");
+
+        if (view == null) {
+            view = new HashSet<>();
+            session.setAttribute("view", view);
+        }
+
+        if (!view.contains((String) no.get("no"))) {
+            view.add((String) no.get("no"));
+            boardMapper.viewCount(no);
+        }
         return boardMapper.getBoardDetail(no);
     }
 
@@ -35,6 +54,10 @@ public class HomeService {
 
     public int insertBoard(Map<String, Object> param) {
         return boardMapper.insertBoard(param);
+    }
+
+    public int modifyBoard(Map<String, Object> param) {
+        return boardMapper.updateBoard(param);
     }
 
     public int deleteBoard(Map<String, Object> param) {

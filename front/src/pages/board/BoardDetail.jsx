@@ -12,18 +12,14 @@ import thumb from "../../assets/img/thumbs_16019896.png";
 const BoardDetail = () => {
     const nav = useNavigate();
     const {user, setUser} = useContext(UserContext);
-    const [role, setRole] = useState(false);
+
+    const [role, setRole] = useState("");
 
     const location = useLocation();
     const [data, setData] = useState({});
-    const init_data = {
-        TITLE: "",
-        AUTHOR: "",
-        CONTENTS: "",
-    };
 
     const [path, setPath] = useState(false);
-    const [param, setParam] = useState({author: ""});
+    const [param, setParam] = useState({author: user.USER_NIC});
 
     const changeBoard = (e) => {
         const {name, value} = e.target;
@@ -49,7 +45,6 @@ const BoardDetail = () => {
             }
         } else {
             setPath(false);
-            setData(init_data);
         }
     };
 
@@ -68,9 +63,17 @@ const BoardDetail = () => {
                 return toast.info("제목과 내용을 모두 입력해주세요.");
             }
 
-            const res = await dbPost("/board/detail", param);
-            if (res === 1) {
-                toast.info("등록완료", {
+            let res;
+
+            if (Object.keys(data).length > 0) {
+                res = await dbPut("/board/detail/modify", param);
+            } else {
+                param['id'] = user.USER_ID;
+                res = await dbPost("/board/detail", param);
+            }
+
+            if (res === 1 || res === 204) {
+                toast.success("등록완료", {
                     autoClose: 500,
                     onClose: () => {
                         nav("/board");
@@ -84,11 +87,22 @@ const BoardDetail = () => {
         }
     };
 
+    const updateBoard = (no) => {
+        const meta = {
+            title: data.TITLE,
+            contents: data.CONTENTS,
+            author: data.AUTHOR,
+            no: no,
+        };
+        setParam({...param, ...meta});
+        setPath(false);
+    };
+
     const deleteBoard = async (no) => {
         try {
             const res = await dbPut("/board/detail", {no});
             if (res === 204) {
-                toast.info("삭제완료", {
+                toast.success("삭제완료", {
                     autoClose: 500,
                     onClose: () => {
                         nav("/board");
@@ -103,7 +117,7 @@ const BoardDetail = () => {
     };
 
     const recommend = async (no) => {
-        if (role) {
+        if (role === "user") {
             return showAlert("본인이 작성한 글에는 추천할 수 없습니다.");
         }
 
@@ -118,21 +132,16 @@ const BoardDetail = () => {
     };
 
     const userCheck = () => {
-        if (user) {
-            setParam({author: user.USER_ID})
-            setRole(user.USER_ID === data.AUTHOR || user.ROLE === "M");
+        if (user.USER_NIC === data.AUTHOR) {
+            setRole("user");
+        } else if (user.ROLE === "M") {
+            setRole("admin");
         }
-    };
-
-    const commonProps = {
-        location,
-        getDetail,
-        data,
     };
 
     useEffect(() => {
         userCheck();
-    }, [user, data]);
+    }, [data, user]);
 
     useEffect(() => {
         getDetail();
@@ -154,6 +163,7 @@ const BoardDetail = () => {
                         ) : (
                             <Form.Control
                                 name="title"
+                                value={param.title || ""}
                                 placeholder="제목을 입력하세요"
                                 onChange={(e) => {
                                     changeBoard(e);
@@ -180,6 +190,7 @@ const BoardDetail = () => {
                             <Form.Control
                                 className="contentsInput"
                                 name="contents"
+                                value={param.contents || ""}
                                 placeholder="내용을 입력하세요."
                                 as="textarea"
                                 onChange={(e) => {
@@ -207,16 +218,23 @@ const BoardDetail = () => {
             )}
             {path && (
                 <div className="my-2">
-                    <h5>댓글</h5>
-                    <Comment {...commonProps} />
+                    <Comment location={location}/>
                 </div>
             )}
             <Link to={"/board"}>
                 <button className="common_btn">목록</button>
             </Link>
-            {path && role && (
+            {path && (role === "user" || role === "admin") && (
                 <div className="user_board_btn">
-                    <button className="common_btn">수정</button>
+                    <button
+                        className="common_btn"
+                        onClick={() => {
+                            updateBoard(data.NO);
+                        }}
+                        disabled={role === "admin"}
+                    >
+                        수정
+                    </button>
                     <button
                         className="common_btn"
                         onClick={() => {

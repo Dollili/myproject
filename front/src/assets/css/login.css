@@ -380,4 +380,6 @@ body {
     animation: shake 0.3s ease-in-out 1;
 }
 
-
+.goHome:hover {
+    cursor: pointer;
+}

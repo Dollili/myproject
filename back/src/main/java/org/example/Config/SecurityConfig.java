@@ -1,7 +1,6 @@
 package org.example.Config;
 
 import lombok.RequiredArgsConstructor;
-import org.example.Filter.SessionFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,9 +8,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 public class SecurityConfig {
 
     private final CorsConfig corsConfig;
-    private final SessionFilter sessionFilter;
+    //private final SessionFilter sessionFilter;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -36,14 +36,15 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .addFilterBefore(corsConfig.corsFilter(), SecurityContextPersistenceFilter.class)
-                .addFilterBefore(sessionFilter, SecurityContextPersistenceFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                //.addFilterBefore(sessionFilter, SecurityContextPersistenceFilter.class)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**")
                         .permitAll()
-                        .requestMatchers("/board", "/board/**")
+                        .requestMatchers("/board/**")
                         .hasAnyRole("U", "M")
                         .anyRequest()
-                        .authenticated());
+                        .authenticated())
+                .addFilterBefore(corsConfig.corsFilter(), SecurityContextHolderFilter.class);
 
         return http.build();
     }
