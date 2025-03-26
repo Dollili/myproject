@@ -19,18 +19,29 @@ public class HomeController {
     private HomeService homeService;
 
     @GetMapping("/list")
-    public List<Map<String, Object>> board(@RequestParam Map<String, Object> params) {
+    public Map<String, Object> board(@RequestParam Map<String, Object> params) {
         return homeService.getBoardList(params);
     }
 
     @GetMapping("/detail")
-    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> no) {
-        return homeService.getBoardDetail(no);
+    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> no, HttpServletRequest request) {
+        return homeService.getBoardDetail(no, request);
     }
 
     @PostMapping("/detail")
     public int boardInsert(@RequestBody Map<String, Object> param) {
         return homeService.insertBoard(param);
+    }
+
+    @PutMapping("/detail/modify")
+    public ResponseEntity<Void> boardModify(@RequestBody Map<String, Object> param) {
+        int result = homeService.modifyBoard(param);
+
+        if (result == 1) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PutMapping("/detail")
@@ -60,7 +71,9 @@ public class HomeController {
     }
 
     @PostMapping("/comment")
-    public int commentInsert(@RequestBody Map<String, Object> param) {
+    public int commentInsert(@RequestBody Map<String, Object> param, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        param.put("user", session.getAttribute("user"));
         return homeService.insertComment(param);
     }
 

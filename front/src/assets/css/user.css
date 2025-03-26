@@ -1,0 +1,48 @@
+.user-container {
+    width: 20%;
+    float: left;
+}
+
+.user-container2 {
+    margin-left: 100px;
+    float: left;
+}
+
+.user-container3 {
+    float: left;
+}
+
+.user-container2 .form-wrapper {
+    min-width: 80vh;
+}
+
+.user-container3 .form-wrapper {
+    min-width: 70vh;
+}
+
+.user-container .input-group {
+    position: relative;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.form.sign-up {
+    margin: 10px;
+    height: 60vh;
+}
+
+.form .complete {
+    background-color: #DB4437;
+}
+
+.user-container.sign-up .form.sign-up,
+.user-container.sign-up,
+.user-container.sign-up > div,
+.user-container2.sign-up .form.sign-up,
+.user-container2.sign-up,
+.user-container2.sign-up > div,
+.user-container3.sign-up .form.sign-up,
+.user-container3.sign-up,
+.user-container3.sign-up > div {
+    transform: scale(1);
+}
