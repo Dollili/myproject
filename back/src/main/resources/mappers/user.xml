@@ -3,18 +3,32 @@
 <mapper namespace="org.example.Repository.UserMapper">
 
     <select id="userLogin" parameterType="string" resultType="map">
-        SELECT USER_ID, USER_PWD, ROLE, USER_NM
+        SELECT USER_ID, USER_PWD, ROLE, USER_NM, USER_NIC
         FROM USER
         WHERE UPPER(USER_ID) = UPPER(#{id})
     </select>
 
     <select id="userInfo" resultType="map">
-        SELECT USER_ID, USER_NM, DATE_FORMAT(REGISTER_DATE, '%Y-%m-%d') AS REGISTER_DATE, ROLE
+        SELECT USER_ID, USER_NM, DATE_FORMAT(REGISTER_DATE, '%Y-%m-%d') AS REGISTER_DATE, ROLE, USER_NIC
         FROM USER
         WHERE UPPER(USER_ID) = UPPER(#{id})
         <if test="role != null and role != ''">
             AND ROLE = #{role}
         </if>
+    </select>
+
+    <select id="userBoard" resultType="map">
+        SELECT NO, TITLE, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, RECOMMEND, VIEW_CNT
+        FROM BOARD
+        WHERE UPPER (USER_ID) = UPPER (#{id})
+          AND DEL_YN IS NULL
+    </select>
+
+    <select id="userComment" resultType="map">
+        SELECT ID, COMMENT, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, BOARD_NO
+        FROM COMMENT
+        WHERE UPPER(USER_ID) = UPPER(#{id})
+          AND DEL_YN IS NULL
     </select>
 
     <select id="findUserId" parameterType="string" resultType="map">
@@ -26,7 +40,21 @@
     <select id="findUserNic" parameterType="string" resultType="map">
         SELECT USER_NIC
         FROM USER
-        WHERE UPPER(USER_ID) = UPPER(#{nick})
+        WHERE UPPER(USER_NIC) = UPPER(#{nic})
     </select>
+
+    <update id="updateUserInfo">
+        UPDATE USER
+        <set>
+            UPDATE_DATE = NOW(),
+            <if test="nic != null and nic != ''">
+                USER_NIC = #{nic},
+            </if>
+            <if test="pwd != null and pwd != ''">
+                USER_PWD = #{pwd}
+            </if>
+        </set>
+        WHERE UPPER(USER_ID) = UPPER(#{id})
+    </update>
 
 </mapper>

@@ -7,8 +7,9 @@ import Paging from "../../components/Paging";
 
 const Board = () => {
     const [data, setData] = useState([]);
-    const [item, setItem] = useState(10);
-    const [current, setCurrent] = useState(1);
+    const [item, setItem] = useState(10); // 한 페이지에 보일 데이터 개수
+    const [total, setTotal] = useState(0); // 검색된 총 데이터 수 (전체 포함)
+    const [current, setCurrent] = useState(1); // 현재 페이지
 
     const nav = useNavigate();
 
@@ -23,12 +24,18 @@ const Board = () => {
         try {
             const res = await dbGet("/board/list", search);
             if (res) {
-                setData(res);
+                setTotal(res.total);
+                setData(res.data);
+            } else {
+                setData([]);
             }
         } catch (e) {
-            setData(null);
+            nav("/error", {state: e.status});
         }
     };
+
+    useEffect(() => {
+    }, [total]);
 
     useEffect(() => {
         getBoard();
@@ -100,14 +107,14 @@ const Board = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {data == null ? (
+                    {data.length === 0 ? (
                         <tr>
                             <td colSpan={6}>게시글이 존재하지 않습니다.</td>
                         </tr>
                     ) : (
                         data.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.NO}</td>
+                                <td>{item.ROWNUM}</td>
                                 <td
                                     onClick={() => {
                                         nav(`/board/${item.NO}`, {state: item.NO});
@@ -125,7 +132,9 @@ const Board = () => {
                     </tbody>
                 </Table>
             </div>
-            {data[0] && <Paging total={data[0].TOTAL} pageItem={item} currentPage={setCurrent}/>}
+            {data.length !== 0 && (
+                <Paging total={total} pageItem={item} currentPage={setCurrent}/>
+            )}
         </>
     );
 };
