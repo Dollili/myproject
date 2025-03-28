@@ -7,8 +7,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import Home from "./pages/Home";
 import UserInfo from "./pages/user/UserInfo";
 import Error from "./pages/Error";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 
 const router = createBrowserRouter([
     {
@@ -23,13 +21,13 @@ const router = createBrowserRouter([
             {path: "", element: <Home/>},
             {
                 path: "info",
-                element: (
-                    <>
-                        <Header/>
-                        <UserInfo/>
-                        <Footer/>
-                    </>
-                ),
+                element: <ProtectedRoute/>,
+                children: [
+                    {
+                        index: true,
+                        element: <UserInfo/>,
+                    },
+                ],
             },
             {
                 path: "board",
