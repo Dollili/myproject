@@ -1,0 +1,70 @@
+.App-side {
+    position: relative;
+}
+
+.App-side .dropdown {
+    border-radius: 5px;
+    position: absolute;
+    z-index: 1;
+    width: 20%;
+    background-color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    animation: fadeOut ease-in-out 0s;
+    pointer-events: none;
+}
+
+.App-side .dropdown.active {
+    opacity: 1;
+    color: black;
+    animation: fadeIn ease-in-out 1s;
+    pointer-events: auto;
+}
+
+.App-side .dropdown.active div {
+    margin: 10px;
+}
+
+.App-side .dropdown.active
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.roundButton {
+    float: left;
+    background-color: white;
+    margin: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 10px solid #0065A6;
+    outline: none;
+    transition: all .2s cubic-bezier(0, 1.26, .8, 1.28);
+}
+
+.roundButton:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+    border-color: #003557;
+    transform: scale(1.2, 1.2);
+}
+
+.roundButton:active {
+    border-color: #003557;
+    background-color: #FFF;
+}
