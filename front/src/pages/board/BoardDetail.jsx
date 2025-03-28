@@ -4,10 +4,11 @@ import Form from "react-bootstrap/Form";
 import {Table} from "react-bootstrap";
 import {showAlert} from "../../components/alert/customAlert";
 import Comment from "./Comment";
-import {dbGet, dbPost, dbPut} from "../../assets/api/commonApi";
+import {dbForm, dbGet, dbPost, dbPut} from "../../assets/api/commonApi";
 import {UserContext} from "../../components/UserContext";
 import {toast, ToastContainer} from "react-toastify";
 import thumb from "../../assets/img/thumbs_16019896.png";
+import FileUpload from "../../components/FileUpload";
 
 const BoardDetail = () => {
     const nav = useNavigate();
@@ -17,6 +18,7 @@ const BoardDetail = () => {
 
     const location = useLocation();
     const [data, setData] = useState({});
+    const [files, setFiles] = useState(null);
 
     const [path, setPath] = useState(false);
     const [param, setParam] = useState({author: user.USER_NIC});
@@ -64,6 +66,7 @@ const BoardDetail = () => {
             }
 
             let res;
+            let file_res;
 
             if (Object.keys(data).length > 0) {
                 res = await dbPut("/board/detail/modify", param);
@@ -71,6 +74,11 @@ const BoardDetail = () => {
                 param['id'] = user.USER_ID;
                 res = await dbPost("/board/detail", param);
             }
+
+            if (files) {
+                file_res = await dbForm(files);
+            }
+            console.log(file_res);
 
             if (res === 1 || res === 204) {
                 toast.success("등록완료", {
@@ -175,6 +183,12 @@ const BoardDetail = () => {
                 <tr>
                     <td>글쓴이</td>
                     <td>{path ? data.AUTHOR : param.author}</td>
+                </tr>
+                <tr>
+                    <td>첨부파일</td>
+                    <td>
+                        <FileUpload files={files} setFiles={setFiles}/>
+                    </td>
                 </tr>
                 <tr>
                     <td colSpan={2}>

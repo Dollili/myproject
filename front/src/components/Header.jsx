@@ -1,9 +1,10 @@
 import React, {useContext} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {dbPost} from "../assets/api/commonApi";
+import "../assets/css/menu.css";
 import {UserContext} from "./UserContext";
 
-const Header = () => {
+const Header = ({toggle}) => {
     const {user, setUser} = useContext(UserContext);
     const nav = useNavigate();
 
@@ -25,6 +26,10 @@ const Header = () => {
     return (
         <>
             <header className="App-header">
+                <button
+                    className="roundButton"
+                    onClick={toggle}
+                />
                 <Link
                     className="logo"
                     to="/board"
@@ -37,10 +42,6 @@ const Header = () => {
                 </p>
                 <p className="menu" onClick={() => info()}>
                     내정보
-                </p>
-                <p className="menu" onClick={() => {
-                }}>
-                    메뉴
                 </p>
             </header>
         </>

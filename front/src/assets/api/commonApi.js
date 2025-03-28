@@ -19,3 +19,25 @@ export const dbDelete = async (url, param) => {
     const res = await api.delete(url, {params: param});
     return res.status;
 };
+
+export const dbForm = async (files, no) => {
+    if (files) {
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append("file", files[i]);
+        }
+        const url = "/file/upload";
+        formData.append("no", no); // 게시글 번호
+
+        try {
+            const res = await api.post(url, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+};
