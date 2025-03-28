@@ -27,6 +27,7 @@
 }
 
 .form.sign-up {
+    transition-delay: unset;
     margin: 10px;
     height: 60vh;
 }
