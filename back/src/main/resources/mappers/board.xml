@@ -27,7 +27,6 @@
     </select>
 
     <select id="getBoardList" resultType="map">
-        --ROWNUM 대체 MYSQL 8버전 필요
         SELECT (SELECT COUNT(*) FROM BOARD B WHERE B.DEL_YN IS NULL AND B.NO &lt;= A.NO) AS ROWNUM, A.*
         FROM (
         SELECT NO, TITLE, AUTHOR, RECOMMEND, VIEW_CNT, DATE_FORMAT(APPLY_DATE,

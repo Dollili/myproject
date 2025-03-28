@@ -12,6 +12,12 @@
     justify-content: flex-end;
 }
 
+.search-count {
+    position: absolute;
+    left: 40px;
+}
+
+.search-count,
 .search-select,
 .search-input,
 .search-button {

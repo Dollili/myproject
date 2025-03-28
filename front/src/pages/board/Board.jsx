@@ -39,12 +39,24 @@ const Board = () => {
 
     useEffect(() => {
         getBoard();
-    }, [current]);
+    }, [current, item]);
 
     return (
         <>
             <div className="main-container">
                 <div className="search-container">
+                    <select
+                        className="search-count"
+                        name="option"
+                        onChange={(e) => {
+                            const {value} = e.target;
+                            setItem(value);
+                        }}
+                    >
+                        <option value={10}>10건</option>
+                        <option value={15}>15건</option>
+                        <option value={30}>30건</option>
+                    </select>
                     <select
                         className="search-select"
                         name="option"

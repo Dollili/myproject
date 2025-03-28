@@ -58,44 +58,10 @@
     flex: 1;
 }
 
-.App-side .dropdown {
-    position: absolute;
-    width: 100%;
-    background-color: grey;
-    opacity: 0.3;
-    animation: fadeIn ease-in-out 1s;
-}
-
-.App-side .dropdown.active {
-    opacity: 0;
-    animation: fadeOut ease-in-out 1s;
-}
-
-.App-side .dropdown.active
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 0.3;
-    }
-}
-
-@keyframes fadeOut {
-    0% {
-        opacity: 0.3;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
 .App-header {
     background-color: black;
     min-height: 10vh;
-    font-size: calc(5px + 2vmin);
+    font-size: 20px;
 }
 
 .App-header .menu {
@@ -107,7 +73,8 @@
 .App-header .logo {
     float: left;
     color: white;
-    margin: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .menu:hover, .logo:hover {
