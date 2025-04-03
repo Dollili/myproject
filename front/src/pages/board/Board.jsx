@@ -128,6 +128,7 @@ const Board = () => {
                             <tr key={index}>
                                 <td>{item.ROWNUM}</td>
                                 <td
+                                    className="contents-td"
                                     onClick={() => {
                                         nav(`/board/${item.NO}`, {state: item.NO});
                                     }}

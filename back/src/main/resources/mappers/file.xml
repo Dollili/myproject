@@ -20,4 +20,11 @@
                 #{size})
     </insert>
 
+    <select id="getFileList" resultType="map">
+        SELECT ORIGIN_NM, DATE_FORMAT(RES_DATE, '%Y-%m-%d'), FILE_SIZE, BOARD_NO, FILE_NM, ID
+        FROM FILE
+        WHERE BOARD_NO = #{no}
+          AND DEL_YN IS NULL
+    </select>
+
 </mapper>
