@@ -5,6 +5,7 @@ back/.classpath
 back/.project
 back/.settings/
 back/*.iml
+back/src/main/resources/application.properties
 
 # Node.js/React 관련
 front/node_modules/
@@ -12,7 +13,7 @@ front/.next/
 front/.idea/
 front/build/
 front/.env.local
-
+front/.env.development
 front.iml
 
 **/node_modules/
