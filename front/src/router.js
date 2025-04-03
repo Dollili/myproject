@@ -7,6 +7,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import Home from "./pages/Home";
 import UserInfo from "./pages/user/UserInfo";
 import Error from "./pages/Error";
+import Notice from "./pages/notice/Notice";
+import NoticeDetail from "./pages/notice/NoticeDetail";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +40,17 @@ const router = createBrowserRouter([
                         element: <Board/>,
                     },
                     {path: ":no", element: <BoardDetail/>},
+                ],
+            },
+            {
+                path: "notice",
+                element: <ProtectedRoute/>, // 보호된 경로 그룹
+                children: [
+                    {
+                        index: true,
+                        element: <Notice/>,
+                    },
+                    {path: ":no", element: <NoticeDetail/>},
                 ],
             },
             {path: "/error", element: <Error/>},
