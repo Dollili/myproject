@@ -1,16 +1,23 @@
-import {Navigate, Outlet} from "react-router-dom";
+import {Navigate, Outlet, useLocation} from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import SideMenu from "./components/SideMenu";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const ProtectedRoute = () => {
     const isAuth = !!sessionStorage.getItem("user_Token");
     const [onOff, setOn] = useState(false);
+    const location = useLocation();
+
 
     const toggle = () => {
         setOn(!onOff);
     };
+
+    //화면 이동 시 메뉴 닫음
+    useEffect(() => {
+        setOn(false)
+    }, [location]);
 
     return isAuth ? (
         <>
