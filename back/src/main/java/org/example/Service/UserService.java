@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Repository.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,10 +24,10 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManager authenticationManager;
+    Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public Map<String, Object> login(Map<String, Object> params, HttpServletRequest request) {
         String username = params.get("id").toString();
@@ -47,6 +49,7 @@ public class UserService {
 
     public ResponseEntity<String> join(Map<String, Object> params) {
         if (params.get("id") == null || params.get("pwd") == null) {
+            logger.error("params is null");
             throw new RuntimeException("Required fields");
         }
         String userId = (String) params.get("id");
@@ -68,8 +71,10 @@ public class UserService {
 
         int result = userMapper.insertUser(params);
         if (result == 1) {
+            logger.info("join success");
             return ResponseEntity.ok("success");
         } else {
+            logger.info("join failed");
             return ResponseEntity.internalServerError().body("fail");
         }
     }
@@ -101,8 +106,10 @@ public class UserService {
         int result = userMapper.updateUserInfo(params);
 
         if (result == 1) {
+            logger.info("update success");
             return ResponseEntity.noContent().build();
         } else {
+            logger.info("update failed");
             return ResponseEntity.internalServerError().body("fail");
         }
     }

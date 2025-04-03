@@ -27,7 +27,6 @@ public interface BoardMapper {
     @Update("UPDATE BOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO=#{no}")
     int recommendUp(Map<String, Object> param);
 
-    @Select("SELECT * FROM (SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, (SELECT COUNT(*) FROM COMMENT WHERE BOARD_NO=#{no} AND DEL_YN IS NULL) AS TOTAL " + "FROM COMMENT WHERE BOARD_NO=#{no} AND DEL_YN IS NULL ORDER BY APPLY_FORMAT_DATE DESC) A " + "LIMIT #{limit} OFFSET #{offset}")
     List<Map<String, Object>> getBoardComment(Map<String, Object> no);
 
     @Insert("INSERT INTO BOARD (TITLE, CONTENTS, AUTHOR, APPLY_DATE, USER_ID) VALUES (#{title},#{contents},#{author},NOW(), #{id})")

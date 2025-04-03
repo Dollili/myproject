@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.Repository.BoardMapper;
 import org.example.Repository.FileMapper;
 import org.example.util.CryptoUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class FileService {
 
     private final FileMapper fileMapper;
     private final BoardMapper boardMapper;
+    Logger logger = LoggerFactory.getLogger(FileService.class);
     @Value("${file.upload.path}")
     private String filePath;
     @Value("${file.path}")
@@ -66,6 +69,7 @@ public class FileService {
 
                 list.add(map);
             } catch (IOException e) {
+                logger.error(e.getMessage());
                 try {
                     throw new IOException("파일 업로드 중 문제가 발생했습니다.");
                 } catch (IOException ex) {
@@ -83,6 +87,7 @@ public class FileService {
             }
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }

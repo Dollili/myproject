@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Repository.BoardMapper;
 import org.example.Repository.FileMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,9 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class HomeService {
-
     private final BoardMapper boardMapper;
     private final FileMapper fileMapper;
+    Logger logger = LoggerFactory.getLogger(HomeService.class);
 
     public Map<String, Object> getBoardList(Map<String, Object> params) {
         int page = params.get("page") == null ? 1 : Integer.parseInt((String) params.get("page"));

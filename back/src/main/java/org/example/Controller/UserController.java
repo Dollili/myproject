@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +18,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class UserController {
-
     private final UserService userService;
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, Object> params, HttpServletRequest request) {
         try {
             Map<String, Object> result = userService.login(params, request);
+            logger.info("login result: {}", result);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
+            logger.error("로그인 실패:{}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
