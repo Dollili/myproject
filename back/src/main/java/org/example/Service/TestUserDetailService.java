@@ -1,6 +1,8 @@
 package org.example.Service;
 
 import org.example.Repository.UserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +16,8 @@ import java.util.Map;
 
 @Service
 public class TestUserDetailService implements UserDetailsService {
-
     private final UserMapper userMapper;
+    Logger logger = LoggerFactory.getLogger(TestUserDetailService.class);
 
     public TestUserDetailService(UserMapper userMapper) {
         this.userMapper = userMapper;
@@ -25,6 +27,7 @@ public class TestUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Map<String, Object> user = userMapper.userLogin(username);
         if (user == null) {
+            logger.info("loadUserByUsername: 사용자 이름이 존재하지 않음");
             throw new UsernameNotFoundException(username);
         }
 

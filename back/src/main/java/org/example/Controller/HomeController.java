@@ -3,6 +3,8 @@ package org.example.Controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.Service.HomeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/board")
 public class HomeController {
-
+    Logger logger = LoggerFactory.getLogger(HomeController.class);
     @Autowired
     private HomeService homeService;
 
@@ -38,8 +40,10 @@ public class HomeController {
         int result = homeService.modifyBoard(param);
 
         if (result == 1) {
+            logger.info("success modify board");
             return ResponseEntity.noContent().build();
         } else {
+            logger.info("fail modify board");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }

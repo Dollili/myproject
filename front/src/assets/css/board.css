@@ -183,3 +183,25 @@ td {
     float: unset;
     margin-left: 5px;
 }
+
+.commentHead {
+    display: flex;
+}
+
+.timeList {
+    margin-left: 15px;
+}
+
+.time {
+    margin: 5px;
+    color: lightgrey;
+}
+
+.time.asc,
+.time.desc {
+    color: black;
+}
+
+.time:hover {
+    cursor: pointer;
+}

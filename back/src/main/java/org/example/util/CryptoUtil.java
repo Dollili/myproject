@@ -1,9 +1,14 @@
 package org.example.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class CryptoUtil {
+    static Logger logger = LoggerFactory.getLogger(CryptoUtil.class);
+
     public static String encryptSHA256(String str) {
         try {
             MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
@@ -20,6 +25,7 @@ public class CryptoUtil {
 
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
+            logger.error("NoSuchAlgorithmException", e);
             throw new RuntimeException("SHA-256 암호화 오류", e);
         }
     }

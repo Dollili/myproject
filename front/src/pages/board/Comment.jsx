@@ -13,6 +13,8 @@ const Comment = ({location}) => {
     const nav = useNavigate();
     const textareaRef = useRef();
 
+    const [time, setTime] = useState("desc");
+
     const [item, setItem] = useState(5);
     const [current, setCurrent] = useState(1);
 
@@ -32,6 +34,7 @@ const Comment = ({location}) => {
         param["no"] = location.state;
         param["page"] = current;
         param["size"] = item;
+        param["orderBy"] = time;
         try {
             const res = await dbGet("/board/comment", param);
             if (res) {
@@ -56,7 +59,7 @@ const Comment = ({location}) => {
             const res = await dbPost("/board/comment", comment);
             if (res === 1) {
                 getComment();
-                console.log(comment)
+                console.log(comment);
                 textareaRef.current.value = "";
             }
         } catch (e) {
@@ -78,13 +81,44 @@ const Comment = ({location}) => {
         }
     };
 
+    const timeList = () => {
+        if (time === "desc") {
+            setTime("asc");
+        } else {
+            setTime("desc");
+        }
+    };
+    
     useEffect(() => {
-        getComment();
-    }, [current]);
+        getComment(time);
+    }, [current, time]);
 
     return (
         <div className="my-2">
-            <h5>댓글</h5>
+            <div className="commentHead">
+                <div>
+                    <h5>댓글</h5>
+                </div>
+                <div className="timeList">
+          <span
+              className={`time ${time === 'desc' ? 'desc' : ''}`}
+              onClick={() => {
+                  timeList();
+              }}
+          >
+            최신순
+          </span>
+                    <span> | </span>
+                    <span
+                        className={`time ${time === 'asc' ? 'asc' : ''}`}
+                        onClick={() => {
+                            timeList();
+                        }}
+                    >
+             과거순
+          </span>
+                </div>
+            </div>
             <div className="comment">
                 <Table bordered>
                     <colgroup>

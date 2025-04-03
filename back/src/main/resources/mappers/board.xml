@@ -57,5 +57,28 @@
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
+    <select id="getBoardComment" resultType="map">
+        SELECT *
+        FROM
+        (
+        SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
+        (SELECT COUNT(*)
+        FROM COMMENT
+        WHERE BOARD_NO = #{no}
+        AND DEL_YN IS NULL
+        )AS TOTAL
+        FROM COMMENT
+        WHERE BOARD_NO=#{no} AND DEL_YN IS NULL
+        ORDER BY APPLY_FORMAT_DATE
+        <if test="orderBy == 'desc'">
+            DESC
+        </if>
+        <if test="orderBy == 'asc'">
+            ASC
+        </if>
+        ) A
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
 </mapper>
 
