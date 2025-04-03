@@ -1,10 +1,10 @@
 import React, {useRef} from "react";
 
-const FileUpload = ({files, setFiles}) => {
+const FileUpload = ({files, setFiles, data, onOff}) => {
     const click = useRef(null);
 
     const handleChangeFile = (e) => {
-        setFiles(e.target.files);
+        setFiles((prev) => [...prev, ...e.target.files]);
     };
 
     const handleClearFiles = () => {
@@ -13,32 +13,42 @@ const FileUpload = ({files, setFiles}) => {
     };
 
     return (
-        <div className="fileForm">
-            <input
-                type="file"
-                id="fileInput"
-                onChange={handleChangeFile}
-                ref={click}
-                multiple
-                hidden
-            />
-            {files && files.length > 0 && (
-                <>
-                    <div>
-                        {Array.from(files).map((file, index) => (
-                            <p key={index} onClick={() => {
-                            }}>{file.name}</p>
-                        ))}
-                    </div>
-                    <button onClick={handleClearFiles} className="common_btn">
-                        파일 지우기
+        <>
+            {!onOff && (
+                <div className="fileForm">
+                    <input
+                        type="file"
+                        id="fileInput"
+                        onChange={handleChangeFile}
+                        ref={click}
+                        multiple
+                        hidden
+                    />
+                    {files?.length > 0 && (
+                        <>
+                            {data.file && <p>추가된 파일</p>}
+                            <div className="file-div">
+                                {Array.from(files).map((file, index) => (
+                                    <p key={index} onClick={() => {
+                                    }}>
+                                        {file.name}
+                                    </p>
+                                ))}
+                            </div>
+                            <button onClick={handleClearFiles} className="common_btn mg">
+                                전체 삭제
+                            </button>
+                        </>
+                    )}
+                    <button
+                        className="common_btn mg"
+                        onClick={() => click.current.click()}
+                    >
+                        첨부
                     </button>
-                </>
+                </div>
             )}
-            <button className="common_btn" onClick={() => click.current.click()}>
-                첨부
-            </button>
-        </div>
+        </>
     );
 };
 
