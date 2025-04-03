@@ -90,7 +90,9 @@ public class UserService {
         String nic = (String) params.get("nic");
         Map<String, Object> user_nic = userMapper.findUserNic(nic);
         if (user_nic != null) {
-            return ResponseEntity.status(418).body("Duplicate NIC");
+            if (!user_nic.get("USER_ID").equals(params.get("id"))) {
+                return ResponseEntity.status(418).body("Duplicate NIC");
+            }
         }
         if (pwd != null && !pwd.isEmpty()) {
             String password = bCryptPasswordEncoder.encode(pwd);

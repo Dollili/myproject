@@ -19,7 +19,6 @@ const Error = () => {
                     break;
                 case 403:
                     setMsg("인증 실패 FORBIDDEN: " + code.state);
-                    sessionStorage.clear();
                     break;
                 default:
                     setMsg("그외의 문제: " + code.state);
