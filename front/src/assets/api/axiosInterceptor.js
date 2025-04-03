@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8088",
+    baseURL: process.env.REACT_APP_BACKEND_URL,
     withCredentials: true,
 });
 
@@ -10,7 +10,7 @@ api.interceptors.response.use(
         return res;
     },
     function (error) {
-        if (error.response && error.response.status === 401) {
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
             sessionStorage.clear();
             window.location.href = "/";
         }

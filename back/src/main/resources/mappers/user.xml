@@ -20,7 +20,7 @@
     <select id="userBoard" resultType="map">
         SELECT NO, TITLE, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, RECOMMEND, VIEW_CNT
         FROM BOARD
-        WHERE UPPER (USER_ID) = UPPER (#{id})
+        WHERE UPPER(USER_ID) = UPPER(#{id})
           AND DEL_YN IS NULL
     </select>
 
@@ -38,7 +38,7 @@
     </select>
 
     <select id="findUserNic" parameterType="string" resultType="map">
-        SELECT USER_NIC
+        SELECT USER_NIC, USER_ID
         FROM USER
         WHERE UPPER(USER_NIC) = UPPER(#{nic})
     </select>
