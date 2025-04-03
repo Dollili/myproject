@@ -11,6 +11,9 @@ import java.util.Map;
 @Mapper
 public interface BoardMapper {
 
+    @Select("SELECT MAX(NO) FROM BOARD")
+    Integer boardMax();
+
     List<Map<String, Object>> getBoardList(Map<String, Object> params);
 
     int getBoardListCnt(Map<String, Object> params);
@@ -41,4 +44,7 @@ public interface BoardMapper {
 
     @Update("UPDATE COMMENT SET DEL_YN ='Y' WHERE ID=#{id} AND USER_ID=#{user}")
     int deleteComment(Map<String, Object> param);
+
+    @Update("UPDATE COMMENT SET DEL_YN ='Y' WHERE BOARD_NO=#{no}")
+    void deleteAllCom(String no);
 }

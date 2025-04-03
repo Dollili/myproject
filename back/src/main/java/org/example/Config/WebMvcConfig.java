@@ -8,13 +8,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${file.path}")
+    @Value("${file.upload.path}")
     private String filepath;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/files/**")
-                .addResourceLocations("file:" + filepath);
+                .addResourceLocations("file:" + filepath + "/");
     }
 
 }
