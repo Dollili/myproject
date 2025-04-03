@@ -27,7 +27,9 @@ export const dbForm = async (files, no) => {
             formData.append("file", files[i]);
         }
         const url = "/file/upload";
-        formData.append("no", no); // 게시글 번호
+        if (no) {
+            formData.append("no", no); // 게시글 번호
+        }
 
         try {
             const res = await api.post(url, formData, {

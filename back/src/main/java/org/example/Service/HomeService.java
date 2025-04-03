@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Repository.BoardMapper;
+import org.example.Repository.FileMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.*;
 public class HomeService {
 
     private final BoardMapper boardMapper;
+    private final FileMapper fileMapper;
 
     public Map<String, Object> getBoardList(Map<String, Object> params) {
         int page = params.get("page") == null ? 1 : Integer.parseInt((String) params.get("page"));
@@ -34,7 +36,7 @@ public class HomeService {
 
     public Map<String, Object> getBoardDetail(Map<String, Object> no, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Set<String> view = (Set<String>) session.getAttribute("view");
+        Set<String> view = (Set<String>) session.getAttribute("view"); // 조회수 세션 임시
 
         if (view == null) {
             view = new HashSet<>();
@@ -45,7 +47,14 @@ public class HomeService {
             view.add((String) no.get("no"));
             boardMapper.viewCount(no);
         }
-        return boardMapper.getBoardDetail(no);
+
+        Map<String, Object> result = boardMapper.getBoardDetail(no);
+        //file
+        if (result != null) {
+            result.put("file", fileMapper.getFileList((String) no.get("no")));
+        }
+
+        return result;
     }
 
     public int recommendUp(Map<String, Object> param) {
@@ -61,6 +70,8 @@ public class HomeService {
     }
 
     public int deleteBoard(Map<String, Object> param) {
+        fileMapper.deleteAll((String) param.get("no")); // 파일 삭제 처리
+        boardMapper.deleteAllCom((String) param.get("no")); // 댓글 삭제 처리
         return boardMapper.deleteBoard(param);
     }
 
