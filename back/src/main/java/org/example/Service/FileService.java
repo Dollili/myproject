@@ -1,6 +1,7 @@
 package org.example.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.Repository.BoardMapper;
 import org.example.Repository.FileMapper;
 import org.example.util.CryptoUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +18,10 @@ import java.util.*;
 public class FileService {
 
     private final FileMapper fileMapper;
+    private final BoardMapper boardMapper;
     @Value("${file.upload.path}")
     private String filePath;
-    @Value("${file.upload}")
+    @Value("${file.path}")
     private String fileUpload;
 
     public ResponseEntity<?> fileUpload(MultipartFile[] files, String no) {
@@ -27,14 +29,16 @@ public class FileService {
         int seq = 0;
         for (MultipartFile file : files) {
             File uploadDir = new File(filePath);
+            File uploadDir2 = new File(fileUpload);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
+            } else if (!uploadDir2.exists()) {
+                uploadDir2.mkdirs();
             }
 
             Map<String, Object> map = new HashMap<>();
             String fileName = file.getOriginalFilename();
-            String fileId = (fileName != null && !fileName.isEmpty()) ? fileName
-                    : "FILE_" + UUID.randomUUID()
+            String fileId = "FILE_" + UUID.randomUUID()
                     .toString()
                     .replace("-", "")
                     .substring(0, 12);
@@ -44,11 +48,16 @@ public class FileService {
             String filePathFinal = filePath + "/" + encryptedFileName;
 
             try {
-                file.transferTo(new File(fileUpload + "/" + encryptedFileName));
-                map.put("fileId", fileId);
+                file.transferTo(new File(filePath + "/" + encryptedFileName));
+                map.put("id", fileId);
 
-                int board_no = Integer.parseInt(no);
-                map.put("no", board_no);
+                if (no == null || no.isEmpty()) {
+                    int board_no = boardMapper.boardMax();
+                    map.put("no", board_no);
+                } else {
+                    int board_no = Integer.parseInt(no);
+                    map.put("no", board_no);
+                }
                 map.put("name", encryptedFileName);
                 map.put("orgNm", fileName);
                 map.put("filePath", filePathFinal);
@@ -66,4 +75,16 @@ public class FileService {
         }
         return ResponseEntity.ok(list);
     }
+
+    public ResponseEntity<?> deleteFile(List<String> files) {
+        try {
+            for (String id : files) {
+                fileMapper.deleteFile(id);
+            }
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

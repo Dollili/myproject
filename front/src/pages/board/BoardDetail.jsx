@@ -9,6 +9,8 @@ import {UserContext} from "../../components/UserContext";
 import {toast, ToastContainer} from "react-toastify";
 import thumb from "../../assets/img/thumbs_16019896.png";
 import FileUpload from "../../components/FileUpload";
+import axios from "axios";
+import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 
 const BoardDetail = () => {
     const nav = useNavigate();
@@ -18,7 +20,8 @@ const BoardDetail = () => {
 
     const location = useLocation();
     const [data, setData] = useState({});
-    const [files, setFiles] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [trash, setTrash] = useState([]);
 
     const [path, setPath] = useState(false);
     const [param, setParam] = useState({author: user.USER_NIC});
@@ -26,6 +29,25 @@ const BoardDetail = () => {
     const changeBoard = (e) => {
         const {name, value} = e.target;
         setParam({...param, [name]: value});
+    };
+
+    const downloadFile = async (file, origin) => {
+        try {
+            const response = await axios.get(
+                process.env.REACT_APP_BACKEND_URL + "/files/" + file,
+                {
+                    responseType: "blob",
+                    withCredentials: true,
+                },
+            );
+            const blob = new Blob([response.data]);
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = origin;
+            link.click();
+        } catch (error) {
+            toast.error(error);
+        }
     };
 
     const getDetail = async () => {
@@ -69,16 +91,24 @@ const BoardDetail = () => {
             let file_res;
 
             if (Object.keys(data).length > 0) {
+                if (trash?.length > 0) {
+                    const res = await fileDel();
+                    if (!res) return;
+                }
                 res = await dbPut("/board/detail/modify", param);
             } else {
-                param['id'] = user.USER_ID;
+                param["id"] = user.USER_ID;
                 res = await dbPost("/board/detail", param);
             }
 
-            if (files) {
-                file_res = await dbForm(files);
+            if (files?.length > 0) {
+                if (data) {
+                    file_res = await dbForm(files, data.no);
+                } else {
+                    file_res = await dbForm(files);
+                }
+                console.log(file_res);
             }
-            console.log(file_res);
 
             if (res === 1 || res === 204) {
                 toast.success("등록완료", {
@@ -122,6 +152,27 @@ const BoardDetail = () => {
         } catch (e) {
             nav("/error", {state: e.status});
         }
+    };
+
+    const fileDel = async () => {
+        if (trash?.length > 0) {
+            try {
+                return await dbPut("/file/delete", trash);
+            } catch (e) {
+                toast.error("파일 삭제 Fail", {
+                    onClose: () => nav("/error", {state: e.status}),
+                });
+            }
+        } else {
+            return true;
+        }
+    };
+
+    const filterFile = (id) => {
+        setData((prev) => ({
+            ...prev,
+            file: prev.file.filter((item) => item.ID !== id),
+        }));
     };
 
     const recommend = async (no) => {
@@ -187,7 +238,36 @@ const BoardDetail = () => {
                 <tr>
                     <td>첨부파일</td>
                     <td>
-                        <FileUpload files={files} setFiles={setFiles}/>
+                        {data &&
+                            data.file?.length > 0 &&
+                            data.file.map((f, idx) => (
+                                <div
+                                    className="file-div"
+                                    key={idx}>
+                                    <span
+                                        className="file-view"
+                                        onClick={() => {
+                                            downloadFile(f.FILE_NM, f.ORIGIN_NM);
+                                        }}
+                                    >
+                                      {f.ORIGIN_NM}
+                                    </span>
+                                    {!path && (
+                                        <img
+                                            key={idx}
+                                            className="comment_del file"
+                                            src={del_icon}
+                                            alt="파일삭제"
+                                            onClick={() => {
+                                                setTrash((prev) => [...prev, f.ID]);
+                                                filterFile(f.ID);
+                                            }}
+                                        />
+                                    )}
+                                    <br/>
+                                </div>
+                            ))}
+                        <FileUpload files={files} setFiles={setFiles} data={data} onOff={path}/>
                     </td>
                 </tr>
                 <tr>
