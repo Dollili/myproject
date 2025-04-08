@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
-import {UserContext} from "../components/UserContext";
+import {UserContext} from "../contexts/UserContext";
 
 const Error = () => {
     const {user} = useContext(UserContext);
