@@ -99,15 +99,20 @@ public class UserService {
                 return ResponseEntity.status(418).body("Duplicate NIC");
             }
         }
+        int pwd_ok = 0;
         if (pwd != null && !pwd.isEmpty()) {
             String password = bCryptPasswordEncoder.encode(pwd);
             params.put("pwd", password);
+            pwd_ok = 1;
         }
         int result = userMapper.updateUserInfo(params);
 
-        if (result == 1) {
+        if (pwd_ok == 1 && result == 1) {
             logger.info("update success");
             return ResponseEntity.noContent().build();
+        } else if (result == 1) {
+            logger.info("update success(no pwd)");
+            return ResponseEntity.status(501).build();
         } else {
             logger.info("update failed");
             return ResponseEntity.internalServerError().body("fail");
