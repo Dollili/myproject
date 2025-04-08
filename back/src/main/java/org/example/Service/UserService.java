@@ -82,11 +82,14 @@ public class UserService {
     public Map<String, Object> findUserInfo(Map<String, Object> params) {
         List<Map<String, Object>> boardList = userMapper.userBoard(params);
         List<Map<String, Object>> commentList = userMapper.userComment(params);
+        List<Map<String, Object>> tempList = userMapper.userTemp(params);
+
 
         Map<String, Object> info = new HashMap<>();
         info.put("info", userMapper.userInfo(params));
         info.put("boardList", boardList);
         info.put("commentList", commentList);
+        info.put("tempList", tempList);
         return info;
     }
 

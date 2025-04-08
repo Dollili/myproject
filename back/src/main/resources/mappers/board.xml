@@ -29,9 +29,14 @@
     <select id="getBoardList" resultType="map">
         SELECT (SELECT COUNT(*) FROM BOARD B WHERE B.DEL_YN IS NULL AND B.NO &lt;= A.NO) AS ROWNUM, A.*
         FROM (
-        SELECT NO, TITLE, AUTHOR, RECOMMEND, VIEW_CNT, DATE_FORMAT(APPLY_DATE,
-        '%Y-%m-%d')
-        AS APPLY_FORMAT_DATE
+        SELECT
+        NO,
+        TITLE,
+        AUTHOR,
+        RECOMMEND,
+        VIEW_CNT,
+        DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE,
+        DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d') AS UPDATE_FORMAT_DATE
         FROM BOARD
         WHERE
         DEL_YN IS NULL
@@ -79,6 +84,33 @@
         ) A
         LIMIT #{limit} OFFSET #{offset}
     </select>
+
+    <insert id="insertBoard">
+        INSERT
+        INTO BOARD
+        (TITLE,
+         CONTENTS,
+         AUTHOR,
+         APPLY_DATE,
+         USER_ID,
+         DEL_YN)
+        VALUES (#{title},
+                #{contents},
+                #{author},
+                NOW(),
+                #{id},
+                #{temp})
+    </insert>
+
+    <update id="updateBoard">
+        UPDATE
+            BOARD
+        SET TITLE       = #{title},
+            CONTENTS    = #{contents},
+            UPDATE_DATE = NOW(),
+            DEL_YN      = #{temp}
+        WHERE NO = #{no}
+    </update>
 
 </mapper>
 

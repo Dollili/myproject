@@ -31,7 +31,9 @@ public class HomeController {
     }
 
     @PostMapping("/detail")
-    public int boardInsert(@RequestBody Map<String, Object> param) {
+    public int boardInsert(@RequestBody Map<String, Object> param, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        param.put("id", session.getAttribute("user"));
         return homeService.insertBoard(param);
     }
 

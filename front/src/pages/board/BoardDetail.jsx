@@ -11,7 +11,6 @@ import thumb from "../../assets/img/thumbs_16019896.png";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 import ImgUpload from "../../components/ImgUpload";
-import Drawing from "../../components/Drawing";
 
 const BoardDetail = () => {
     const nav = useNavigate();
@@ -83,12 +82,12 @@ const BoardDetail = () => {
         }
     };
 
-    const append_board = async () => {
+    const append_board = async (temp) => {
         try {
-            if (validation(param)) {
+            if (validation(param) && !temp) {
                 return toast.info("제목과 내용을 모두 입력해주세요.");
             }
-
+            temp === "temp" ? (param["temp"] = "T") : (param["temp"] = null);
             let res;
             let file_res;
 
@@ -99,7 +98,6 @@ const BoardDetail = () => {
                 }
                 res = await dbPut("/board/detail/modify", param);
             } else {
-                param["id"] = user.USER_ID;
                 res = await dbPost("/board/detail", param);
             }
 
@@ -292,7 +290,8 @@ const BoardDetail = () => {
                 </tr>
                 <tr>
                     <td colSpan={2}>
-                        {/*{path ? (
+                        {/*<Drawing/>*/}
+                        {path ? (
                             <Form.Control
                                 className="contentsInput disabled"
                                 style={{borderStyle: "unset"}}
@@ -311,8 +310,7 @@ const BoardDetail = () => {
                                     changeBoard(e);
                                 }}
                             />
-                        )}*/}
-                        <Drawing/>
+                        )}
                     </td>
                 </tr>
                 </tbody>
@@ -331,7 +329,7 @@ const BoardDetail = () => {
                     <div>{data.RECOMMEND}</div>
                 </div>
             )}
-            {path && (
+            {path && data.DEL_YN !== 'T' && (
                 <div className="my-2">
                     <Comment location={location}/>
                 </div>
@@ -361,14 +359,24 @@ const BoardDetail = () => {
                 </div>
             )}
             {!path && (
-                <button
-                    className="common_btn append"
-                    onClick={() => {
-                        append_board();
-                    }}
-                >
-                    등록
-                </button>
+                <>
+                    <button
+                        className="common_btn temp"
+                        onClick={() => {
+                            append_board("temp");
+                        }}
+                    >
+                        임시 저장
+                    </button>
+                    <button
+                        className="common_btn append"
+                        onClick={() => {
+                            append_board();
+                        }}
+                    >
+                        등록
+                    </button>
+                </>
             )}
             <ToastContainer
                 toastStyle={{maxWidth: "100%", width: "auto", whiteSpace: "nowrap"}}
