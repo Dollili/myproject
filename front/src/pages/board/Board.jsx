@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Table} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
-import {dbGet} from "../../assets/api/commonApi";
-import eyeIcon from "../../assets/img/free-icon-eye-4818558.png";
+import {dbGet} from "../../services/commonApi";
 import Paging from "../../components/Paging";
 
 const Board = () => {
     const [data, setData] = useState([]);
-    const [item, setItem] = useState(10); // 한 페이지에 보일 데이터 개수
+    const [item, setItem] = useState(12); // 한 페이지에 보일 데이터 개수
     const [total, setTotal] = useState(0); // 검색된 총 데이터 수 (전체 포함)
     const [current, setCurrent] = useState(1); // 현재 페이지
 
@@ -34,6 +32,18 @@ const Board = () => {
         }
     };
 
+    const [scroll, setScroll] = useState(false);
+    useEffect(() => {
+        const handleScroll = () => {
+            setScroll(window.scrollY === 0);
+        }
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
+        return () => {
+            window.removeEventListener("scroll", handleScroll)
+        };
+    }, []);
+
     useEffect(() => {
     }, [total]);
 
@@ -44,7 +54,7 @@ const Board = () => {
     return (
         <>
             <div className="main-container">
-                <div className="search-container">
+                <div className={`search-container ${scroll ? "" : "scroll"}`}>
                     <select
                         className="search-count"
                         name="option"
@@ -53,7 +63,7 @@ const Board = () => {
                             setItem(value);
                         }}
                     >
-                        <option value={10}>10건</option>
+                        <option value={12}>12건</option>
                         <option value={15}>15건</option>
                         <option value={30}>30건</option>
                     </select>
@@ -88,12 +98,37 @@ const Board = () => {
                         검색
                     </button>
                     <Link to={"detail"}>
-                        <button className="search-button" style={{float: "right"}}>
-                            글쓰기
-                        </button>
+                        <button className="search-button">글쓰기</button>
                     </Link>
                 </div>
-                <Table striped bordered hover className="board my-2">
+                <div className="grid-container">
+                    {data.length === 0 ? (
+                        <div className="noPost">
+                            게시글이 존재하지 않습니다.
+                        </div>
+                    ) : (
+                        data.map((item, index) => (
+                            <div key={index} className="card" onClick={() => {
+                                nav(`/board/${item.NO}`, {state: item.NO});
+                            }}>
+                                <img src="#"/>
+                                <div className="info">
+                                    <h4
+                                        className="contents-td"
+                                    >
+                                        {item.TITLE}
+                                    </h4>
+                                    <p>{item.AUTHOR}</p>
+                                    <p>{item.APPLY_FORMAT_DATE}</p>
+                                    <p>댓글 {item.RECOMMEND}</p>
+                                    <p>조회수 {item.VIEW_CNT}</p>
+                                </div>
+                                {" "}
+                            </div>
+                        ))
+                    )}
+                </div>
+                {/*<Table striped bordered hover className="board my-2">
                     <colgroup>
                         <col style={{width: "10%"}}/>
                         <col style={{width: "40%"}}/>
@@ -143,7 +178,7 @@ const Board = () => {
                         ))
                     )}
                     </tbody>
-                </Table>
+                </Table>*/}
             </div>
             {data.length !== 0 && (
                 <Paging total={total} pageItem={item} currentPage={setCurrent}/>

@@ -35,8 +35,6 @@ public class FileService {
             File uploadDir2 = new File(fileUpload);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
-            } else if (!uploadDir2.exists()) {
-                uploadDir2.mkdirs();
             }
 
             Map<String, Object> map = new HashMap<>();

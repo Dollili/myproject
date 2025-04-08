@@ -2,8 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
-import "./assets/css/board.css";
-import "./assets/css/user.css";
+import "./styles/css/board.css";
+import "./styles/css/notice.css";
+import "./styles/css/grid.css";
+import "./styles/css/user.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import router from "./router";
@@ -11,7 +13,7 @@ import router from "./router";
 import reportWebVitals from "./reportWebVitals";
 import {RouterProvider} from "react-router-dom";
 import App from "./App";
-import {UserProvider} from "./components/UserContext";
+import {UserProvider} from "./contexts/UserContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

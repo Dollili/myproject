@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 import suc_icon from "../../assets/img/free-icon-success-11433360.png";
-import {dbPost} from "../../assets/api/commonApi";
+import {dbPost} from "../../services/commonApi";
 
 const Register = ({toggle}) => {
     const nav = useNavigate();

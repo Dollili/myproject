@@ -1,5 +1,5 @@
 import React from "react";
-import "../assets/css/menu.css";
+import "../styles/css/menu.css";
 import {useNavigate} from "react-router-dom";
 
 const SideMenu = ({onOff}) => {

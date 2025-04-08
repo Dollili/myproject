@@ -1,16 +1,17 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import {Table} from "react-bootstrap";
 import {showAlert} from "../../components/alert/customAlert";
 import Comment from "./Comment";
-import {dbForm, dbGet, dbPost, dbPut} from "../../assets/api/commonApi";
-import {UserContext} from "../../components/UserContext";
+import {dbForm, dbGet, dbPost, dbPut} from "../../services/commonApi";
+import {UserContext} from "../../contexts/UserContext";
 import {toast, ToastContainer} from "react-toastify";
 import thumb from "../../assets/img/thumbs_16019896.png";
-import FileUpload from "../../components/FileUpload";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
+import ImgUpload from "../../components/ImgUpload";
+import Drawing from "../../components/Drawing";
 
 const BoardDetail = () => {
     const nav = useNavigate();
@@ -22,6 +23,7 @@ const BoardDetail = () => {
     const [data, setData] = useState({});
     const [files, setFiles] = useState([]);
     const [trash, setTrash] = useState([]);
+    const click = useRef(null);
 
     const [path, setPath] = useState(false);
     const [param, setParam] = useState({author: user.USER_NIC});
@@ -199,6 +201,20 @@ const BoardDetail = () => {
     };
 
     useEffect(() => {
+        if (files?.length > 0) {
+            files.forEach(function (f) {
+                if (!f.type.startsWith("image/")) {
+                    toast.info("이미지 파일만 업로드 가능합니다.", {
+                        autoClose: 500,
+                    });
+                    setFiles(null);
+                    click.current.value = null;
+                }
+            });
+        }
+    }, [files]);
+
+    useEffect(() => {
         userCheck();
     }, [data, user]);
 
@@ -241,17 +257,15 @@ const BoardDetail = () => {
                         {data &&
                             data.file?.length > 0 &&
                             data.file.map((f, idx) => (
-                                <div
-                                    className="file-div"
-                                    key={idx}>
-                                    <span
-                                        className="file-view"
-                                        onClick={() => {
-                                            downloadFile(f.FILE_NM, f.ORIGIN_NM);
-                                        }}
-                                    >
-                                      {f.ORIGIN_NM}
-                                    </span>
+                                <div className="file-div" key={idx}>
+                    <span
+                        className="file-view"
+                        onClick={() => {
+                            downloadFile(f.FILE_NM, f.ORIGIN_NM);
+                        }}
+                    >
+                      {f.ORIGIN_NM}
+                    </span>
                                     {!path && (
                                         <img
                                             key={idx}
@@ -267,12 +281,18 @@ const BoardDetail = () => {
                                     <br/>
                                 </div>
                             ))}
-                        <FileUpload files={files} setFiles={setFiles} data={data} onOff={path}/>
+                        <ImgUpload
+                            files={files}
+                            setFiles={setFiles}
+                            data={data}
+                            onOff={path}
+                            click={click}
+                        />
                     </td>
                 </tr>
                 <tr>
                     <td colSpan={2}>
-                        {path ? (
+                        {/*{path ? (
                             <Form.Control
                                 className="contentsInput disabled"
                                 style={{borderStyle: "unset"}}
@@ -291,7 +311,8 @@ const BoardDetail = () => {
                                     changeBoard(e);
                                 }}
                             />
-                        )}
+                        )}*/}
+                        <Drawing/>
                     </td>
                 </tr>
                 </tbody>

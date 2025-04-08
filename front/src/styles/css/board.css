@@ -6,15 +6,23 @@
 
 /* 메인 게시판 */
 .search-container {
+    position: fixed;
     display: flex;
-    gap: 8px; /* 요소 간 간격 */
-    width: 100%;
-    justify-content: flex-end;
+    gap: 6px; /* 요소 간 간격 */
+    right: 60px;
+    z-index: 1;
+
+    opacity: 1;
+    transition: opacity 0.8s ease;
+}
+
+.search-container.scroll {
+    opacity: 0.7;
 }
 
 .search-count {
-    position: absolute;
-    left: 40px;
+    position: fixed;
+    left: 60px
 }
 
 .search-count,
@@ -145,8 +153,20 @@ td {
     background-color: #757575;
 }
 
+.contents-td {
+    line-clamp: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
 .contents-td:hover {
     cursor: pointer;
+}
+
+.fileForm {
+    display: flex;
 }
 
 .common_btn.mg {
@@ -163,6 +183,7 @@ td {
 }
 
 .file-div {
+    width: 80%;
     padding: 10px;
     border-style: solid;
     border-radius: 5px;
@@ -174,10 +195,15 @@ td {
     margin: unset;
 }
 
-.fileForm p {
-    margin: 3px;
+.fileForm div {
+    width: 80%;
 }
 
+.fileForm p {
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
 
 .comment_del.file {
     float: unset;
@@ -204,4 +230,13 @@ td {
 
 .time:hover {
     cursor: pointer;
+}
+
+.drawing {
+    touch-action: none;
+    position: relative;
+}
+
+.drawing-contents {
+    width: 100%;
 }

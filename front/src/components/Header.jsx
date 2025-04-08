@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {dbPost} from "../assets/api/commonApi";
-import "../assets/css/menu.css";
-import {UserContext} from "./UserContext";
+import {dbPost} from "../services/commonApi";
+import "../styles/css/menu.css";
+import {UserContext} from "../contexts/UserContext";
 
 const Header = ({toggle}) => {
     const {user, setUser} = useContext(UserContext);

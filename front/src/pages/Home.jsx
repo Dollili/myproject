@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {dbPost} from "../assets/api/commonApi";
+import {dbPost} from "../services/commonApi";
 import {toast} from "react-toastify";
 import Register from "./user/Register";
-import "../assets/css/login.css";
-import {UserContext} from "../components/UserContext";
+import "../styles/css/login.css";
+import {UserContext} from "../contexts/UserContext";
 
 const Home = () => {
     const {user, setUser} = useContext(UserContext);

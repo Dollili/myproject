@@ -1,0 +1,50 @@
+.grid-container {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개씩 */
+    gap: 16px;
+    padding: 20px;
+}
+
+.noPost {
+    grid-template-columns: unset;
+    display: unset;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 150px;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 1 / 1; /* 정사각형 유지 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.card .info {
+    padding: 10px;
+}
+
+.card h4 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+}
+
+.card p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #666;
+}

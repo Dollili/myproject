@@ -3,21 +3,23 @@
     float: left;
 }
 
-.user-container2 {
-    margin-left: 100px;
-    float: left;
-}
-
-.user-container3 {
+.user-container2,
+.user-container3,
+.user-container4 {
     float: left;
 }
 
 .user-container2 .form-wrapper {
-    min-width: 80vh;
+    min-width: 60vh;
 }
 
 .user-container3 .form-wrapper {
-    min-width: 70vh;
+    min-width: 50vh;
+}
+
+
+.user-container4 .form-wrapper {
+    min-width: 50vh;
 }
 
 .user-container .input-group {
@@ -44,6 +46,19 @@
 .user-container2.sign-up > div,
 .user-container3.sign-up .form.sign-up,
 .user-container3.sign-up,
-.user-container3.sign-up > div {
+.user-container3.sign-up > div,
+.user-container4.sign-up .form.sign-up,
+.user-container4.sign-up,
+.user-container4.sign-up > div {
     transform: scale(1);
+}
+
+.title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 0;
+}
+
+.title:hover {
+    cursor: pointer;
 }
