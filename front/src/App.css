@@ -5,9 +5,8 @@
 .App {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
     font-family: GmarketSansMedium;
-    overflow-y: auto;
 }
 
 .App-contents {

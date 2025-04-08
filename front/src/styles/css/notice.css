@@ -1,0 +1,12 @@
+.notice {
+    display: flex;
+}
+
+.notice-search {
+    position: unset;
+    justify-content: flex-end;
+}
+
+.notice-count {
+    left: 40px;
+}

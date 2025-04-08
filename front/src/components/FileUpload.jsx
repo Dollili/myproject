@@ -4,7 +4,7 @@ const FileUpload = ({files, setFiles, data, onOff}) => {
     const click = useRef(null);
 
     const handleChangeFile = (e) => {
-        setFiles((prev) => [...prev, ...e.target.files]);
+        setFiles((prev) => [...(prev || []), ...e.target.files]);
     };
 
     const handleClearFiles = () => {
@@ -29,10 +29,10 @@ const FileUpload = ({files, setFiles, data, onOff}) => {
                             {data.file && <p>추가된 파일</p>}
                             <div className="file-div">
                                 {Array.from(files).map((file, index) => (
-                                    <p key={index} onClick={() => {
+                                    <div key={index} onClick={() => {
                                     }}>
                                         {file.name}
-                                    </p>
+                                    </div>
                                 ))}
                             </div>
                             <button onClick={handleClearFiles} className="common_btn mg">
