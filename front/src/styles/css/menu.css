@@ -7,7 +7,7 @@
     position: absolute;
     z-index: 2;
     width: 13%;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.7);
     opacity: 0;
     animation: fadeOut ease-in-out 0s;
     pointer-events: none;
@@ -76,6 +76,7 @@
     font-size: 1.1rem;
     margin-top: 10px;
     margin-bottom: 10px;
+    transition: 0.2s ease-in-out;
 }
 
 .menu-item:hover {
