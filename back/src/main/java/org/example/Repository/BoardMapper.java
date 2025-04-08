@@ -29,13 +29,11 @@ public interface BoardMapper {
 
     List<Map<String, Object>> getBoardComment(Map<String, Object> no);
 
-    @Insert("INSERT INTO BOARD (TITLE, CONTENTS, AUTHOR, APPLY_DATE, USER_ID) VALUES (#{title},#{contents},#{author},NOW(), #{id})")
     int insertBoard(Map<String, Object> param);
 
     @Update("UPDATE BOARD SET DEL_YN = 'Y' WHERE NO=#{no}")
     int deleteBoard(Map<String, Object> param);
 
-    @Update("UPDATE BOARD SET TITLE = #{title}, CONTENTS = #{contents} WHERE NO=#{no}")
     int updateBoard(Map<String, Object> param);
 
     @Insert("INSERT INTO COMMENT (USER_ID, APPLY_DATE, COMMENT, BOARD_NO, USER_NIC) VALUES (#{user}, NOW(), #{comment}, #{no}, #{nic})")

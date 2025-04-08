@@ -22,6 +22,19 @@
         FROM BOARD
         WHERE UPPER(USER_ID) = UPPER(#{id})
           AND DEL_YN IS NULL
+        ORDER BY APPLY_DATE DESC;
+    </select>
+
+    <select id="userTemp" resultType="map">
+        SELECT NO,
+               TITLE,
+               DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s')  AS APPLY_FORMAT_DATE,
+               RECOMMEND,
+               VIEW_CNT,
+               DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d %H:%i:%s') AS UPDATE_FORMAT_DATE
+        FROM BOARD
+        WHERE UPPER(USER_ID) = UPPER(#{id})
+          AND DEL_YN = 'T'
     </select>
 
     <select id="userComment" resultType="map">

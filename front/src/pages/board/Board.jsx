@@ -36,11 +36,11 @@ const Board = () => {
     useEffect(() => {
         const handleScroll = () => {
             setScroll(window.scrollY === 0);
-        }
+        };
         window.addEventListener("scroll", handleScroll);
         handleScroll();
         return () => {
-            window.removeEventListener("scroll", handleScroll)
+            window.removeEventListener("scroll", handleScroll);
         };
     }, []);
 
@@ -103,21 +103,19 @@ const Board = () => {
                 </div>
                 <div className="grid-container">
                     {data.length === 0 ? (
-                        <div className="noPost">
-                            게시글이 존재하지 않습니다.
-                        </div>
+                        <div className="noPost">게시글이 존재하지 않습니다.</div>
                     ) : (
                         data.map((item, index) => (
-                            <div key={index} className="card" onClick={() => {
-                                nav(`/board/${item.NO}`, {state: item.NO});
-                            }}>
+                            <div
+                                key={index}
+                                className="card"
+                                onClick={() => {
+                                    nav(`/board/${item.NO}`, {state: item.NO});
+                                }}
+                            >
                                 <img src="#"/>
                                 <div className="info">
-                                    <h4
-                                        className="contents-td"
-                                    >
-                                        {item.TITLE}
-                                    </h4>
+                                    <h4>{item.TITLE}</h4>
                                     <p>{item.AUTHOR}</p>
                                     <p>{item.APPLY_FORMAT_DATE}</p>
                                     <p>댓글 {item.RECOMMEND}</p>
@@ -128,57 +126,6 @@ const Board = () => {
                         ))
                     )}
                 </div>
-                {/*<Table striped bordered hover className="board my-2">
-                    <colgroup>
-                        <col style={{width: "10%"}}/>
-                        <col style={{width: "40%"}}/>
-                        <col style={{width: "15%"}}/>
-                        <col style={{width: "15%"}}/>
-                        <col style={{width: "10%"}}/>
-                        <col style={{width: "10%"}}/>
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>날짜</th>
-                        <th>추천</th>
-                        <th>
-                            <img
-                                src={eyeIcon}
-                                alt="조회수"
-                                style={{width: "20px", height: "20px"}}
-                            />
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.length === 0 ? (
-                        <tr>
-                            <td colSpan={6}>게시글이 존재하지 않습니다.</td>
-                        </tr>
-                    ) : (
-                        data.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.ROWNUM}</td>
-                                <td
-                                    className="contents-td"
-                                    onClick={() => {
-                                        nav(`/board/${item.NO}`, {state: item.NO});
-                                    }}
-                                >
-                                    {item.TITLE}
-                                </td>
-                                <td>{item.AUTHOR}</td>
-                                <td>{item.APPLY_FORMAT_DATE}</td>
-                                <td>{item.RECOMMEND}</td>
-                                <td>{item.VIEW_CNT}</td>
-                            </tr>
-                        ))
-                    )}
-                    </tbody>
-                </Table>*/}
             </div>
             {data.length !== 0 && (
                 <Paging total={total} pageItem={item} currentPage={setCurrent}/>

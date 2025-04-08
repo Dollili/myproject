@@ -15,9 +15,8 @@ const Header = ({toggle}) => {
     const logout = async () => {
         try {
             await dbPost("/auth/logout", {});
-            setUser(null);
-            sessionStorage.removeItem("user_Token");
             window.location.href = "/";
+            setUser("");
         } catch (e) {
             nav("/error", e.status);
         }
@@ -26,10 +25,7 @@ const Header = ({toggle}) => {
     return (
         <>
             <header className="App-header">
-                <button
-                    className="roundButton"
-                    onClick={toggle}
-                />
+                <button className="roundButton" onClick={toggle}/>
                 <Link
                     className="logo"
                     to="/board"
