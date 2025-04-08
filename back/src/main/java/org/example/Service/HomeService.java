@@ -72,8 +72,9 @@ public class HomeService {
     }
 
     public int deleteBoard(Map<String, Object> param) {
-        fileMapper.deleteAll((String) param.get("no")); // 파일 삭제 처리
-        boardMapper.deleteAllCom((String) param.get("no")); // 댓글 삭제 처리
+        String no = param.get("no").toString();
+        fileMapper.deleteAll(no); // 파일 삭제 처리
+        boardMapper.deleteAllCom(no); // 댓글 삭제 처리
         return boardMapper.deleteBoard(param);
     }
 

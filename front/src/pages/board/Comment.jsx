@@ -59,7 +59,6 @@ const Comment = ({location}) => {
             const res = await dbPost("/board/comment", comment);
             if (res === 1) {
                 getComment();
-                console.log(comment);
                 textareaRef.current.value = "";
             }
         } catch (e) {

@@ -44,6 +44,9 @@ const UserInfo = () => {
                 if (res.commentList) {
                     setComment(res.commentList);
                 }
+                if (res.tempList) {
+                    setTemp(res.tempList);
+                }
             } else {
                 toast.warn("정보를 가져올 수 없습니다.");
             }
@@ -183,7 +186,7 @@ const UserInfo = () => {
                                     <thead>
                                     <tr>
                                         <th>제목</th>
-                                        <th>날짜</th>
+                                        <th>작성일</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -225,7 +228,7 @@ const UserInfo = () => {
                                     <thead>
                                     <tr>
                                         <th>댓글</th>
-                                        <th>날짜</th>
+                                        <th>작성일</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -269,7 +272,7 @@ const UserInfo = () => {
                                     <thead>
                                     <tr>
                                         <th>제목</th>
-                                        <th>날짜</th>
+                                        <th>수정일</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -288,7 +291,7 @@ const UserInfo = () => {
                                                 >
                                                     {item.TITLE}
                                                 </td>
-                                                <td>{item.APPLY_FORMAT_DATE}</td>
+                                                <td>{item.UPDATE_FORMAT_DATE || item.APPLY_FORMAT_DATE}</td>
                                             </tr>
                                         ))
                                     )}

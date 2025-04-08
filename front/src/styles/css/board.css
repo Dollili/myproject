@@ -95,6 +95,11 @@ td {
     float: right;
 }
 
+.temp {
+    margin-left: 5px;
+    float: right;
+}
+
 .comment {
     background-color: unset;
     color: black;

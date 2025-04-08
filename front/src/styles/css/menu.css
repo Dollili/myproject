@@ -14,15 +14,15 @@
 }
 
 .App-side .dropdown.active {
-    text-align: center;
     opacity: 1;
     color: black;
+    margin-left: 25px;
     animation: fadeIn ease-in-out 1s;
     pointer-events: auto;
 }
 
 .App-side .dropdown.active div {
-    margin: 10px;
+    padding-top: 10px;
 }
 
 .App-side .dropdown.active
@@ -49,23 +49,37 @@
 .roundButton {
     float: left;
     background-color: white;
-    margin: 10px;
-    width: 40px;
-    height: 40px;
+    margin-top: 25px;
+    margin-left: 30px;
+    margin-right: 15px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-    border: 10px solid #0065A6;
+    border: 6px solid #0065A6;
     outline: none;
     transition: all .2s cubic-bezier(0, 1.26, .8, 1.28);
 }
 
 .roundButton:hover {
-    background-color: lightgrey;
+    background-color: white;
     cursor: pointer;
-    border-color: #003557;
+    border-color: #36aefb;
     transform: scale(1.2, 1.2);
 }
 
 .roundButton:active {
     border-color: #003557;
     background-color: #FFF;
+}
+
+.menu-item {
+    font-size: 1.1rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.menu-item:hover {
+    padding: 10px;
+    font-size: 1.3rem;
+    cursor: pointer;
 }
