@@ -5,8 +5,13 @@
 .notice-search {
     position: unset;
     justify-content: flex-end;
+    margin-bottom: 15px;
 }
 
 .notice-count {
     left: 40px;
+}
+
+.notice .board th {
+    background-color: #efefef;
 }
