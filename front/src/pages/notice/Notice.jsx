@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Table} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
-import {dbGet} from "../../assets/api/commonApi";
+import {dbGet} from "../../services/commonApi";
 import eyeIcon from "../../assets/img/free-icon-eye-4818558.png";
 import Paging from "../../components/Paging";
 
@@ -43,10 +43,10 @@ const Notice = () => {
 
     return (
         <>
-            <div className="main-container">
-                <div className="search-container">
+            <div className="main-container notice">
+                <div className="search-container notice-search">
                     <select
-                        className="search-count"
+                        className="search-count notice-count"
                         name="option"
                         onChange={(e) => {
                             const {value} = e.target;
@@ -93,14 +93,13 @@ const Notice = () => {
                         </button>
                     </Link>
                 </div>
-                <Table striped bordered hover className="board my-2">
+                <Table bordered hover className="board my-2">
                     <colgroup>
-                        <col style={{width: "10%"}}/>
-                        <col style={{width: "40%"}}/>
+                        <col style={{width: "5%"}}/>
+                        <col style={{width: "60%"}}/>
                         <col style={{width: "15%"}}/>
                         <col style={{width: "15%"}}/>
-                        <col style={{width: "10%"}}/>
-                        <col style={{width: "10%"}}/>
+                        <col style={{width: "5%"}}/>
                     </colgroup>
                     <thead>
                     <tr>
@@ -108,7 +107,6 @@ const Notice = () => {
                         <th>제목</th>
                         <th>작성자</th>
                         <th>날짜</th>
-                        <th>추천</th>
                         <th>
                             <img
                                 src={eyeIcon}
@@ -137,7 +135,6 @@ const Notice = () => {
                                 </td>
                                 <td>{item.AUTHOR}</td>
                                 <td>{item.APPLY_FORMAT_DATE}</td>
-                                <td>{item.RECOMMEND}</td>
                                 <td>{item.VIEW_CNT}</td>
                             </tr>
                         ))
