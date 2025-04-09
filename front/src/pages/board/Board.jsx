@@ -118,10 +118,11 @@ const Board = () => {
                             >
                                 <img src="#"/>
                                 <div className="info">
-                                    <h4>{item.TITLE}</h4>
+                                    <h4>{item.TITLE} <span
+                                        style={{color: "red", marginLeft: "3px"}}>[{item.COMMENT_CNT}]</span></h4>
                                     <p>{item.AUTHOR}</p>
                                     <p>{item.APPLY_FORMAT_DATE}</p>
-                                    <p>댓글 {item.RECOMMEND}</p>
+                                    <p>추천 {item.RECOMMEND}</p>
                                     <p>조회수 {item.VIEW_CNT}</p>
                                 </div>
                                 {" "}
