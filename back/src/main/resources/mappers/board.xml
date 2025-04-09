@@ -6,6 +6,7 @@
         SELECT COUNT(*)
         FROM BOARD
         WHERE DEL_YN IS NULL
+        AND CATEGORY = #{category}
         <if test="val != null and val !=''">
             <choose>
                 <when test="option != null and option != ''">
@@ -27,7 +28,8 @@
     </select>
 
     <select id="getBoardList" resultType="map">
-        SELECT (SELECT COUNT(*) FROM BOARD B WHERE B.DEL_YN IS NULL AND B.NO &lt;= A.NO) AS ROWNUM, A.*
+        SELECT (SELECT COUNT(*) FROM BOARD B WHERE B.DEL_YN IS NULL AND CATEGORY = #{category} AND B.NO &lt;= A.NO) AS
+        ROWNUM, A.*
         FROM (
         SELECT
         NO,
@@ -40,6 +42,7 @@
         FROM BOARD
         WHERE
         DEL_YN IS NULL
+        AND CATEGORY = #{category}
         <if test="val != null and val !=''">
             <choose>
                 <when test="option != null and option != ''">
@@ -93,13 +96,15 @@
          AUTHOR,
          APPLY_DATE,
          USER_ID,
-         DEL_YN)
+         DEL_YN,
+         CATEGORY)
         VALUES (#{title},
                 #{contents},
                 #{author},
                 NOW(),
                 #{id},
-                #{temp})
+                #{temp},
+                #{category})
     </insert>
 
     <update id="updateBoard">

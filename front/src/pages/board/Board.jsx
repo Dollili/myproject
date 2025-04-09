@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {dbGet} from "../../services/commonApi";
 import Paging from "../../components/Paging";
+import {slugUtil} from "../../utils/common";
 
 const Board = () => {
     const [data, setData] = useState([]);
@@ -19,6 +20,7 @@ const Board = () => {
     const getBoard = async () => {
         search["page"] = current;
         search["size"] = item;
+        search["category"] = 'board';
         try {
             const res = await dbGet("/board/list", search);
             if (res) {
@@ -111,7 +113,7 @@ const Board = () => {
                                 key={index}
                                 className="card"
                                 onClick={() => {
-                                    nav(`/board/${item.NO}`, {state: item.NO});
+                                    nav(`/board/${slugUtil(item.TITLE)}`, {state: item.NO});
                                 }}
                             >
                                 <img src="#"/>

@@ -262,7 +262,7 @@ const UserInfo = () => {
                 <div className="user-container4 sign-up write">
                     <div className="form-wrapper align-items-center">
                         <div className={`form ${msg} form-2`}>
-                            <h4>작성 중인 글</h4>
+                            <h4>저장된 글</h4>
                             <div className="input-group">
                                 <Table striped bordered hover className="board">
                                     <colgroup>
