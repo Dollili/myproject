@@ -98,6 +98,7 @@ const BoardDetail = () => {
                 }
                 res = await dbPut("/board/detail/modify", param);
             } else {
+                param['category'] = 'board';
                 res = await dbPost("/board/detail", param);
             }
 

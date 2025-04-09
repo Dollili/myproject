@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Table} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {dbGet} from "../../services/commonApi";
 import eyeIcon from "../../assets/img/free-icon-eye-4818558.png";
 import Paging from "../../components/Paging";
+import {UserContext} from "../../contexts/UserContext";
+import {slugUtil} from "../../utils/common";
 
 const Notice = () => {
     const [data, setData] = useState([]);
@@ -12,6 +14,8 @@ const Notice = () => {
     const [current, setCurrent] = useState(1); // 현재 페이지
 
     const nav = useNavigate();
+    const {user} = useContext(UserContext);
+    const [role, setRole] = useState(false);
 
     const [search, setSearch] = useState({
         option: "",
@@ -21,6 +25,7 @@ const Notice = () => {
     const getNotice = async () => {
         search["page"] = current;
         search["size"] = item;
+        search["category"] = 'notice';
         try {
             const res = await dbGet("/board/list", search);
             if (res) {
@@ -40,6 +45,12 @@ const Notice = () => {
     useEffect(() => {
         getNotice();
     }, [current, item]);
+
+    useEffect(() => {
+        if (user) {
+            user.ROLE === "M" ? setRole(true) : setRole(false);
+        }
+    }, []);
 
     return (
         <>
@@ -87,11 +98,13 @@ const Notice = () => {
                     >
                         검색
                     </button>
-                    <Link to={"detail"}>
-                        <button className="search-button" style={{float: "right"}}>
-                            글쓰기
-                        </button>
-                    </Link>
+                    {role && (
+                        <Link to={"detail"}>
+                            <button className="search-button" style={{float: "right"}}>
+                                글쓰기
+                            </button>
+                        </Link>
+                    )}
                 </div>
                 <Table bordered hover className="board my-2">
                     <colgroup>
@@ -128,12 +141,12 @@ const Notice = () => {
                                 <td
                                     className="contents-td"
                                     onClick={() => {
-                                        nav(`/board/${item.NO}`, {state: item.NO});
+                                        nav(`/notice/${slugUtil(item.TITLE)}`, {state: item.NO});
                                     }}
                                 >
                                     {item.TITLE}
                                 </td>
-                                <td>{item.AUTHOR}</td>
+                                <td>관리자</td>
                                 <td>{item.APPLY_FORMAT_DATE}</td>
                                 <td>{item.VIEW_CNT}</td>
                             </tr>
