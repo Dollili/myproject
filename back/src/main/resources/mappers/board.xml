@@ -38,8 +38,13 @@
         RECOMMEND,
         VIEW_CNT,
         DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE,
-        DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d') AS UPDATE_FORMAT_DATE
-        FROM BOARD
+        DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d') AS UPDATE_FORMAT_DATE,
+        (
+        SELECT COUNT(*)
+        FROM COMMENT C
+        WHERE C.BOARD_NO = B.NO
+        ) AS COMMENT_CNT
+        FROM BOARD B
         WHERE
         DEL_YN IS NULL
         AND CATEGORY = #{category}

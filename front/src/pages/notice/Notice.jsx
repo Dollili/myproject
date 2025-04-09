@@ -145,6 +145,7 @@ const Notice = () => {
                                     }}
                                 >
                                     {item.TITLE}
+                                    <span style={{color: "red", marginLeft: "3px"}}>[{item.COMMENT_CNT}]</span>
                                 </td>
                                 <td>관리자</td>
                                 <td>{item.APPLY_FORMAT_DATE}</td>
