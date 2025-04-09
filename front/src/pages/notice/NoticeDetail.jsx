@@ -14,7 +14,7 @@ const NoticeDetail = () => {
     const nav = useNavigate();
     const {user, setUser} = useContext(UserContext);
 
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState(false);
 
     const location = useLocation();
     const [data, setData] = useState({});
@@ -58,7 +58,7 @@ const NoticeDetail = () => {
                 } else {
                     toast.error("조회 오류 발생", {
                         onClose: () => {
-                            nav("/board");
+                            nav("/notice");
                         },
                     });
                 }
@@ -95,7 +95,7 @@ const NoticeDetail = () => {
                 }
                 res = await dbPut("/board/detail/modify", param);
             } else {
-                param["id"] = user.USER_ID;
+                param["category"] = "notice";
                 res = await dbPost("/board/detail", param);
             }
 
@@ -112,7 +112,7 @@ const NoticeDetail = () => {
                 toast.success("등록완료", {
                     autoClose: 500,
                     onClose: () => {
-                        nav("/board");
+                        nav("/notice");
                     },
                 });
             } else {
@@ -141,7 +141,7 @@ const NoticeDetail = () => {
                 toast.success("삭제완료", {
                     autoClose: 500,
                     onClose: () => {
-                        nav("/board");
+                        nav("/notice");
                     },
                 });
             } else {
@@ -173,20 +173,11 @@ const NoticeDetail = () => {
         }));
     };
 
-    const userCheck = () => {
-        if (user.USER_NIC === data.AUTHOR) {
-            setRole("user");
-        } else if (user.ROLE === "M") {
-            setRole("admin");
-        }
-    };
-
-    useEffect(() => {
-        userCheck();
-    }, [data, user]);
-
     useEffect(() => {
         getDetail();
+        if (user) {
+            user.ROLE === "M" ? setRole(true) : setRole(false);
+        }
     }, []);
 
     return (
@@ -216,7 +207,7 @@ const NoticeDetail = () => {
                 </tr>
                 <tr>
                     <td>글쓴이</td>
-                    <td>{path ? data.AUTHOR : param.author}</td>
+                    <td>관리자</td>
                 </tr>
                 <tr>
                     <td>첨부파일</td>
@@ -224,17 +215,15 @@ const NoticeDetail = () => {
                         {data &&
                             data.file?.length > 0 &&
                             data.file.map((f, idx) => (
-                                <div
-                                    className="file-div"
-                                    key={idx}>
-                                    <span
-                                        className="file-view"
-                                        onClick={() => {
-                                            downloadFile(f.FILE_NM, f.ORIGIN_NM);
-                                        }}
-                                    >
-                                      {f.ORIGIN_NM}
-                                    </span>
+                                <div className="file-div" key={idx}>
+                    <span
+                        className="file-view"
+                        onClick={() => {
+                            downloadFile(f.FILE_NM, f.ORIGIN_NM);
+                        }}
+                    >
+                      {f.ORIGIN_NM}
+                    </span>
                                     {!path && (
                                         <img
                                             key={idx}
@@ -250,7 +239,12 @@ const NoticeDetail = () => {
                                     <br/>
                                 </div>
                             ))}
-                        <FileUpload files={files} setFiles={setFiles} data={data} onOff={path}/>
+                        <FileUpload
+                            files={files}
+                            setFiles={setFiles}
+                            data={data}
+                            onOff={path}
+                        />
                     </td>
                 </tr>
                 <tr>
@@ -284,17 +278,16 @@ const NoticeDetail = () => {
                     <NoticeComment location={location}/>
                 </div>
             )}
-            <Link to={"/board"}>
+            <Link to={"/notice"}>
                 <button className="common_btn">목록</button>
             </Link>
-            {path && (role === "user" || role === "admin") && (
+            {path && role && (
                 <div className="user_board_btn">
                     <button
                         className="common_btn"
                         onClick={() => {
                             updateBoard(data.NO);
                         }}
-                        disabled={role === "admin"}
                     >
                         수정
                     </button>
