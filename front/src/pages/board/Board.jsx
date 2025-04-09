@@ -32,6 +32,7 @@ const Board = () => {
         }
     };
 
+    //스크롤 감지
     const [scroll, setScroll] = useState(false);
     useEffect(() => {
         const handleScroll = () => {
