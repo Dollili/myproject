@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 @Service
@@ -24,15 +26,12 @@ public class FileService {
     Logger logger = LoggerFactory.getLogger(FileService.class);
     @Value("${file.upload.path}")
     private String filePath;
-    @Value("${file.path}")
-    private String fileUpload;
 
     public ResponseEntity<?> fileUpload(MultipartFile[] files, String no) {
         List<Map<String, Object>> list = new ArrayList<>();
         int seq = 0;
         for (MultipartFile file : files) {
-            File uploadDir = new File(filePath);
-            File uploadDir2 = new File(fileUpload);
+            File uploadDir = new File(filePath + "attach");
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
@@ -76,6 +75,32 @@ public class FileService {
             }
         }
         return ResponseEntity.ok(list);
+    }
+
+    public ResponseEntity<?> tempFile(MultipartFile file) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            String saveName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            File uploadDir = new File(filePath + "temp");
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            Path tempPath = uploadDir.toPath().resolve(saveName);
+            Files.copy(file.getInputStream(), tempPath);
+
+            String fileUrl = "/files/temp/" + saveName;
+
+            result.put("url", fileUrl);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            try {
+                throw new IOException("파일 업로드 중 문제가 발생했습니다.");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        return ResponseEntity.ok(result);
     }
 
     public ResponseEntity<?> deleteFile(List<String> files) {
