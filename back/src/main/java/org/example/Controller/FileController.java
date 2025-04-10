@@ -23,6 +23,11 @@ public class FileController {
         return fileService.fileUpload(files, no);
     }
 
+    @PostMapping("/upload/temp")
+    public ResponseEntity<?> uploadTemp(@RequestParam("file") MultipartFile file) {
+        return fileService.tempFile(file);
+    }
+
     @PutMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody List<String> params) {
         return fileService.deleteFile(params);

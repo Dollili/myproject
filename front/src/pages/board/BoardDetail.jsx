@@ -346,6 +346,7 @@ const BoardDetail = () => {
                             updateBoard(data.NO);
                         }}
                         disabled={role === "admin"}
+                        hidden={role === "admin"}
                     >
                         수정
                     </button>

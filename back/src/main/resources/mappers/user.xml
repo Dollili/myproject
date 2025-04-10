@@ -18,7 +18,12 @@
     </select>
 
     <select id="userBoard" resultType="map">
-        SELECT NO, TITLE, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, RECOMMEND, VIEW_CNT
+        SELECT NO,
+               TITLE,
+               DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
+               RECOMMEND,
+               VIEW_CNT,
+               CATEGORY
         FROM BOARD
         WHERE UPPER(USER_ID) = UPPER(#{id})
           AND DEL_YN IS NULL
@@ -31,7 +36,8 @@
                DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s')  AS APPLY_FORMAT_DATE,
                RECOMMEND,
                VIEW_CNT,
-               DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d %H:%i:%s') AS UPDATE_FORMAT_DATE
+               DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d %H:%i:%s') AS UPDATE_FORMAT_DATE,
+               CATEGORY
         FROM BOARD
         WHERE UPPER(USER_ID) = UPPER(#{id})
           AND DEL_YN = 'T'

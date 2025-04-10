@@ -42,7 +42,7 @@
         (
         SELECT COUNT(*)
         FROM COMMENT C
-        WHERE C.BOARD_NO = B.NO
+        WHERE C.BOARD_NO = B.NO AND C.DEL_YN IS NULL
         ) AS COMMENT_CNT
         FROM BOARD B
         WHERE

@@ -41,10 +41,10 @@ const FileUpload = ({files, setFiles, data, onOff}) => {
                         </>
                     )}
                     <button
-                        className="common_btn mg"
+                        className="common_btn mg add"
                         onClick={() => click.current.click()}
                     >
-                        첨부
+                        +
                     </button>
                 </div>
             )}
