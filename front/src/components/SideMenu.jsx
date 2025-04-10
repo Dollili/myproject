@@ -24,8 +24,8 @@ const SideMenu = ({onOff}) => {
                     게시판
                 </div>
                 <div className="menu-item" onClick={() => nav("/ranking")}>금주 랭킹</div>
-                {role && <div className="menu-item" onClick={() => nav("/userBoard")}>사용자 통계</div>}
                 <div className="menu-item" onClick={() => nav("/qna")}>QnA</div>
+                {role && <div className="menu-item" onClick={() => nav("/userBoard")}>사용자 통계</div>}
             </div>
         </div>
     );

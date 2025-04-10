@@ -14,6 +14,7 @@ const Home = () => {
     const [userlogin, setLogin] = useState({
         id: "",
         pwd: "",
+        role: "U",
     });
 
     const userObj = (e) => {
@@ -24,16 +25,7 @@ const Home = () => {
         setLogin({...userlogin, [name]: value});
     };
 
-    const role_check = () => {
-        if (userlogin.id === "testadmin") {
-            userlogin["role"] = "M";
-        } else {
-            userlogin["role"] = "U";
-        }
-    };
-
     const login = async () => {
-        role_check();
         if (userlogin.id.length === 0 || userlogin.pwd.length === 0) {
             return toast.warn("아이디 혹은 비밀번호를 입력해주세요.");
         }
@@ -119,15 +111,19 @@ const Home = () => {
                                     >
                                         로그인
                                     </button>
-                                    <p>
-                                        <b>비밀번호를 잊으셨나요?</b>
-                                    </p>
-                                    <p>
-                                        <span>계정이 없으신가요? </span>
-                                        <b onClick={() => toggle()} className="pointer">
-                                            회원 가입
-                                        </b>
-                                    </p>
+                                    <div style={{display: "flex", justifyContent: "center"}}>
+                                        <p>
+                                            <b>비밀번호 찾기</b> {/*구현해야함 ㅋㅋ*/}
+                                        </p>
+                                        &nbsp;
+                                        <p>
+                                            <b>|</b>
+                                        </p>
+                                        &nbsp;
+                                        <p>
+                                            <b onClick={() => toggle()} className="pointer">회원가입</b>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

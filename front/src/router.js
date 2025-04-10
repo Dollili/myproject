@@ -9,6 +9,7 @@ import UserInfo from "./pages/user/UserInfo";
 import Error from "./pages/Error";
 import Notice from "./pages/notice/Notice";
 import NoticeDetail from "./pages/notice/NoticeDetail";
+import Admin from "./pages/admin/Admin";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
         errorElement: <NotFound/>,
         children: [
             {path: "", element: <Home/>},
+            {path: "admin", element: <Admin/>},
             {
                 path: "info",
                 element: <ProtectedRoute/>,
