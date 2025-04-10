@@ -154,7 +154,6 @@ const Home = () => {
                     <div className="col align-items-center flex-col">
                         <div className="img sign-up"></div>
                         <div className="text sign-up">
-                            <h2>회원 가입</h2>
                         </div>
                     </div>
                 </div>

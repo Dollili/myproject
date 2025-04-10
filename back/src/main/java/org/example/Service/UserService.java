@@ -37,7 +37,12 @@ public class UserService {
         SecurityContext securityContext = new SecurityContextImpl(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
         session.setAttribute("user", authentication.getName());
 

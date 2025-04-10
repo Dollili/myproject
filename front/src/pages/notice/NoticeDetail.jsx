@@ -9,6 +9,8 @@ import FileUpload from "../../components/FileUpload";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 import NoticeComment from "./NoticeComment";
+import MyEditor from "../../components/MyEditor";
+import DOMPurity from "quill/formats/link";
 
 const NoticeDetail = () => {
     const nav = useNavigate();
@@ -27,6 +29,10 @@ const NoticeDetail = () => {
     const changeBoard = (e) => {
         const {name, value} = e.target;
         setParam({...param, [name]: value});
+    };
+
+    const changeContent = (val) => {
+        setParam({...param, "contents": val});
     };
 
     const downloadFile = async (file, origin) => {
@@ -250,24 +256,13 @@ const NoticeDetail = () => {
                 <tr>
                     <td colSpan={2}>
                         {path ? (
-                            <Form.Control
-                                className="contentsInput disabled"
+                            <div
+                                className="contentsInput"
+                                dangerouslySetInnerHTML={{__html: DOMPurity.sanitize(data.CONTENTS)}}
                                 style={{borderStyle: "unset"}}
-                                value={data.CONTENTS}
-                                as="textarea"
-                                disabled
                             />
                         ) : (
-                            <Form.Control
-                                className="contentsInput"
-                                name="contents"
-                                value={param.contents || ""}
-                                placeholder="내용을 입력하세요."
-                                as="textarea"
-                                onChange={(e) => {
-                                    changeBoard(e);
-                                }}
-                            />
+                            <MyEditor onChange={changeContent} value={param.contents || ""}/>
                         )}
                     </td>
                 </tr>

@@ -15,3 +15,8 @@
 .notice .board th {
     background-color: #efefef;
 }
+
+.quill img {
+    width: 450px;
+    height: auto;
+}
