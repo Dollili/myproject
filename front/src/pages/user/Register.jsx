@@ -162,11 +162,11 @@ const Register = ({toggle}) => {
                                 join();
                             }}
                         >
-                            회원 가입
+                            가입
                         </button>
                         <p>
                             <b onClick={() => toggle()} className="pointer">
-                                LOGIN
+                                회원 로그인
                             </b>
                         </p>
                     </div>

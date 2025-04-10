@@ -31,9 +31,6 @@ public class UserService {
 
     public Map<String, Object> login(Map<String, Object> params, HttpServletRequest request) {
         String username = params.get("id").toString();
-        if (username.contains("TESTADMIN")) {
-            params.put("role", "M");
-        }
         String password = params.get("pwd").toString();
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
