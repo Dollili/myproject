@@ -253,10 +253,35 @@ td {
 }
 
 .drawing {
+    display: flex;
     touch-action: none;
-    position: relative;
+    height: 1000px;
+    min-width: 80%;
+}
+
+.tools {
+    margin-left: 10px;
+    float: right;
+}
+
+.tools select {
+    padding: 3px;
+    width: 50px;
+}
+
+.tools div,
+.tools select,
+.tools button,
+.tools input {
+    margin: 5px;
 }
 
 .drawing-contents {
-    width: 100%;
+    min-width: 80%;
+    min-height: 80%;
+}
+
+.drawing-contents div {
+    min-width: 100%;
+    min-height: 100%;
 }

@@ -28,7 +28,7 @@ const Header = ({toggle}) => {
                 <button className="roundButton" onClick={toggle}/>
                 <Link
                     className="logo"
-                    to="/board"
+                    to="/img"
                     style={{color: "white", textDecorationLine: "none"}}
                 >
                     I-CURSOR

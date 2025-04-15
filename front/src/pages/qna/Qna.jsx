@@ -7,7 +7,7 @@ import Paging from "../../components/Paging";
 import {UserContext} from "../../contexts/UserContext";
 import {slugUtil} from "../../utils/common";
 
-const Board = () => {
+const Qna = () => {
     const [data, setData] = useState([]);
     const [item, setItem] = useState(10); // 한 페이지에 보일 데이터 개수
     const [total, setTotal] = useState(0); // 검색된 총 데이터 수 (전체 포함)
@@ -22,10 +22,10 @@ const Board = () => {
         val: "",
     });
 
-    const getBoard = async () => {
+    const getNotice = async () => {
         search["page"] = current;
         search["size"] = item;
-        search["category"] = 'board';
+        search["category"] = 'notice';
         try {
             const res = await dbGet("/board/list", search);
             if (res) {
@@ -43,7 +43,7 @@ const Board = () => {
     }, [total]);
 
     useEffect(() => {
-        getBoard();
+        getNotice();
     }, [current, item]);
 
     useEffect(() => {
@@ -93,7 +93,7 @@ const Board = () => {
                     <button
                         className="search-button"
                         onClick={() => {
-                            getBoard().then(() => setSearch({...search, val: ""}));
+                            getNotice().then(() => setSearch({...search, val: ""}));
                         }}
                     >
                         검색
@@ -109,10 +109,9 @@ const Board = () => {
                 <Table bordered hover className="board my-2">
                     <colgroup>
                         <col style={{width: "5%"}}/>
-                        <col style={{width: "55%"}}/>
+                        <col style={{width: "60%"}}/>
                         <col style={{width: "15%"}}/>
                         <col style={{width: "15%"}}/>
-                        <col style={{width: "5%"}}/>
                         <col style={{width: "5%"}}/>
                     </colgroup>
                     <thead>
@@ -121,7 +120,6 @@ const Board = () => {
                         <th>제목</th>
                         <th>작성자</th>
                         <th>날짜</th>
-                        <th>추천수</th>
                         <th>
                             <img
                                 src={eyeIcon}
@@ -143,15 +141,14 @@ const Board = () => {
                                 <td
                                     className="contents-td"
                                     onClick={() => {
-                                        nav(`/board/${slugUtil(item.TITLE)}`, {state: item.NO});
+                                        nav(`/notice/${slugUtil(item.TITLE)}`, {state: item.NO});
                                     }}
                                 >
                                     {item.TITLE}
                                     <span style={{color: "red", marginLeft: "3px"}}>[{item.COMMENT_CNT}]</span>
                                 </td>
-                                <td>{item.AUTHOR}</td>
+                                <td>관리자</td>
                                 <td>{item.APPLY_FORMAT_DATE}</td>
-                                <td>{item.RECOMMEND}</td>
                                 <td>{item.VIEW_CNT}</td>
                             </tr>
                         ))
@@ -166,4 +163,4 @@ const Board = () => {
     );
 };
 
-export default Board;
+export default Qna;

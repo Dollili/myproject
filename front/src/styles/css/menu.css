@@ -3,47 +3,24 @@
 }
 
 .App-side .dropdown {
-    border-radius: 5px;
     position: absolute;
     z-index: 2;
-    width: 13%;
+    min-width: 13%;
     background-color: rgba(255, 255, 255, 0.7);
+    left: 25px;
     opacity: 0;
-    animation: fadeOut ease-in-out 0s;
-    pointer-events: none;
+    transition: all 0.3s ease;
 }
 
 .App-side .dropdown.active {
+    max-height: 500px;
     opacity: 1;
     color: black;
-    margin-left: 25px;
-    animation: fadeIn ease-in-out 1s;
-    pointer-events: auto;
+    left: 25px;
 }
 
 .App-side .dropdown.active div {
     padding-top: 10px;
-}
-
-.App-side .dropdown.active
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 0.5;
-    }
-}
-
-@keyframes fadeOut {
-    0% {
-        opacity: 0.5;
-    }
-
-    100% {
-        opacity: 0;
-    }
 }
 
 .roundButton {

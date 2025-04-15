@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 
-const Comment = ({location}) => {
+const BoardComment = ({location}) => {
     const {user} = useContext(UserContext);
     const nav = useNavigate();
     const textareaRef = useRef();
@@ -56,6 +56,8 @@ const Comment = ({location}) => {
             return toast.info("내용을 입력해주세요.");
         comment["no"] = location.state;
         try {
+            comment["category"] = "board";
+
             const res = await dbPost("/board/comment", comment);
             if (res === 1) {
                 getComment();
@@ -191,4 +193,4 @@ const Comment = ({location}) => {
         </div>
     );
 };
-export default Comment;
+export default BoardComment;

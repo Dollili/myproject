@@ -33,12 +33,12 @@ const Admin = () => {
         }
         try {
             const res = await dbPost("/auth/login", adminLogin);
-            if (res.info) {
+            if (res) {
                 toast.success("로그인 성공", {
                     autoClose: 500,
                     onClose: () => {
-                        setUser(res.info);
-                        sessionStorage.setItem("user_Token", JSON.stringify(res.info));
+                        setUser(res);
+                        sessionStorage.setItem("user_Token", JSON.stringify(res));
                         nav("/board");
                     },
                 });

@@ -45,10 +45,10 @@ public class FileService {
             seq = seq + 1;
 
             String encryptedFileName = CryptoUtil.encryptSHA256(fileId + "_" + seq);
-            String filePathFinal = filePath + "/" + encryptedFileName;
+            String filePathFinal = uploadDir.getPath() + "/" + encryptedFileName;
 
             try {
-                file.transferTo(new File(filePath + "/" + encryptedFileName));
+                file.transferTo(new File(uploadDir.getPath() + "/" + encryptedFileName));
                 map.put("id", fileId);
 
                 if (no == null || no.isEmpty()) {

@@ -1,29 +1,29 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import {Table} from "react-bootstrap";
+import {showAlert} from "../../components/alert/customAlert";
+import ImgComment from "./ImgComment";
 import {dbForm, dbGet, dbPost, dbPut} from "../../services/commonApi";
 import {UserContext} from "../../contexts/UserContext";
 import {toast, ToastContainer} from "react-toastify";
-import FileUpload from "../../components/FileUpload";
+import thumb from "../../assets/img/thumbs_16019896.png";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
-import BoardComment from "./BoardComment";
-import MyEditor from "../../components/MyEditor";
-import DOMPurity from "quill/formats/link";
-import thumb from "../../assets/img/thumbs_16019896.png";
-import {showAlert} from "../../components/alert/customAlert";
+import ImgUpload from "../../components/ImgUpload";
+import Drawing from "../../components/Drawing";
 
-const BoardDetail = () => {
+const ImgBoardDetail = () => {
     const nav = useNavigate();
     const {user, setUser} = useContext(UserContext);
 
-    const [role, setRole] = useState(false);
+    const [role, setRole] = useState("");
 
     const location = useLocation();
     const [data, setData] = useState({});
     const [files, setFiles] = useState([]);
     const [trash, setTrash] = useState([]);
+    const click = useRef(null);
 
     const [path, setPath] = useState(false);
     const [param, setParam] = useState({author: user.USER_NIC});
@@ -31,10 +31,6 @@ const BoardDetail = () => {
     const changeBoard = (e) => {
         const {name, value} = e.target;
         setParam({...param, [name]: value});
-    };
-
-    const changeContent = (val) => {
-        setParam({...param, "contents": val});
     };
 
     const downloadFile = async (file, origin) => {
@@ -66,7 +62,7 @@ const BoardDetail = () => {
                 } else {
                     toast.error("조회 오류 발생", {
                         onClose: () => {
-                            nav("/board");
+                            nav("/img");
                         },
                     });
                 }
@@ -87,12 +83,12 @@ const BoardDetail = () => {
         }
     };
 
-    const append_board = async () => {
+    const append_board = async (temp) => {
         try {
-            if (validation(param)) {
+            if (validation(param) && !temp) {
                 return toast.info("제목과 내용을 모두 입력해주세요.");
             }
-
+            temp === "temp" ? (param["temp"] = "T") : (param["temp"] = null);
             let res;
             let file_res;
 
@@ -103,7 +99,7 @@ const BoardDetail = () => {
                 }
                 res = await dbPut("/board/detail/modify", param);
             } else {
-                param["category"] = "board";
+                param['category'] = 'board';
                 res = await dbPost("/board/detail", param);
             }
 
@@ -120,7 +116,7 @@ const BoardDetail = () => {
                 toast.success("등록완료", {
                     autoClose: 500,
                     onClose: () => {
-                        nav("/board");
+                        nav("/img");
                     },
                 });
             } else {
@@ -149,26 +145,11 @@ const BoardDetail = () => {
                 toast.success("삭제완료", {
                     autoClose: 500,
                     onClose: () => {
-                        nav("/board");
+                        nav("/img");
                     },
                 });
             } else {
                 toast.error("삭제실패");
-            }
-        } catch (e) {
-            nav("/error", {state: e.status});
-        }
-    };
-
-    const recommend = async (no) => {
-        if (role === "user") {
-            return showAlert("본인이 작성한 글에는 추천할 수 없습니다.");
-        }
-
-        try {
-            const res = await dbPut("/board/detail/recommend", {no: no});
-            if (res === 204) {
-                getDetail();
             }
         } catch (e) {
             nav("/error", {state: e.status});
@@ -196,6 +177,21 @@ const BoardDetail = () => {
         }));
     };
 
+    const recommend = async (no) => {
+        if (role === "user") {
+            return showAlert("본인이 작성한 글에는 추천할 수 없습니다.");
+        }
+
+        try {
+            const res = await dbPut("/board/detail/recommend", {no: no});
+            if (res === 204) {
+                getDetail();
+            }
+        } catch (e) {
+            nav("/error", {state: e.status});
+        }
+    };
+
     const userCheck = () => {
         if (user.USER_NIC === data.AUTHOR) {
             setRole("user");
@@ -203,6 +199,20 @@ const BoardDetail = () => {
             setRole("admin");
         }
     };
+
+    useEffect(() => {
+        if (files?.length > 0) {
+            files.forEach(function (f) {
+                if (!f.type.startsWith("image/")) {
+                    toast.info("이미지 파일만 업로드 가능합니다.", {
+                        autoClose: 500,
+                    });
+                    setFiles(null);
+                    click.current.value = null;
+                }
+            });
+        }
+    }, [files]);
 
     useEffect(() => {
         userCheck();
@@ -271,24 +281,38 @@ const BoardDetail = () => {
                                     <br/>
                                 </div>
                             ))}
-                        <FileUpload
+                        <ImgUpload
                             files={files}
                             setFiles={setFiles}
                             data={data}
                             onOff={path}
+                            click={click}
                         />
                     </td>
                 </tr>
                 <tr>
                     <td colSpan={2}>
+                        {/*<Drawing/>*/}
                         {path ? (
-                            <div
-                                className="contentsInput"
-                                dangerouslySetInnerHTML={{__html: DOMPurity.sanitize(data.CONTENTS)}}
+                            <Form.Control
+                                className="contentsInput disabled"
                                 style={{borderStyle: "unset"}}
+                                value={data.CONTENTS}
+                                as="textarea"
+                                disabled
                             />
                         ) : (
-                            <MyEditor onChange={changeContent} value={param.contents || ""}/>
+                            <Drawing/>
+                            /*<Form.Control
+                                className="contentsInput"
+                                name="contents"
+                                value={param.contents || ""}
+                                placeholder="내용을 입력하세요."
+                                as="textarea"
+                                onChange={(e) => {
+                                    changeBoard(e);
+                                }}
+                            />*/
                         )}
                     </td>
                 </tr>
@@ -308,21 +332,23 @@ const BoardDetail = () => {
                     <div>{data.RECOMMEND}</div>
                 </div>
             )}
-            {path && (
+            {path && data.DEL_YN !== 'T' && (
                 <div className="my-2">
-                    <BoardComment location={location}/>
+                    <ImgComment location={location}/>
                 </div>
             )}
-            <Link to={"/board"}>
+            <Link to={"/img"}>
                 <button className="common_btn">목록</button>
             </Link>
-            {path && role && (
+            {path && (role === "user" || role === "admin") && (
                 <div className="user_board_btn">
                     <button
                         className="common_btn"
                         onClick={() => {
                             updateBoard(data.NO);
                         }}
+                        disabled={role === "admin"}
+                        hidden={role === "admin"}
                     >
                         수정
                     </button>
@@ -337,14 +363,24 @@ const BoardDetail = () => {
                 </div>
             )}
             {!path && (
-                <button
-                    className="common_btn append"
-                    onClick={() => {
-                        append_board();
-                    }}
-                >
-                    등록
-                </button>
+                <>
+                    <button
+                        className="common_btn temp"
+                        onClick={() => {
+                            append_board("temp");
+                        }}
+                    >
+                        임시 저장
+                    </button>
+                    <button
+                        className="common_btn append"
+                        onClick={() => {
+                            append_board();
+                        }}
+                    >
+                        등록
+                    </button>
+                </>
             )}
             <ToastContainer
                 toastStyle={{maxWidth: "100%", width: "auto", whiteSpace: "nowrap"}}
@@ -358,4 +394,4 @@ const BoardDetail = () => {
         </div>
     );
 };
-export default BoardDetail;
+export default ImgBoardDetail;

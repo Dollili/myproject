@@ -10,6 +10,8 @@ import Error from "./pages/Error";
 import Notice from "./pages/notice/Notice";
 import NoticeDetail from "./pages/notice/NoticeDetail";
 import Admin from "./pages/admin/Admin";
+import ImgBoard from "./pages/imgboard/ImgBoard";
+import ImgBoardDetail from "./pages/imgboard/ImgBoardDetail";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +33,17 @@ const router = createBrowserRouter([
                         index: true,
                         element: <UserInfo/>,
                     },
+                ],
+            },
+            {
+                path: "img",
+                element: <ProtectedRoute/>, // 보호된 경로 그룹
+                children: [
+                    {
+                        index: true,
+                        element: <ImgBoard/>,
+                    },
+                    {path: ":no", element: <ImgBoardDetail/>},
                 ],
             },
             {
