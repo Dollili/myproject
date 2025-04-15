@@ -18,7 +18,6 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,9 +28,15 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public Map<String, Object> login(Map<String, Object> params, HttpServletRequest request) {
+    public Map<String, Object> login(Map<String, Object> params, HttpServletRequest request) throws Exception {
         String username = params.get("id").toString();
         String password = params.get("pwd").toString();
+
+        Map<String, Object> info = userMapper.userInfo(params);
+        if (info == null) {
+            throw new Exception("사용자 정보가 일치하지 않습니다.");
+        }
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
         SecurityContext securityContext = new SecurityContextImpl(authentication);
@@ -46,7 +51,7 @@ public class UserService {
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
         session.setAttribute("user", authentication.getName());
 
-        return this.findUserInfo(params);
+        return info;
     }
 
     public ResponseEntity<String> join(Map<String, Object> params) {
@@ -82,16 +87,12 @@ public class UserService {
     }
 
     public Map<String, Object> findUserInfo(Map<String, Object> params) {
-        List<Map<String, Object>> boardList = userMapper.userBoard(params);
-        List<Map<String, Object>> commentList = userMapper.userComment(params);
-        List<Map<String, Object>> tempList = userMapper.userTemp(params);
-
-
         Map<String, Object> info = new HashMap<>();
+
         info.put("info", userMapper.userInfo(params));
-        info.put("boardList", boardList);
-        info.put("commentList", commentList);
-        info.put("tempList", tempList);
+        info.put("boardList", userMapper.userBoard(params));
+        info.put("commentList", userMapper.userComment(params));
+        info.put("tempList", userMapper.userTemp(params));
         return info;
     }
 

@@ -200,7 +200,7 @@ const UserInfo = () => {
                                                 <td
                                                     className="title"
                                                     onClick={() => {
-                                                        nav(`/board/${item.NO}`, {state: item.NO});
+                                                        nav(`/${item.CATEGORY}/${item.NO}`, {state: item.NO});
                                                     }}
                                                 >
                                                     {item.TITLE}
@@ -242,7 +242,7 @@ const UserInfo = () => {
                                                 <td
                                                     className="title"
                                                     onClick={() => {
-                                                        nav(`/board/${item.BOARD_NO}`, {
+                                                        nav(`/${item.CATEGORY}/${item.BOARD_NO}`, {
                                                             state: item.BOARD_NO,
                                                         });
                                                     }}
@@ -286,7 +286,7 @@ const UserInfo = () => {
                                                 <td
                                                     className="title"
                                                     onClick={() => {
-                                                        nav(`/board/${item.NO}`, {state: item.NO});
+                                                        nav(`/${item.CATEGORY}/${item.NO}`, {state: item.NO});
                                                     }}
                                                 >
                                                     {item.TITLE}

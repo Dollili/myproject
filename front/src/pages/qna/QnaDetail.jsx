@@ -8,13 +8,11 @@ import {toast, ToastContainer} from "react-toastify";
 import FileUpload from "../../components/FileUpload";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
-import BoardComment from "./BoardComment";
+import NoticeComment from "./QnaComment";
 import MyEditor from "../../components/MyEditor";
 import DOMPurity from "quill/formats/link";
-import thumb from "../../assets/img/thumbs_16019896.png";
-import {showAlert} from "../../components/alert/customAlert";
 
-const BoardDetail = () => {
+const QnaDetail = () => {
     const nav = useNavigate();
     const {user, setUser} = useContext(UserContext);
 
@@ -66,7 +64,7 @@ const BoardDetail = () => {
                 } else {
                     toast.error("조회 오류 발생", {
                         onClose: () => {
-                            nav("/board");
+                            nav("/notice");
                         },
                     });
                 }
@@ -103,7 +101,7 @@ const BoardDetail = () => {
                 }
                 res = await dbPut("/board/detail/modify", param);
             } else {
-                param["category"] = "board";
+                param["category"] = "notice";
                 res = await dbPost("/board/detail", param);
             }
 
@@ -120,7 +118,7 @@ const BoardDetail = () => {
                 toast.success("등록완료", {
                     autoClose: 500,
                     onClose: () => {
-                        nav("/board");
+                        nav("/notice");
                     },
                 });
             } else {
@@ -149,26 +147,11 @@ const BoardDetail = () => {
                 toast.success("삭제완료", {
                     autoClose: 500,
                     onClose: () => {
-                        nav("/board");
+                        nav("/notice");
                     },
                 });
             } else {
                 toast.error("삭제실패");
-            }
-        } catch (e) {
-            nav("/error", {state: e.status});
-        }
-    };
-
-    const recommend = async (no) => {
-        if (role === "user") {
-            return showAlert("본인이 작성한 글에는 추천할 수 없습니다.");
-        }
-
-        try {
-            const res = await dbPut("/board/detail/recommend", {no: no});
-            if (res === 204) {
-                getDetail();
             }
         } catch (e) {
             nav("/error", {state: e.status});
@@ -196,20 +179,11 @@ const BoardDetail = () => {
         }));
     };
 
-    const userCheck = () => {
-        if (user.USER_NIC === data.AUTHOR) {
-            setRole("user");
-        } else if (user.ROLE === "M") {
-            setRole("admin");
-        }
-    };
-
-    useEffect(() => {
-        userCheck();
-    }, [data, user]);
-
     useEffect(() => {
         getDetail();
+        if (user) {
+            user.ROLE === "M" ? setRole(true) : setRole(false);
+        }
     }, []);
 
     return (
@@ -239,7 +213,7 @@ const BoardDetail = () => {
                 </tr>
                 <tr>
                     <td>글쓴이</td>
-                    <td>{path ? data.AUTHOR : param.author}</td>
+                    <td>관리자</td>
                 </tr>
                 <tr>
                     <td>첨부파일</td>
@@ -295,25 +269,11 @@ const BoardDetail = () => {
                 </tbody>
             </Table>
             {path && (
-                <div className="text-center">
-                    <img
-                        className="thumb_btn"
-                        src={thumb}
-                        alt="추천"
-                        style={{width: "40px", height: "40px"}}
-                        onClick={() => {
-                            recommend(data.NO);
-                        }}
-                    />
-                    <div>{data.RECOMMEND}</div>
-                </div>
-            )}
-            {path && (
                 <div className="my-2">
-                    <BoardComment location={location}/>
+                    <NoticeComment location={location}/>
                 </div>
             )}
-            <Link to={"/board"}>
+            <Link to={"/notice"}>
                 <button className="common_btn">목록</button>
             </Link>
             {path && role && (
@@ -358,4 +318,4 @@ const BoardDetail = () => {
         </div>
     );
 };
-export default BoardDetail;
+export default QnaDetail;
