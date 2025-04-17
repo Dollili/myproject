@@ -24,16 +24,20 @@ const MyEditor = ({onChange, value}) => {
             const formData = new FormData();
             formData.append("file", file);
 
-            const res = await api.post("/file/upload/temp", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            const url = await res.data.url;
+            try {
+                const res = await api.post("/file/upload/temp", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                const url = res.data.url;
 
-            const editor = quillRef.current.getEditor();
-            const range = editor.getSelection();
-            editor.insertEmbed(range.index, "image", url);
+                const editor = quillRef.current.getEditor();
+                const range = editor.getSelection();
+                editor.insertEmbed(range.index, "image", url);
+            } catch (e) {
+                console.error(e);
+            }
         };
     };
 
@@ -42,6 +46,7 @@ const MyEditor = ({onChange, value}) => {
             toolbar: {
                 container: [
                     [{header: [1, 2, 3, false]}],
+                    [{font: []}],
                     [{color: []}, {background: []}],
                     [{script: "sub"}, {script: "super"}],
                     ["bold", "italic", "underline", "strike", "blockquote"],

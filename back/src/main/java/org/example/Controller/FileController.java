@@ -24,8 +24,8 @@ public class FileController {
     }
 
     @PostMapping("/upload/temp")
-    public ResponseEntity<?> uploadTemp(@RequestParam("file") MultipartFile file) {
-        return fileService.tempFile(file);
+    public ResponseEntity<?> uploadTemp(@RequestParam("file") MultipartFile file, @RequestParam(value = "name", required = false) String name) {
+        return fileService.tempFile(file, name);
     }
 
     @PutMapping("/delete")

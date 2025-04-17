@@ -12,6 +12,7 @@ import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 import ImgUpload from "../../components/ImgUpload";
 import Drawing from "../../components/Drawing";
+import api from "../../services/axiosInterceptor";
 
 const ImgBoardDetail = () => {
     const nav = useNavigate();
@@ -27,6 +28,8 @@ const ImgBoardDetail = () => {
 
     const [path, setPath] = useState(false);
     const [param, setParam] = useState({author: user.USER_NIC});
+
+    const canvasRef = useRef(null);
 
     const changeBoard = (e) => {
         const {name, value} = e.target;
@@ -56,7 +59,7 @@ const ImgBoardDetail = () => {
         if (location.state) {
             setPath(true);
             try {
-                const res = await dbGet("/board/detail", {no: location.state});
+                const res = await dbGet("/board/imgDetail", {no: location.state});
                 if (res) {
                     setData(res);
                 } else {
@@ -77,7 +80,7 @@ const ImgBoardDetail = () => {
     const validation = (param) => {
         if (
             !param ||
-            !["title", "contents"].every((key) => param[key] && param[key].length > 0)
+            !["title", "drawinfo"].every((key) => param[key] && param[key].length > 0)
         ) {
             return true;
         }
@@ -85,31 +88,51 @@ const ImgBoardDetail = () => {
 
     const append_board = async (temp) => {
         try {
+            const imgInfo = await canvasRef.current?.exportPaths();
+            const time = await canvasRef.current?.getSketchingTime();
+
+            param["drawinfo"] = JSON.stringify(imgInfo);
+            param["drawtime"] = time;
+
             if (validation(param) && !temp) {
                 return toast.info("제목과 내용을 모두 입력해주세요.");
             }
             temp === "temp" ? (param["temp"] = "T") : (param["temp"] = null);
+
             let res;
-            let file_res;
+            let imgPath;
+
+            const img = await canvasRef.current?.exportImage("png");
+            const formData = new FormData();
+            formData.append("file", base64ToBlob(img), "drawing");
+            if (data?.IMG_NM) {
+                formData.append("name", data.IMG_NM);
+            }
+            imgPath = await api.post("/file/upload/temp", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            if (imgPath.data?.url) {
+                param["imgpath"] = imgPath.data.url;
+                param['imgname'] = imgPath.data.name;
+            }
 
             if (Object.keys(data).length > 0) {
-                if (trash?.length > 0) {
-                    const res = await fileDel();
-                    if (!res) return;
-                }
-                res = await dbPut("/board/detail/modify", param);
+                const del = await fileDel();
+                if (!del) return;
+                res = await dbPut("/board/imgDetail/modify", param);
             } else {
-                param['category'] = 'board';
-                res = await dbPost("/board/detail", param);
+                param["category"] = "img";
+                res = await dbPost("/board/imgDetail", param);
             }
 
             if (files?.length > 0) {
                 if (data) {
-                    file_res = await dbForm(files, data.no);
+                    await dbForm(files, data.no);
                 } else {
-                    file_res = await dbForm(files);
+                    await dbForm(files);
                 }
-                console.log(file_res);
             }
 
             if (res === 1 || res === 204) {
@@ -130,8 +153,10 @@ const ImgBoardDetail = () => {
     const updateBoard = (no) => {
         const meta = {
             title: data.TITLE,
-            contents: data.CONTENTS,
+            drawinfo: data.DRAWINFO,
+            drawtime: data.DRAWTIME,
             author: data.AUTHOR,
+            imgpath: data.IMG_PATH,
             no: no,
         };
         setParam({...param, ...meta});
@@ -140,7 +165,7 @@ const ImgBoardDetail = () => {
 
     const deleteBoard = async (no) => {
         try {
-            const res = await dbPut("/board/detail", {no});
+            const res = await dbPut("/board/imgDetail", {no});
             if (res === 204) {
                 toast.success("삭제완료", {
                     autoClose: 500,
@@ -183,13 +208,26 @@ const ImgBoardDetail = () => {
         }
 
         try {
-            const res = await dbPut("/board/detail/recommend", {no: no});
+            const res = await dbPut("/board/imgDetail/recommend", {no: no});
             if (res === 204) {
                 getDetail();
             }
         } catch (e) {
             nav("/error", {state: e.status});
         }
+    };
+
+    const canvasSave = async () => {
+        //console.log('총 시간 (그린 시간 기준 / 분.초): ', Math.floor(time / 1000 / 60) + '.' + Math.floor((time / 1000) % 60));
+    };
+
+    const base64ToBlob = (img) => {
+        const file = atob(img.split(",")[1]);
+        const arrays = [];
+        for (let i = 0; i < file.length; i++) {
+            arrays.push(file.charCodeAt(i));
+        }
+        return new Blob([new Uint8Array(arrays)], {type: "image/png"});
     };
 
     const userCheck = () => {
@@ -200,19 +238,19 @@ const ImgBoardDetail = () => {
         }
     };
 
-    useEffect(() => {
-        if (files?.length > 0) {
-            files.forEach(function (f) {
-                if (!f.type.startsWith("image/")) {
-                    toast.info("이미지 파일만 업로드 가능합니다.", {
-                        autoClose: 500,
-                    });
-                    setFiles(null);
-                    click.current.value = null;
-                }
-            });
-        }
-    }, [files]);
+    /*useEffect(() => {
+              if (files?.length > 0) {
+                  files.forEach(function (f) {
+                      if (!f.type.startsWith("image/")) {
+                          toast.info("이미지 파일만 업로드 가능합니다.", {
+                              autoClose: 500,
+                          });
+                          setFiles(null);
+                          click.current.value = null;
+                      }
+                  });
+              }
+          }, [files]);*/
 
     useEffect(() => {
         userCheck();
@@ -292,27 +330,10 @@ const ImgBoardDetail = () => {
                 </tr>
                 <tr>
                     <td colSpan={2}>
-                        {/*<Drawing/>*/}
                         {path ? (
-                            <Form.Control
-                                className="contentsInput disabled"
-                                style={{borderStyle: "unset"}}
-                                value={data.CONTENTS}
-                                as="textarea"
-                                disabled
-                            />
+                            <Drawing canvasRef={canvasRef} saveInfo={data?.DRAWINFO}/>
                         ) : (
-                            <Drawing/>
-                            /*<Form.Control
-                                className="contentsInput"
-                                name="contents"
-                                value={param.contents || ""}
-                                placeholder="내용을 입력하세요."
-                                as="textarea"
-                                onChange={(e) => {
-                                    changeBoard(e);
-                                }}
-                            />*/
+                            <Drawing canvasRef={canvasRef}/>
                         )}
                     </td>
                 </tr>
@@ -332,7 +353,7 @@ const ImgBoardDetail = () => {
                     <div>{data.RECOMMEND}</div>
                 </div>
             )}
-            {path && data.DEL_YN !== 'T' && (
+            {path && data.DEL_YN !== "T" && (
                 <div className="my-2">
                     <ImgComment location={location}/>
                 </div>
@@ -367,6 +388,7 @@ const ImgBoardDetail = () => {
                     <button
                         className="common_btn temp"
                         onClick={() => {
+                            canvasSave();
                             append_board("temp");
                         }}
                     >
@@ -375,6 +397,7 @@ const ImgBoardDetail = () => {
                     <button
                         className="common_btn append"
                         onClick={() => {
+                            canvasSave();
                             append_board();
                         }}
                     >

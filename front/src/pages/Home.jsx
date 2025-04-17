@@ -37,7 +37,7 @@ const Home = () => {
                     onClose: () => {
                         setUser(res);
                         sessionStorage.setItem("user_Token", JSON.stringify(res));
-                        nav("/board")
+                        nav("/img")
                     },
                 });
             } else {
@@ -136,7 +136,7 @@ const Home = () => {
                             <h4
                                 className="goHome"
                                 onClick={() => {
-                                    nav("board");
+                                    nav("img");
                                 }}
                             >
                                 Click

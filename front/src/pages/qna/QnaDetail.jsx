@@ -259,7 +259,7 @@ const QnaDetail = () => {
                             <div
                                 className="contentsInput"
                                 dangerouslySetInnerHTML={{__html: DOMPurity.sanitize(data.CONTENTS)}}
-                                style={{borderStyle: "unset"}}
+                                style={{borderStyle: "unset", fontFamily: "initial"}}
                             />
                         ) : (
                             <MyEditor onChange={changeContent} value={param.contents || ""}/>

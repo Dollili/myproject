@@ -1,33 +1,12 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ReactSketchCanvas} from "react-sketch-canvas";
-import bg from "../assets/img/background.jpg"
+import bg from "../assets/img/background.jpg";
 
-const Drawing = ({onSave}) => {
-    const canvasRef = useRef(null);
+const Drawing = ({canvasRef, saveInfo}) => {
     const [eraser, setEraser] = useState(true);
     const [color, setColor] = useState("#000000");
     const [bord, setBorder] = useState("1");
-
-    const [result, setResult] = useState({
-        img: "",
-        data: "",
-        time: "",
-    })
-
-    const save = async () => {
-        const img = await canvasRef.current?.exportImage("png");
-        const data = await canvasRef.current?.exportPaths();
-        const time = await canvasRef.current?.getSketchingTime();
-
-        const formData = new FormData();
-        formData.append("img", base64ToBlob(img));
-        formData.append("paths", JSON.stringify(data));
-        formData.append("time", JSON.stringify(time));
-        console.log(formData.get("paths"));
-
-
-        console.log('총 시간 (그린 시간 기준 / 분.초): ', Math.floor(time / 1000 / 60) + '.' + Math.floor((time / 1000) % 60));
-    };
+    const disabled = useState("none");
 
     const undo = () => {
         canvasRef.current?.undo();
@@ -41,14 +20,16 @@ const Drawing = ({onSave}) => {
         canvasRef.current?.clearCanvas();
     };
 
-    const base64ToBlob = (img) => {
-        const file = atob(img.split(',')[1]);
-        const arrays = [];
-        for (let i = 0; i < file.length; i++) {
-            arrays.push(file.charCodeAt(i));
-        }
-        return new Blob([new Uint8Array(arrays)], {type: 'image/png'})
+    const loadCanvas = () => {
+        const save = JSON.parse(saveInfo);
+        canvasRef.current?.loadPaths(save)
     }
+
+    useEffect(() => {
+        if (saveInfo) {
+            loadCanvas();
+        }
+    }, [saveInfo]);
 
     return (
         <div className="drawing">
@@ -61,12 +42,13 @@ const Drawing = ({onSave}) => {
                     eraserWidth={bord}
                     exportWithBackgroundImage={false}
                     style={{
-                        border: "none"
+                        border: "none",
                     }}
                     withTimestamp={true}
+                    allowOnlyPointerType={saveInfo ? disabled : "mouse"}
                 />
             </div>
-            <div className="tools">
+            {!saveInfo && <div className="tools">
                 <div>
                     <div>선 굵기 {bord} px</div>
                     <input
@@ -108,10 +90,7 @@ const Drawing = ({onSave}) => {
                 <div className="common_btn" onClick={clearCanvas}>
                     전체 비우기🗑️
                 </div>
-                <div className="common_btn" onClick={save}>
-                    저장
-                </div>
-            </div>
+            </div>}
         </div>
     );
 };
