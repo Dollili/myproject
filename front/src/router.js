@@ -12,6 +12,8 @@ import NoticeDetail from "./pages/notice/NoticeDetail";
 import Admin from "./pages/admin/Admin";
 import ImgBoard from "./pages/imgboard/ImgBoard";
 import ImgBoardDetail from "./pages/imgboard/ImgBoardDetail";
+import Qna from "./pages/qna/Qna";
+import QnaDetail from "./pages/qna/QnaDetail";
 
 const router = createBrowserRouter([
     {
@@ -66,6 +68,17 @@ const router = createBrowserRouter([
                         element: <Notice/>,
                     },
                     {path: ":no", element: <NoticeDetail/>},
+                ],
+            },
+            {
+                path: "qna",
+                element: <ProtectedRoute/>, // 보호된 경로 그룹
+                children: [
+                    {
+                        index: true,
+                        element: <Qna/>,
+                    },
+                    {path: ":no", element: <QnaDetail/>},
                 ],
             },
             {path: "/error", element: <Error/>},

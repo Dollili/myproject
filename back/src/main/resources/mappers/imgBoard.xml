@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.Repository.ImageMapper">
+
+    <select id="getBoardListCnt" resultType="integer">
+        SELECT COUNT(*)
+        FROM IMGBOARD
+        WHERE DEL_YN IS NULL
+        AND CATEGORY = #{category}
+        <if test="val != null and val !=''">
+            <choose>
+                <when test="option != null and option != ''">
+                    <choose>
+                        <when test="option == 'author'">
+                            AND UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                        </when>
+                        <otherwise>
+                            AND TITLE LIKE CONCAT('%',#{val},'%')
+                        </otherwise>
+                    </choose>
+                </when>
+                <otherwise>
+                    AND (UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                    OR TITLE LIKE CONCAT('%',#{val},'%'))
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="getBoardList" resultType="map">
+        SELECT (SELECT COUNT(*) FROM IMGBOARD B WHERE B.DEL_YN IS NULL AND CATEGORY = #{category} AND B.NO &lt;= A.NO)
+        AS
+        ROWNUM, A.*
+        FROM (
+        SELECT
+        NO,
+        TITLE,
+        AUTHOR,
+        RECOMMEND,
+        VIEW_CNT,
+        DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE,
+        DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d') AS UPDATE_FORMAT_DATE,
+        (
+        SELECT COUNT(*)
+        FROM IMGCOMMENT C
+        WHERE C.BOARD_NO = B.NO AND C.DEL_YN IS NULL
+        ) AS COMMENT_CNT,
+        IMG_PATH
+        FROM IMGBOARD B
+        WHERE
+        DEL_YN IS NULL
+        AND CATEGORY = #{category}
+        <if test="val != null and val !=''">
+            <choose>
+                <when test="option != null and option != ''">
+                    <choose>
+                        <when test="option == 'author'">
+                            AND UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                        </when>
+                        <otherwise>
+                            AND TITLE LIKE CONCAT('%',#{val},'%')
+                        </otherwise>
+                    </choose>
+                </when>
+                <otherwise>
+                    AND (UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                    OR TITLE LIKE CONCAT('%',#{val},'%'))
+                </otherwise>
+            </choose>
+        </if>
+        ORDER BY APPLY_DATE DESC) A
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getBoardComment" resultType="map">
+        SELECT *
+        FROM
+        (
+        SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
+        (SELECT COUNT(*)
+        FROM IMGCOMMENT
+        WHERE BOARD_NO = #{no}
+        AND DEL_YN IS NULL
+        )AS TOTAL
+        FROM IMGCOMMENT
+        WHERE BOARD_NO=#{no} AND DEL_YN IS NULL
+        ORDER BY APPLY_FORMAT_DATE
+        <if test="orderBy == 'desc'">
+            DESC
+        </if>
+        <if test="orderBy == 'asc'">
+            ASC
+        </if>
+        ) A
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <insert id="insertBoard">
+        INSERT
+        INTO IMGBOARD
+        (TITLE,
+         DRAWINFO,
+         DRAWTIME,
+         AUTHOR,
+         APPLY_DATE,
+         USER_ID,
+         DEL_YN,
+         CATEGORY,
+         IMG_PATH,
+         IMG_NM)
+        VALUES (#{title},
+                #{drawinfo},
+                #{drawtime},
+                #{author},
+                NOW(),
+                #{id},
+                #{temp},
+                #{category},
+                #{imgpath},
+                #{imgname})
+    </insert>
+
+    <update id="updateBoard">
+        UPDATE
+            IMGBOARD
+        SET TITLE       = #{title},
+            DRAWINFO    = #{drawinfo},
+            DRAWTIME    = #{drawtime},
+            UPDATE_DATE = NOW(),
+            DEL_YN      = #{temp}
+        WHERE NO = #{no}
+    </update>
+
+</mapper>

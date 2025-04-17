@@ -36,7 +36,7 @@ const ImgComment = ({location}) => {
         param["size"] = item;
         param["orderBy"] = time;
         try {
-            const res = await dbGet("/board/comment", param);
+            const res = await dbGet("/board/iComment", param);
             if (res) {
                 setCmt(res);
             } else {
@@ -58,7 +58,7 @@ const ImgComment = ({location}) => {
         try {
             comment["category"] = "board";
 
-            const res = await dbPost("/board/comment", comment);
+            const res = await dbPost("/board/iComment", comment);
             if (res === 1) {
                 getComment();
                 textareaRef.current.value = "";
@@ -70,7 +70,7 @@ const ImgComment = ({location}) => {
 
     const deleteComment = async (id) => {
         try {
-            const res = await dbPut("/board/comment/delete", {id: id});
+            const res = await dbPut("/board/iComment/delete", {id: id});
             if (res === 200) {
                 getComment();
             }

@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Table} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {dbGet} from "../../services/commonApi";
 import eyeIcon from "../../assets/img/free-icon-eye-4818558.png";
 import Paging from "../../components/Paging";
-import {UserContext} from "../../contexts/UserContext";
 import {slugUtil} from "../../utils/common";
 
 const Board = () => {
@@ -14,8 +13,6 @@ const Board = () => {
     const [current, setCurrent] = useState(1); // 현재 페이지
 
     const nav = useNavigate();
-    const {user} = useContext(UserContext);
-    const [role, setRole] = useState(false);
 
     const [search, setSearch] = useState({
         option: "",
@@ -45,12 +42,6 @@ const Board = () => {
     useEffect(() => {
         getBoard();
     }, [current, item]);
-
-    useEffect(() => {
-        if (user) {
-            user.ROLE === "M" ? setRole(true) : setRole(false);
-        }
-    }, []);
 
     return (
         <>
@@ -98,13 +89,11 @@ const Board = () => {
                     >
                         검색
                     </button>
-                    {role && (
-                        <Link to={"detail"}>
-                            <button className="search-button" style={{float: "right"}}>
-                                글쓰기
-                            </button>
-                        </Link>
-                    )}
+                    <Link to={"detail"}>
+                        <button className="search-button" style={{float: "right"}}>
+                            글쓰기
+                        </button>
+                    </Link>
                 </div>
                 <Table bordered hover className="board my-2">
                     <colgroup>

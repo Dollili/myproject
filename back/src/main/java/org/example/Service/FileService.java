@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Service
@@ -77,7 +78,7 @@ public class FileService {
         return ResponseEntity.ok(list);
     }
 
-    public ResponseEntity<?> tempFile(MultipartFile file) {
+    public ResponseEntity<?> tempFile(MultipartFile file, String name) {
         Map<String, String> result = new HashMap<>();
         try {
             String saveName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -86,12 +87,19 @@ public class FileService {
                 uploadDir.mkdirs();
             }
 
-            Path tempPath = uploadDir.toPath().resolve(saveName);
-            Files.copy(file.getInputStream(), tempPath);
+            Path tempPath;
+            if (name == null || name.isEmpty()) {
+                tempPath = uploadDir.toPath().resolve(saveName);
+                String fileUrl = "/files/temp/" + saveName;
+                result.put("url", fileUrl);
+                result.put("name", saveName);
+            } else {
+                tempPath = uploadDir.toPath().resolve(name);
+                result.put("success", "true");
+            }
 
-            String fileUrl = "/files/temp/" + saveName;
-
-            result.put("url", fileUrl);
+            // 덮어쓰기 허용
+            Files.copy(file.getInputStream(), tempPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             logger.error(e.getMessage());
             try {
