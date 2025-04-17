@@ -22,10 +22,10 @@ const Qna = () => {
         val: "",
     });
 
-    const getNotice = async () => {
+    const getQna = async () => {
         search["page"] = current;
         search["size"] = item;
-        search["category"] = 'notice';
+        search["category"] = 'qna';
         try {
             const res = await dbGet("/board/list", search);
             if (res) {
@@ -43,7 +43,7 @@ const Qna = () => {
     }, [total]);
 
     useEffect(() => {
-        getNotice();
+        getQna();
     }, [current, item]);
 
     useEffect(() => {
@@ -93,7 +93,7 @@ const Qna = () => {
                     <button
                         className="search-button"
                         onClick={() => {
-                            getNotice().then(() => setSearch({...search, val: ""}));
+                            getQna().then(() => setSearch({...search, val: ""}));
                         }}
                     >
                         검색
@@ -101,7 +101,7 @@ const Qna = () => {
                     {role && (
                         <Link to={"detail"}>
                             <button className="search-button" style={{float: "right"}}>
-                                글쓰기
+                                질문하기
                             </button>
                         </Link>
                     )}
@@ -141,13 +141,13 @@ const Qna = () => {
                                 <td
                                     className="contents-td"
                                     onClick={() => {
-                                        nav(`/notice/${slugUtil(item.TITLE)}`, {state: item.NO});
+                                        nav(`/qna/${slugUtil(item.TITLE)}`, {state: item.NO});
                                     }}
                                 >
                                     {item.TITLE}
                                     <span style={{color: "red", marginLeft: "3px"}}>[{item.COMMENT_CNT}]</span>
                                 </td>
-                                <td>관리자</td>
+                                <td>{item.AUTHOR}</td>
                                 <td>{item.APPLY_FORMAT_DATE}</td>
                                 <td>{item.VIEW_CNT}</td>
                             </tr>

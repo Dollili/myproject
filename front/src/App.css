@@ -54,6 +54,7 @@
 }
 
 .App-header {
+    z-index: 3;
     background-color: black;
     min-height: 10vh;
     font-size: 20px;

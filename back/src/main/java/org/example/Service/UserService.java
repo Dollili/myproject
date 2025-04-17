@@ -91,6 +91,7 @@ public class UserService {
 
         info.put("info", userMapper.userInfo(params));
         info.put("boardList", userMapper.userBoard(params));
+        info.put("imgBoardList", userMapper.userImgBoard(params));
         info.put("commentList", userMapper.userComment(params));
         info.put("tempList", userMapper.userTemp(params));
         return info;

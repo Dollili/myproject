@@ -21,7 +21,7 @@ const SideMenu = ({onOff}) => {
                     공지사항
                 </div>
                 <div className="menu-item" onClick={() => nav("/img")}>
-                    그림판
+                    그림방
                 </div>
                 <div className="menu-item" onClick={() => nav("/board")}>
                     자유게시판

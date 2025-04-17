@@ -20,9 +20,9 @@ const ImgBoard = () => {
     const getBoard = async () => {
         search["page"] = current;
         search["size"] = item;
-        search["category"] = 'board';
+        search["category"] = 'img';
         try {
-            const res = await dbGet("/board/list", search);
+            const res = await dbGet("/board/imgList", search);
             if (res) {
                 setTotal(res.total);
                 setData(res.data);
@@ -116,7 +116,7 @@ const ImgBoard = () => {
                                     nav(`/img/${slugUtil(item.TITLE)}`, {state: item.NO});
                                 }}
                             >
-                                <img src="#"/>
+                                <img src={`${process.env.REACT_APP_BACKEND_URL}${item.IMG_PATH}`} alt="thumbnail"/>
                                 <div className="info">
                                     <h4>{item.TITLE} <span
                                         style={{color: "red", marginLeft: "3px"}}>[{item.COMMENT_CNT}]</span></h4>
