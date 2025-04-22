@@ -18,29 +18,16 @@
     </select>
 
     <select id="userBoard" resultType="map">
-        SELECT NO,
-               TITLE,
-               DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
-               RECOMMEND,
-               VIEW_CNT,
-               CATEGORY
+        SELECT NO, TITLE, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, CATEGORY
         FROM BOARD
-        WHERE UPPER(USER_ID) = UPPER(#{id})
-          AND DEL_YN IS NULL
-        ORDER BY APPLY_DATE DESC;
-    </select>
-
-    <select id="userImgBoard" resultType="map">
-        SELECT NO,
-               TITLE,
-               DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
-               RECOMMEND,
-               VIEW_CNT,
-               CATEGORY
+        WHERE DEL_YN IS NULL
+          AND UPPER(USER_ID) = UPPER(#{id})
+        UNION ALL
+        SELECT NO, TITLE, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, CATEGORY
         FROM IMGBOARD
-        WHERE UPPER(USER_ID) = UPPER(#{id})
-          AND DEL_YN IS NULL
-        ORDER BY APPLY_DATE DESC;
+        WHERE DEL_YN IS NULL
+          AND UPPER(USER_ID) = UPPER(#{id})
+        ORDER BY APPLY_FORMAT_DATE DESC
     </select>
 
     <select id="userTemp" resultType="map">
@@ -54,11 +41,27 @@
         FROM BOARD
         WHERE UPPER(USER_ID) = UPPER(#{id})
           AND DEL_YN = 'T'
+        UNION ALL
+        SELECT NO,
+               TITLE,
+               DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s')  AS APPLY_FORMAT_DATE,
+               RECOMMEND,
+               VIEW_CNT,
+               DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d %H:%i:%s') AS UPDATE_FORMAT_DATE,
+               CATEGORY
+        FROM IMGBOARD
+        WHERE UPPER(USER_ID) = UPPER(#{id})
+          AND DEL_YN = 'T'
     </select>
 
     <select id="userComment" resultType="map">
-        SELECT ID, COMMENT, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, BOARD_NO
+        SELECT ID, COMMENT, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, BOARD_NO, CATEGORY
         FROM COMMENT
+        WHERE UPPER(USER_ID) = UPPER(#{id})
+          AND DEL_YN IS NULL
+        UNION ALL
+        SELECT ID, COMMENT, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE, BOARD_NO, CATEGORY
+        FROM IMGCOMMENT
         WHERE UPPER(USER_ID) = UPPER(#{id})
           AND DEL_YN IS NULL
     </select>

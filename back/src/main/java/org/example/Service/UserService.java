@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,30 +29,22 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public Map<String, Object> login(Map<String, Object> params, HttpServletRequest request) throws Exception {
+    public Map<String, Object> login(Map<String, Object> params, HttpServletRequest request) throws LoginException {
         String username = params.get("id").toString();
         String password = params.get("pwd").toString();
-
-        Map<String, Object> info = userMapper.userInfo(params);
-        if (info == null) {
-            throw new Exception("사용자 정보가 일치하지 않습니다.");
-        }
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
         SecurityContext securityContext = new SecurityContextImpl(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+        request.getSession().invalidate();
 
-        session = request.getSession(true);
+        HttpSession session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
         session.setAttribute("user", authentication.getName());
 
-        return info;
+        return userMapper.userInfo(params);
     }
 
     public ResponseEntity<String> join(Map<String, Object> params) {
@@ -91,7 +84,6 @@ public class UserService {
 
         info.put("info", userMapper.userInfo(params));
         info.put("boardList", userMapper.userBoard(params));
-        info.put("imgBoardList", userMapper.userImgBoard(params));
         info.put("commentList", userMapper.userComment(params));
         info.put("tempList", userMapper.userTemp(params));
         return info;
