@@ -56,7 +56,7 @@ const ImgComment = ({location}) => {
             return toast.info("내용을 입력해주세요.");
         comment["no"] = location.state;
         try {
-            comment["category"] = "board";
+            comment["category"] = "img";
 
             const res = await dbPost("/board/iComment", comment);
             if (res === 1) {

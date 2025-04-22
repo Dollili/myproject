@@ -21,8 +21,6 @@ public interface UserMapper {
 
     List<Map<String, Object>> userBoard(Map<String, Object> user);
 
-    List<Map<String, Object>> userImgBoard(Map<String, Object> user);
-
     List<Map<String, Object>> userTemp(Map<String, Object> user);
 
     List<Map<String, Object>> userComment(Map<String, Object> user);
