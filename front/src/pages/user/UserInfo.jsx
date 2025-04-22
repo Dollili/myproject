@@ -15,6 +15,7 @@ const UserInfo = () => {
 
     const [res, setRes] = useState({});
     const [board, setBoard] = useState([]);
+    const [imgBoard, setImgBoard] = useState([]);
     const [temporary, setTemp] = useState([]);
     const [comment, setComment] = useState([]);
 
@@ -89,6 +90,21 @@ const UserInfo = () => {
                 }
                 nav("/error", {state: e.status});
             }
+        }
+    };
+
+    const changeCategory = (val) => {
+        switch (val) {
+            case "board":
+                return "자유게시판";
+            case "notice":
+                return "공지";
+            case "img":
+                return "그림방";
+            case "qna":
+                return "QnA";
+            default:
+                return "no data";
         }
     };
 
@@ -177,14 +193,16 @@ const UserInfo = () => {
                     <div className="form-wrapper align-items-center">
                         <div className={`form ${msg} form-2`}>
                             <h4>작성한 글</h4>
-                            <div className="input-group">
+                            <div className="input-group boardList">
                                 <Table striped bordered hover className="board">
                                     <colgroup>
-                                        <col style={{width: "50%"}}/>
-                                        <col style={{width: "50%"}}/>
+                                        <col style={{width: "20%"}}/>
+                                        <col style={{width: "40%"}}/>
+                                        <col style={{width: "40%"}}/>
                                     </colgroup>
                                     <thead>
                                     <tr>
+                                        <th>구분</th>
                                         <th>제목</th>
                                         <th>작성일</th>
                                     </tr>
@@ -192,15 +210,18 @@ const UserInfo = () => {
                                     <tbody>
                                     {board.length === 0 ? (
                                         <tr>
-                                            <td colSpan={2}>작성한 글이 존재하지 않습니다.</td>
+                                            <td colSpan={3}>작성한 글이 존재하지 않습니다.</td>
                                         </tr>
                                     ) : (
                                         board.map((item, idx) => (
                                             <tr key={idx}>
+                                                <td>{changeCategory(item.CATEGORY)}</td>
                                                 <td
                                                     className="title"
                                                     onClick={() => {
-                                                        nav(`/${item.CATEGORY}/${item.NO}`, {state: item.NO});
+                                                        nav(`/${item.CATEGORY}/${item.NO}`, {
+                                                            state: item.NO,
+                                                        });
                                                     }}
                                                 >
                                                     {item.TITLE}
@@ -219,14 +240,16 @@ const UserInfo = () => {
                     <div className="form-wrapper align-items-center">
                         <div className={`form ${msg} form-3`}>
                             <h4>작성한 댓글</h4>
-                            <div className="input-group">
+                            <div className="input-group boardList">
                                 <Table striped bordered hover className="board">
                                     <colgroup>
-                                        <col style={{width: "50%"}}/>
-                                        <col style={{width: "50%"}}/>
+                                        <col style={{width: "20%"}}/>
+                                        <col style={{width: "40%"}}/>
+                                        <col style={{width: "40%"}}/>
                                     </colgroup>
                                     <thead>
                                     <tr>
+                                        <th>구분</th>
                                         <th>댓글</th>
                                         <th>작성일</th>
                                     </tr>
@@ -234,11 +257,12 @@ const UserInfo = () => {
                                     <tbody>
                                     {comment.length === 0 ? (
                                         <tr>
-                                            <td colSpan={2}>작성한 댓글이 존재하지 않습니다.</td>
+                                            <td colSpan={3}>작성한 댓글이 존재하지 않습니다.</td>
                                         </tr>
                                     ) : (
                                         comment.map((item, idx) => (
                                             <tr key={idx}>
+                                                <td className="date">{changeCategory(item.CATEGORY)}</td>
                                                 <td
                                                     className="title"
                                                     onClick={() => {
@@ -249,7 +273,9 @@ const UserInfo = () => {
                                                 >
                                                     {item.COMMENT}
                                                 </td>
-                                                <td>{item.APPLY_FORMAT_DATE}</td>
+                                                <td className="date">
+                                                    {item.APPLY_FORMAT_DATE}
+                                                </td>
                                             </tr>
                                         ))
                                     )}
@@ -263,14 +289,16 @@ const UserInfo = () => {
                     <div className="form-wrapper align-items-center">
                         <div className={`form ${msg} form-2`}>
                             <h4>저장된 글</h4>
-                            <div className="input-group">
+                            <div className="input-group boardList">
                                 <Table striped bordered hover className="board">
                                     <colgroup>
-                                        <col style={{width: "50%"}}/>
-                                        <col style={{width: "50%"}}/>
+                                        <col style={{width: "20%"}}/>
+                                        <col style={{width: "40%"}}/>
+                                        <col style={{width: "40%"}}/>
                                     </colgroup>
                                     <thead>
                                     <tr>
+                                        <th>구분</th>
                                         <th>제목</th>
                                         <th>수정일</th>
                                     </tr>
@@ -278,20 +306,25 @@ const UserInfo = () => {
                                     <tbody>
                                     {temporary.length === 0 ? (
                                         <tr>
-                                            <td colSpan={2}>작성 중인 글이 존재하지 않습니다.</td>
+                                            <td colSpan={3}>작성 중인 글이 존재하지 않습니다.</td>
                                         </tr>
                                     ) : (
                                         temporary.map((item, idx) => (
                                             <tr key={idx}>
+                                                <td className="date">{changeCategory(item.CATEGORY)}</td>
                                                 <td
                                                     className="title"
                                                     onClick={() => {
-                                                        nav(`/${item.CATEGORY}/${item.NO}`, {state: item.NO});
+                                                        nav(`/${item.CATEGORY}/${item.NO}`, {
+                                                            state: item.NO,
+                                                        });
                                                     }}
                                                 >
                                                     {item.TITLE}
                                                 </td>
-                                                <td>{item.UPDATE_FORMAT_DATE || item.APPLY_FORMAT_DATE}</td>
+                                                <td className="date">
+                                                    {item.UPDATE_FORMAT_DATE || item.APPLY_FORMAT_DATE}
+                                                </td>
                                             </tr>
                                         ))
                                     )}
@@ -311,9 +344,7 @@ const UserInfo = () => {
                     hideProgressBar
                 />
             </div>
-            <p style={{textAlign: "center"}}>
-                클릭 시 해당 글로 이동합니다
-            </p>
+            <p style={{textAlign: "center"}}>클릭 시 해당 글로 이동합니다</p>
         </>
     );
 };

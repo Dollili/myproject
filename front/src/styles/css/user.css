@@ -62,3 +62,16 @@
 .title:hover {
     cursor: pointer;
 }
+
+.boardList {
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+.boardList .date {
+    font-size: 0.8rem;
+}
+
+.boardList:hover {
+    scrollbar-width: thin;
+}

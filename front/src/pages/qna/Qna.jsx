@@ -48,7 +48,7 @@ const Qna = () => {
 
     useEffect(() => {
         if (user) {
-            user.ROLE === "M" ? setRole(true) : setRole(false);
+            user.ROLE === "M" ? setRole(false) : setRole(true);
         }
     }, []);
 

@@ -10,9 +10,9 @@ import {toast, ToastContainer} from "react-toastify";
 import thumb from "../../assets/img/thumbs_16019896.png";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
-import ImgUpload from "../../components/ImgUpload";
 import Drawing from "../../components/Drawing";
 import api from "../../services/axiosInterceptor";
+import FileUpload from "../../components/FileUpload";
 
 const ImgBoardDetail = () => {
     const nav = useNavigate();
@@ -217,10 +217,6 @@ const ImgBoardDetail = () => {
         }
     };
 
-    const canvasSave = async () => {
-        //console.log('총 시간 (그린 시간 기준 / 분.초): ', Math.floor(time / 1000 / 60) + '.' + Math.floor((time / 1000) % 60));
-    };
-
     const base64ToBlob = (img) => {
         const file = atob(img.split(",")[1]);
         const arrays = [];
@@ -319,21 +315,26 @@ const ImgBoardDetail = () => {
                                     <br/>
                                 </div>
                             ))}
-                        <ImgUpload
+                        <FileUpload
                             files={files}
                             setFiles={setFiles}
                             data={data}
                             onOff={path}
-                            click={click}
                         />
                     </td>
                 </tr>
                 <tr>
-                    <td colSpan={2}>
+                    <td className="contents-section" colSpan={2}>
                         {path ? (
-                            <Drawing canvasRef={canvasRef} saveInfo={data?.DRAWINFO}/>
+                            <Drawing
+                                canvasRef={canvasRef}
+                                saveInfo={data?.DRAWINFO}
+                                drawTime={data?.DRAWTIME}
+                            />
                         ) : (
-                            <Drawing canvasRef={canvasRef}/>
+                            <Drawing
+                                canvasRef={canvasRef}
+                            />
                         )}
                     </td>
                 </tr>
@@ -388,7 +389,6 @@ const ImgBoardDetail = () => {
                     <button
                         className="common_btn temp"
                         onClick={() => {
-                            canvasSave();
                             append_board("temp");
                         }}
                     >
@@ -397,7 +397,6 @@ const ImgBoardDetail = () => {
                     <button
                         className="common_btn append"
                         onClick={() => {
-                            canvasSave();
                             append_board();
                         }}
                     >
