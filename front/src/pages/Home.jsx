@@ -35,8 +35,7 @@ const Home = () => {
                 toast.success("로그인 성공", {
                     autoClose: 500,
                     onClose: () => {
-                        setUser(res);
-                        sessionStorage.setItem("user_Token", JSON.stringify(res));
+                        sessionStorage.setItem("user", JSON.stringify(res));
                         nav("/img")
                     },
                 });
