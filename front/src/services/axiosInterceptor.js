@@ -12,7 +12,6 @@ api.interceptors.response.use(
     function (error) {
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
             sessionStorage.clear();
-            window.location.href = "/";
         }
         return Promise.reject(error);
     },

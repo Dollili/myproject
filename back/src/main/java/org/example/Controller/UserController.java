@@ -22,10 +22,9 @@ public class UserController {
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, Object> params, HttpServletRequest request) {
+    public ResponseEntity<?> login(@RequestBody Map<String, Object> params, HttpServletResponse response) {
         try {
-            Map<String, Object> result = userService.login(params, request);
-            logger.info("login result: {}", result);
+            Map<String, Object> result = userService.login(params, response);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             logger.error("로그인 실패:{}", e.getMessage());

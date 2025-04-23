@@ -169,6 +169,7 @@ const UserInfo = () => {
                             </div>
                             {mod ? (
                                 <button
+                                    className="mod-btn"
                                     onClick={() => {
                                         setMod(false);
                                     }}
@@ -183,7 +184,7 @@ const UserInfo = () => {
                                         modInfo();
                                     }}
                                 >
-                                    수정 완료
+                                    완료
                                 </button>
                             )}
                         </div>

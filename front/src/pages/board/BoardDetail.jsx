@@ -109,11 +109,10 @@ const BoardDetail = () => {
 
             if (files?.length > 0) {
                 if (data) {
-                    file_res = await dbForm(files, data.no);
+                    await dbForm(files, data.no);
                 } else {
-                    file_res = await dbForm(files);
+                    await dbForm(files);
                 }
-                console.log(file_res);
             }
 
             if (res === 1 || res === 204) {

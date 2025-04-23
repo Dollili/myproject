@@ -3,14 +3,14 @@ import {createContext, useEffect, useState} from "react";
 export const UserContext = createContext(null);
 
 export function UserProvider({children}) {
-    const store = sessionStorage.getItem("user_Token");
+    const store = sessionStorage.getItem("user");
     const [user, setUser] = useState(store ? JSON.parse(store) : null);
 
     useEffect(() => {
         if (user) {
-            sessionStorage.setItem("user_Token", JSON.stringify(user));
+            sessionStorage.setItem("user", JSON.stringify(user));
         } else {
-            sessionStorage.removeItem("user_Token");
+            sessionStorage.removeItem("user");
         }
     }, [user]);
 
