@@ -36,12 +36,12 @@ public interface ImageMapper {
 
     int updateBoard(Map<String, Object> param);
 
-    @Insert("INSERT INTO COMMENT (USER_ID, APPLY_DATE, COMMENT, BOARD_NO, USER_NIC, CATEGORY) VALUES (#{user}, NOW(), #{comment}, #{no}, #{nic}, #{category})")
+    @Insert("INSERT INTO IMGCOMMENT (USER_ID, APPLY_DATE, COMMENT, BOARD_NO, USER_NIC, CATEGORY) VALUES (#{user}, NOW(), #{comment}, #{no}, #{nic}, #{category})")
     int insertComment(Map<String, Object> param);
 
-    @Update("UPDATE COMMENT SET DEL_YN ='Y' WHERE ID=#{id} AND USER_ID=#{user}")
+    @Update("UPDATE IMGCOMMENT SET DEL_YN ='Y' WHERE ID=#{id} AND USER_ID=#{user}")
     int deleteComment(Map<String, Object> param);
 
-    @Update("UPDATE COMMENT SET DEL_YN ='Y' WHERE BOARD_NO=#{no}")
+    @Update("UPDATE IMGCOMMENT SET DEL_YN ='Y' WHERE BOARD_NO=#{no}")
     void deleteAllCom(String no);
 }
