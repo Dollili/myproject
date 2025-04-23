@@ -5,7 +5,7 @@ import SideMenu from "./components/SideMenu";
 import {useEffect, useState} from "react";
 
 const ProtectedRoute = () => {
-    const isAuth = !!sessionStorage.getItem("user_Token");
+    const isAuth = !!sessionStorage.getItem("user");
     const [onOff, setOn] = useState(false);
     const location = useLocation();
 

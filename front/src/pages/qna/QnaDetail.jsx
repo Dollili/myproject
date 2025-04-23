@@ -64,7 +64,7 @@ const QnaDetail = () => {
                 } else {
                     toast.error("조회 오류 발생", {
                         onClose: () => {
-                            nav("/notice");
+                            nav("/qna");
                         },
                     });
                 }
@@ -101,24 +101,23 @@ const QnaDetail = () => {
                 }
                 res = await dbPut("/board/detail/modify", param);
             } else {
-                param["category"] = "notice";
+                param["category"] = "qna";
                 res = await dbPost("/board/detail", param);
             }
 
             if (files?.length > 0) {
                 if (data) {
-                    file_res = await dbForm(files, data.no);
+                    await dbForm(files, data.no);
                 } else {
-                    file_res = await dbForm(files);
+                    await dbForm(files);
                 }
-                console.log(file_res);
             }
 
             if (res === 1 || res === 204) {
                 toast.success("등록완료", {
                     autoClose: 500,
                     onClose: () => {
-                        nav("/notice");
+                        nav("/qna");
                     },
                 });
             } else {
@@ -147,7 +146,7 @@ const QnaDetail = () => {
                 toast.success("삭제완료", {
                     autoClose: 500,
                     onClose: () => {
-                        nav("/notice");
+                        nav("/qna");
                     },
                 });
             } else {
@@ -273,7 +272,7 @@ const QnaDetail = () => {
                     <NoticeComment location={location}/>
                 </div>
             )}
-            <Link to={"/notice"}>
+            <Link to={"/qna"}>
                 <button className="common_btn">목록</button>
             </Link>
             {path && role && (

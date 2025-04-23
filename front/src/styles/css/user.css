@@ -36,6 +36,12 @@
 
 .form .complete {
     background-color: #DB4437;
+    line-height: initial;
+    width: 40%;
+}
+
+.form .complete:hover {
+    background-color: rgba(219, 68, 55, 0.66);
 }
 
 .user-container.sign-up .form.sign-up,
@@ -74,4 +80,13 @@
 
 .boardList:hover {
     scrollbar-width: thin;
+}
+
+.form .mod-btn {
+    line-height: initial;
+    width: 40%;
+}
+
+.form .mod-btn:hover {
+    background-color: #dee2e6;
 }

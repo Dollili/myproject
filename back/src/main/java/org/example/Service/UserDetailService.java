@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class TestUserDetailService implements UserDetailsService {
+public class UserDetailService implements UserDetailsService {
     private final UserMapper userMapper;
-    Logger logger = LoggerFactory.getLogger(TestUserDetailService.class);
+    Logger logger = LoggerFactory.getLogger(UserDetailService.class);
 
-    public TestUserDetailService(UserMapper userMapper) {
+    public UserDetailService(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
