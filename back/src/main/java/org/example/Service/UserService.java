@@ -42,15 +42,20 @@ public class UserService {
                 .collect(Collectors.toList());
 
         String token = jwtTokenProvider.createToken(username, roles);
+        long maxAge = jwtTokenProvider.getValidityInMilliseconds() / 1000;
 
         Cookie cookie = new Cookie("token", token);
         cookie.setHttpOnly(true);
         cookie.setSecure(true); // HTTPS 환경에서만 전달
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60); // 1시간
+        cookie.setMaxAge((int) maxAge); // 1시간
         response.addCookie(cookie);
 
-        return userMapper.userInfo(params);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", userMapper.userInfo(params));
+        map.put("time", System.currentTimeMillis() + jwtTokenProvider.getValidityInMilliseconds());
+
+        return map;
     }
 
     public ResponseEntity<String> join(Map<String, Object> params) {

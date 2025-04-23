@@ -13,13 +13,16 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long validityInMilliseconds = 3600000;
+
+    public long getValidityInMilliseconds() {
+        return 60 * 60 * 1000L;
+    }
 
     public String createToken(String username, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", roles);
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+        Date validity = new Date(now.getTime() + getValidityInMilliseconds());
 
         return Jwts.builder()
                 .setClaims(claims)
