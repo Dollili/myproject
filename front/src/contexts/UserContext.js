@@ -11,6 +11,7 @@ export function UserProvider({children}) {
             sessionStorage.setItem("user", JSON.stringify(user));
         } else {
             sessionStorage.removeItem("user");
+            sessionStorage.removeItem("time");
         }
     }, [user]);
 

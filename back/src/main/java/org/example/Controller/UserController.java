@@ -40,10 +40,10 @@ public class UserController {
             session.invalidate();
         }
 
-        Cookie cookie = new Cookie("JSESSIONID", null);
+        Cookie cookie = new Cookie("token", null);
+        cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
         response.addCookie(cookie);
 
         return ResponseEntity.ok().build();
