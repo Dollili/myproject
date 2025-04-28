@@ -19,9 +19,13 @@
     opacity: 0.7;
 }
 
-.search-count {
+.boardTitle {
     position: fixed;
-    left: 60px
+    left: 60px;
+}
+
+.search-count {
+    margin-right: 10px
 }
 
 .search-count,

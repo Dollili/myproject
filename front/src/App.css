@@ -61,7 +61,11 @@
 }
 
 .App-header .menu {
+    display: flex;
     float: right;
+}
+
+.App-header .menu p {
     color: white;
     margin: 30px;
 }
@@ -73,7 +77,7 @@
     margin-bottom: 30px;
 }
 
-.menu:hover, .logo:hover {
+.menu p:hover, .logo:hover {
     cursor: pointer;
 }
 
@@ -109,4 +113,23 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+.remainTime-btn {
+    border: unset;
+    border-radius: 5px;
+    background-color: unset;
+    padding: 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+    color: #757575;
+}
+
+.remainTime-btn:hover {
+    background-color: #cccccc;
+    color: white;
+}
+
+.remainLogin {
+    background-color: white;
 }

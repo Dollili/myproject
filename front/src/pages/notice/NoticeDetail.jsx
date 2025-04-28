@@ -4,13 +4,14 @@ import Form from "react-bootstrap/Form";
 import {Table} from "react-bootstrap";
 import {dbForm, dbGet, dbPost, dbPut} from "../../services/commonApi";
 import {UserContext} from "../../contexts/UserContext";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import FileUpload from "../../components/FileUpload";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 import NoticeComment from "./NoticeComment";
 import MyEditor from "../../components/MyEditor";
 import DOMPurity from "quill/formats/link";
+import ToastCon from "../../components/ToastCon";
 
 const NoticeDetail = () => {
     const nav = useNavigate();
@@ -32,7 +33,7 @@ const NoticeDetail = () => {
     };
 
     const changeContent = (val) => {
-        setParam({...param, "contents": val});
+        setParam({...param, contents: val});
     };
 
     const downloadFile = async (file, origin) => {
@@ -257,11 +258,16 @@ const NoticeDetail = () => {
                         {path ? (
                             <div
                                 className="contentsInput"
-                                dangerouslySetInnerHTML={{__html: DOMPurity.sanitize(data.CONTENTS)}}
+                                dangerouslySetInnerHTML={{
+                                    __html: DOMPurity.sanitize(data.CONTENTS),
+                                }}
                                 style={{borderStyle: "unset", fontFamily: "initial"}}
                             />
                         ) : (
-                            <MyEditor onChange={changeContent} value={param.contents || ""}/>
+                            <MyEditor
+                                onChange={changeContent}
+                                value={param.contents || ""}
+                            />
                         )}
                     </td>
                 </tr>
@@ -305,15 +311,7 @@ const NoticeDetail = () => {
                     등록
                 </button>
             )}
-            <ToastContainer
-                toastStyle={{maxWidth: "100%", width: "auto", whiteSpace: "nowrap"}}
-                theme="light"
-                position="top-center"
-                limit={1}
-                closeButton={false}
-                autoClose={2000}
-                hideProgressBar
-            />
+            <ToastCon autoClose={2000}/>
         </div>
     );
 };

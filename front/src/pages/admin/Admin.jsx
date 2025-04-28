@@ -1,8 +1,9 @@
 import React, {useContext, useState} from "react";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import {dbPost} from "../../services/commonApi";
 import {UserContext} from "../../contexts/UserContext";
 import {useNavigate} from "react-router-dom";
+import ToastCon from "../../components/ToastCon";
 
 const Admin = () => {
     const nav = useNavigate();
@@ -94,14 +95,7 @@ const Admin = () => {
                     </div>
                 </div>
             </div>
-            <ToastContainer
-                theme="light"
-                position="top-center"
-                limit={1}
-                closeButton={false}
-                autoClose={1000}
-                hideProgressBar
-            />
+            <ToastCon autoClose={1000}/>
         </>
     );
 };

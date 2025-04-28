@@ -7,6 +7,9 @@ import org.example.Repository.UserMapper;
 import org.example.util.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +40,8 @@ public class UserService {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-        List<String> roles = authentication.getAuthorities().stream()
+        List<String> roles = authentication.getAuthorities()
+                .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
@@ -127,6 +131,31 @@ public class UserService {
             logger.info("update failed");
             return ResponseEntity.internalServerError().body("fail");
         }
+    }
+
+    public ResponseEntity<?> refreshToken(String token) {
+        if (jwtTokenProvider.validateToken(token)) {
+            String username = jwtTokenProvider.getUsername(token);
+            List<String> roles = jwtTokenProvider.getRoles(token);
+            String newToken = jwtTokenProvider.createToken(username, roles);
+
+            String cookie = ResponseCookie.from("token", newToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge((int) (jwtTokenProvider.getValidityInMilliseconds() / 1000))
+                    .build()
+                    .toString();
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("result", "success");
+            map.put("time", System.currentTimeMillis() + jwtTokenProvider.getValidityInMilliseconds());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie)
+                    .body(map);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
 }

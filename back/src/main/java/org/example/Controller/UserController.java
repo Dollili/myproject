@@ -66,4 +66,9 @@ public class UserController {
         return userService.join(params);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<?> reLogin(@CookieValue("token") String token) {
+        return userService.refreshToken(token);
+    }
+
 }

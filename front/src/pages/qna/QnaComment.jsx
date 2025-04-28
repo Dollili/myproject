@@ -155,7 +155,7 @@ const QnaComment = ({location}) => {
                         currentPage={setCurrent}
                     />
                 )}
-                <Table bordered>
+                {user.ROLE === "M" && <Table bordered>
                     <colgroup>
                         <col style={{width: "20%"}}/>
                         <col style={{width: "60%"}}/>
@@ -188,7 +188,7 @@ const QnaComment = ({location}) => {
                         </td>
                     </tr>
                     </tbody>
-                </Table>
+                </Table>}
             </div>
         </div>
     );
