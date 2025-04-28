@@ -6,13 +6,14 @@ import {showAlert} from "../../components/alert/customAlert";
 import ImgComment from "./ImgComment";
 import {dbForm, dbGet, dbPost, dbPut} from "../../services/commonApi";
 import {UserContext} from "../../contexts/UserContext";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import thumb from "../../assets/img/thumbs_16019896.png";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 import Drawing from "../../components/Drawing";
 import api from "../../services/axiosInterceptor";
 import FileUpload from "../../components/FileUpload";
+import ToastCon from "../../components/ToastCon";
 
 const ImgBoardDetail = () => {
     const nav = useNavigate();
@@ -115,7 +116,7 @@ const ImgBoardDetail = () => {
             });
             if (imgPath.data?.url) {
                 param["imgpath"] = imgPath.data.url;
-                param['imgname'] = imgPath.data.name;
+                param["imgname"] = imgPath.data.name;
             }
 
             if (Object.keys(data).length > 0) {
@@ -235,18 +236,18 @@ const ImgBoardDetail = () => {
     };
 
     /*useEffect(() => {
-              if (files?.length > 0) {
-                  files.forEach(function (f) {
-                      if (!f.type.startsWith("image/")) {
-                          toast.info("이미지 파일만 업로드 가능합니다.", {
-                              autoClose: 500,
-                          });
-                          setFiles(null);
-                          click.current.value = null;
-                      }
-                  });
-              }
-          }, [files]);*/
+                if (files?.length > 0) {
+                    files.forEach(function (f) {
+                        if (!f.type.startsWith("image/")) {
+                            toast.info("이미지 파일만 업로드 가능합니다.", {
+                                autoClose: 500,
+                            });
+                            setFiles(null);
+                            click.current.value = null;
+                        }
+                    });
+                }
+            }, [files]);*/
 
     useEffect(() => {
         userCheck();
@@ -332,9 +333,7 @@ const ImgBoardDetail = () => {
                                 drawTime={data?.DRAWTIME}
                             />
                         ) : (
-                            <Drawing
-                                canvasRef={canvasRef}
-                            />
+                            <Drawing canvasRef={canvasRef}/>
                         )}
                     </td>
                 </tr>
@@ -404,15 +403,7 @@ const ImgBoardDetail = () => {
                     </button>
                 </>
             )}
-            <ToastContainer
-                toastStyle={{maxWidth: "100%", width: "auto", whiteSpace: "nowrap"}}
-                theme="light"
-                position="top-center"
-                limit={1}
-                closeButton={false}
-                autoClose={2000}
-                hideProgressBar
-            />
+            <ToastCon autoClose={2000}/>
         </div>
     );
 };

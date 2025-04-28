@@ -40,6 +40,15 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
+    public List<String> getRoles(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return (List<String>) claims.get("roles");
+    }
+
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(key).parseClaimsJws(token);

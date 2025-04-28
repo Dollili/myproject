@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
 import suc_icon from "../../assets/img/free-icon-success-11433360.png";
 import {dbPost} from "../../services/commonApi";
+import ToastCon from "../../components/ToastCon";
 
 const Register = ({toggle}) => {
     const nav = useNavigate();
@@ -171,14 +172,7 @@ const Register = ({toggle}) => {
                         </p>
                     </div>
                 </div>
-                <ToastContainer
-                    theme="light"
-                    position="top-center"
-                    limit={1}
-                    closeButton={false}
-                    autoClose={1000}
-                    hideProgressBar
-                />
+                <ToastCon autoClose={1000}/>
             </div>
         </>
     );
