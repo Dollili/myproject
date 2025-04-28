@@ -56,6 +56,7 @@ const Qna = () => {
         <>
             <div className="main-container notice">
                 <div className="search-container notice-search">
+                    <h2 className="boardTitle">QnA</h2>
                     <select
                         className="search-count notice-count"
                         name="option"

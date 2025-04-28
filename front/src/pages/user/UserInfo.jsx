@@ -4,7 +4,8 @@ import React, {useContext, useEffect, useState} from "react";
 import "../../styles/css/login.css";
 import {Table} from "react-bootstrap";
 import {UserContext} from "../../contexts/UserContext";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
+import ToastCon from "../../components/ToastCon";
 
 const UserInfo = () => {
     const nav = useNavigate();
@@ -263,7 +264,9 @@ const UserInfo = () => {
                                     ) : (
                                         comment.map((item, idx) => (
                                             <tr key={idx}>
-                                                <td className="date">{changeCategory(item.CATEGORY)}</td>
+                                                <td className="date">
+                                                    {changeCategory(item.CATEGORY)}
+                                                </td>
                                                 <td
                                                     className="title"
                                                     onClick={() => {
@@ -274,9 +277,7 @@ const UserInfo = () => {
                                                 >
                                                     {item.COMMENT}
                                                 </td>
-                                                <td className="date">
-                                                    {item.APPLY_FORMAT_DATE}
-                                                </td>
+                                                <td className="date">{item.APPLY_FORMAT_DATE}</td>
                                             </tr>
                                         ))
                                     )}
@@ -312,7 +313,9 @@ const UserInfo = () => {
                                     ) : (
                                         temporary.map((item, idx) => (
                                             <tr key={idx}>
-                                                <td className="date">{changeCategory(item.CATEGORY)}</td>
+                                                <td className="date">
+                                                    {changeCategory(item.CATEGORY)}
+                                                </td>
                                                 <td
                                                     className="title"
                                                     onClick={() => {
@@ -335,15 +338,7 @@ const UserInfo = () => {
                         </div>
                     </div>
                 </div>
-                <ToastContainer
-                    toastStyle={{maxWidth: "100%", width: "auto", whiteSpace: "nowrap"}}
-                    theme="light"
-                    position="top-center"
-                    limit={1}
-                    closeButton={false}
-                    autoClose={2000}
-                    hideProgressBar
-                />
+                <ToastCon autoClose={2000}/>
             </div>
             <p style={{textAlign: "center"}}>클릭 시 해당 글로 이동합니다</p>
         </>

@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import {Table} from "react-bootstrap";
 import {dbForm, dbGet, dbPost, dbPut} from "../../services/commonApi";
 import {UserContext} from "../../contexts/UserContext";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import FileUpload from "../../components/FileUpload";
 import axios from "axios";
 import del_icon from "../../assets/img/free-icon-remove-1828843.png";
@@ -13,6 +13,7 @@ import MyEditor from "../../components/MyEditor";
 import DOMPurity from "quill/formats/link";
 import thumb from "../../assets/img/thumbs_16019896.png";
 import {showAlert} from "../../components/alert/customAlert";
+import ToastCon from "../../components/ToastCon";
 
 const BoardDetail = () => {
     const nav = useNavigate();
@@ -34,7 +35,7 @@ const BoardDetail = () => {
     };
 
     const changeContent = (val) => {
-        setParam({...param, "contents": val});
+        setParam({...param, contents: val});
     };
 
     const downloadFile = async (file, origin) => {
@@ -283,11 +284,16 @@ const BoardDetail = () => {
                         {path ? (
                             <div
                                 className="contentsInput"
-                                dangerouslySetInnerHTML={{__html: DOMPurity.sanitize(data.CONTENTS)}}
+                                dangerouslySetInnerHTML={{
+                                    __html: DOMPurity.sanitize(data.CONTENTS),
+                                }}
                                 style={{borderStyle: "unset", fontFamily: "initial"}}
                             />
                         ) : (
-                            <MyEditor onChange={changeContent} value={param.contents || ""}/>
+                            <MyEditor
+                                onChange={changeContent}
+                                value={param.contents || ""}
+                            />
                         )}
                     </td>
                 </tr>
@@ -345,15 +351,7 @@ const BoardDetail = () => {
                     등록
                 </button>
             )}
-            <ToastContainer
-                toastStyle={{maxWidth: "100%", width: "auto", whiteSpace: "nowrap"}}
-                theme="light"
-                position="top-center"
-                limit={1}
-                closeButton={false}
-                autoClose={2000}
-                hideProgressBar
-            />
+            <ToastCon autoClose={2000}/>
         </div>
     );
 };
