@@ -72,7 +72,7 @@ const UserInfo = () => {
                         onClose: async () => {
                             await dbPost("/auth/logout", {});
                             setUser(null);
-                            sessionStorage.removeItem("user_Token");
+                            sessionStorage.removeItem("user");
                             window.location.href = "/";
                         },
                     });
@@ -101,7 +101,7 @@ const UserInfo = () => {
             case "notice":
                 return "공지";
             case "img":
-                return "그림방";
+                return "전시회";
             case "qna":
                 return "QnA";
             default:
@@ -217,7 +217,7 @@ const UserInfo = () => {
                                     ) : (
                                         board.map((item, idx) => (
                                             <tr key={idx}>
-                                                <td>{changeCategory(item.CATEGORY)}</td>
+                                                <td className="date">{changeCategory(item.CATEGORY)}</td>
                                                 <td
                                                     className="title"
                                                     onClick={() => {

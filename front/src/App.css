@@ -73,11 +73,17 @@
 .App-header .logo {
     float: left;
     color: white;
+    font-size: 22px;
     margin-top: 30px;
     margin-bottom: 30px;
 }
 
-.menu p:hover, .logo:hover {
+.logo:hover {
+    cursor: pointer;
+}
+
+.menu p:hover {
+    font-size: 1.3rem;
     cursor: pointer;
 }
 

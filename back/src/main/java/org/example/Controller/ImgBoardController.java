@@ -1,13 +1,12 @@
 package org.example.Controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.example.Service.ImgBoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,14 +25,14 @@ public class ImgBoardController {
     }
 
     @GetMapping("/imgDetail")
-    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> no, HttpServletRequest request) {
-        return imgBoardService.getBoardDetail(no, request);
+    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> no) {
+        return imgBoardService.getBoardDetail(no);
     }
 
     @PostMapping("/imgDetail")
-    public int boardInsert(@RequestBody Map<String, Object> param, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        param.put("id", session.getAttribute("user"));
+    public int boardInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("id", username);
         return imgBoardService.insertBoard(param);
     }
 
@@ -77,16 +76,16 @@ public class ImgBoardController {
     }
 
     @PostMapping("/iComment")
-    public int commentInsert(@RequestBody Map<String, Object> param, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        param.put("user", session.getAttribute("user"));
+    public int commentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("id", username);
         return imgBoardService.insertComment(param);
     }
 
     @PutMapping("/iComment/delete")
-    public ResponseEntity<?> commentDelete(@RequestBody Map<String, Object> param, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        param.put("user", session.getAttribute("user"));
+    public ResponseEntity<?> commentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("id", username);
         return imgBoardService.deleteComment(param);
     }
 }

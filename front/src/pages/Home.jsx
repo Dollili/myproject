@@ -7,8 +7,8 @@ import "../styles/css/login.css";
 import {UserContext} from "../contexts/UserContext";
 
 const Home = () => {
-    const {user, setUser} = useContext(UserContext);
     const nav = useNavigate();
+    const {user, setUser} = useContext(UserContext);
     const [container, setContainer] = useState(null);
 
     const [userlogin, setLogin] = useState({
@@ -35,6 +35,7 @@ const Home = () => {
                 toast.success("로그인 성공", {
                     autoClose: 500,
                     onClose: () => {
+                        setUser(res.result);
                         sessionStorage.setItem("user", JSON.stringify(res.result));
                         sessionStorage.setItem("time", res.time);
                         nav("/img")
@@ -74,7 +75,7 @@ const Home = () => {
                 id="container"
                 className={`container ${container === null ? "" : container ? "sign-in" : "sign-up"}`}
             >
-                {sessionStorage.getItem("user_Token") == null ? (
+                {sessionStorage.getItem("user") == null ? (
                     <div className="row">
                         <Register toggle={toggle}/>
                         <div className="col align-items-center flex-col sign-in">
