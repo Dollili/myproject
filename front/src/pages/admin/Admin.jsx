@@ -1,9 +1,9 @@
 import React, {useContext, useState} from "react";
 import {toast} from "react-toastify";
 import {dbPost} from "../../services/commonApi";
-import {UserContext} from "../../contexts/UserContext";
 import {useNavigate} from "react-router-dom";
 import ToastCon from "../../components/ToastCon";
+import {UserContext} from "../../contexts/UserContext";
 
 const Admin = () => {
     const nav = useNavigate();
@@ -38,8 +38,8 @@ const Admin = () => {
                 toast.success("로그인 성공", {
                     autoClose: 500,
                     onClose: () => {
-                        setUser(res);
-                        sessionStorage.setItem("user_Token", JSON.stringify(res));
+                        setUser(res.result);
+                        sessionStorage.setItem("user", JSON.stringify(res.result));
                         nav("/board");
                     },
                 });

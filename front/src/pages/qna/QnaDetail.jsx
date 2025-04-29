@@ -93,7 +93,6 @@ const QnaDetail = () => {
             }
 
             let res;
-            let file_res;
 
             if (Object.keys(data).length > 0) {
                 if (trash?.length > 0) {
@@ -292,14 +291,14 @@ const QnaDetail = () => {
             </Link>
             {path && role && (
                 <div className="user_board_btn">
-                    <button
+                    {/*<button
                         className="common_btn"
                         onClick={() => {
                             updateBoard(data.NO);
                         }}
                     >
                         수정
-                    </button>
+                    </button>*/}
                     <button
                         className="common_btn"
                         onClick={() => {

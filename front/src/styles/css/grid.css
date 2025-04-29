@@ -1,5 +1,5 @@
 .grid-container {
-    margin-top: 40px;
+    margin-top: 50px;
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개씩 */
     gap: 16px;

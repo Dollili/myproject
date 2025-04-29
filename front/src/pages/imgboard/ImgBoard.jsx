@@ -57,7 +57,7 @@ const ImgBoard = () => {
     return (
         <>
             <div className="main-container">
-                <h2 className="boardTitle">그림방</h2>
+                <h2 className="boardTitle">전시회</h2>
                 <div className={`search-container ${scroll ? "" : "scroll"}`}>
                     <select
                         className="search-count"
@@ -126,7 +126,6 @@ const ImgBoard = () => {
                                     <p>추천 {item.RECOMMEND}</p>
                                     <p>조회수 {item.VIEW_CNT}</p>
                                 </div>
-                                {" "}
                             </div>
                         ))
                     )}

@@ -22,7 +22,7 @@ public interface BoardMapper {
     Map<String, Object> getBoardDetail(Map<String, Object> no);
 
     @Update("UPDATE BOARD SET VIEW_CNT = VIEW_CNT + 1 WHERE NO=#{no}")
-    void viewCount(Map<String, Object> no);
+    void viewCount(String no);
 
     @Update("UPDATE BOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO=#{no}")
     int recommendUp(Map<String, Object> param);

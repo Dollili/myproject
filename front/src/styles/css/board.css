@@ -1,5 +1,5 @@
 .main-container {
-    margin: 40px;
+    margin: 20px;
     flex-direction: column;
     flex: 1;
 }
@@ -20,8 +20,10 @@
 }
 
 .boardTitle {
-    position: fixed;
-    left: 60px;
+    margin-top: 10px;
+    margin-bottom: -15px;
+    margin-left: 15px;
+    font-family: TmoneyRoundWindExtraBold;
 }
 
 .search-count {
@@ -149,19 +151,29 @@ td {
 
 .pagination-custom {
     justify-content: center;
-    margin: 10px;
 }
 
 .pagination-custom .page-item {
     background-color: unset;
-    border-radius: 0;
-    min-width: 40px;
+    max-width: 100%;
+    margin: 0 5px;
     text-align: center;
+    display: flex; /* Flexbox 적용 */
+    justify-content: center; /* 가로로 가운데 정렬 */
+    align-items: center; /* 세로로 가운데 정렬 */
+    font-family: TmoneyRoundWindExtraBold;
 }
 
 .pagination-custom .page-item .page-link {
+    border-radius: 50px;
+    width: 45px;
     border-color: beige;
     color: black;
+    padding: 10px;
+}
+
+.pagination-custom .page-item:hover {
+    font-size: 1.2rem;
 }
 
 .pagination-custom .page-item.active .page-link {
