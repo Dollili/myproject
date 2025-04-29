@@ -1,7 +1,5 @@
 package org.example.Service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Repository.BoardMapper;
 import org.example.Repository.FileMapper;
@@ -10,13 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
 public class HomeService {
     private final BoardMapper boardMapper;
     private final FileMapper fileMapper;
+    private final ViewCountService viewCountService;
     Logger logger = LoggerFactory.getLogger(HomeService.class);
 
     public Map<String, Object> getBoardList(Map<String, Object> params) {
@@ -36,24 +37,19 @@ public class HomeService {
         return result;
     }
 
-    public Map<String, Object> getBoardDetail(Map<String, Object> no, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Set<String> view = (Set<String>) session.getAttribute("view"); // 조회수 세션 임시
-
-        if (view == null) {
-            view = new HashSet<>();
-            session.setAttribute("view", view);
-        }
-
-        if (!view.contains((String) no.get("no"))) {
-            view.add((String) no.get("no"));
+    public Map<String, Object> getBoardDetail(Map<String, Object> param) {
+        String category = "board";
+        String no = param.get("no") == null ? "" : param.get("no").toString();
+        String id = param.get("id") == null ? "" : param.get("id").toString();
+        if (!viewCountService.hasUserPost(id, no, category)) {
             boardMapper.viewCount(no);
+            viewCountService.markUserPost(id, no, category);
         }
 
-        Map<String, Object> result = boardMapper.getBoardDetail(no);
+        Map<String, Object> result = boardMapper.getBoardDetail(param);
         //file
         if (result != null) {
-            result.put("file", fileMapper.getFileList((String) no.get("no")));
+            result.put("file", fileMapper.getFileList((String) param.get("no")));
         }
 
         return result;
@@ -100,4 +96,5 @@ public class HomeService {
             return ResponseEntity.status(409).build();
         }
     }
+
 }

@@ -1,7 +1,5 @@
 package org.example.Service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Repository.FileMapper;
 import org.example.Repository.ImageMapper;
@@ -10,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -36,7 +36,8 @@ public class ImgBoardService {
         return result;
     }
 
-    public Map<String, Object> getBoardDetail(Map<String, Object> no, HttpServletRequest request) {
+    public Map<String, Object> getBoardDetail(Map<String, Object> no) {
+/*
         HttpSession session = request.getSession();
         Set<String> view = (Set<String>) session.getAttribute("view"); // 조회수 세션 임시
 
@@ -49,6 +50,7 @@ public class ImgBoardService {
             view.add((String) no.get("no"));
             imageMapper.viewCount(no);
         }
+*/
 
         Map<String, Object> result = imageMapper.getBoardDetail(no);
         //file
@@ -64,7 +66,7 @@ public class ImgBoardService {
     }
 
     public int insertBoard(Map<String, Object> param) {
-        
+
 
         return imageMapper.insertBoard(param);
     }

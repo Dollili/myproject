@@ -2,14 +2,13 @@ package org.example.Controller;
 
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.Service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -33,13 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
-
-        if (session != null) {
-            session.invalidate();
-        }
-
+    public ResponseEntity<?> logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("token", null);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
@@ -55,9 +48,9 @@ public class UserController {
     }
 
     @PutMapping("/user")
-    public ResponseEntity<?> updateUserInfo(@RequestBody Map<String, Object> params, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        params.put("id", session.getAttribute("user"));
+    public ResponseEntity<?> updateUserInfo(@RequestBody Map<String, Object> params, Authentication authentication) {
+        String username = authentication.getName();
+        params.put("id", username);
         return userService.updateUserInfo(params);
     }
 

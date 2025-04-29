@@ -20,15 +20,23 @@ const SideMenu = ({onOff}) => {
                 <div className="menu-item" onClick={() => nav("/notice")}>
                     공지사항
                 </div>
-                <div className="menu-item" onClick={() => nav("/img")}>
-                    그림방
-                </div>
                 <div className="menu-item" onClick={() => nav("/board")}>
                     자유게시판
                 </div>
-                <div className="menu-item" onClick={() => nav("/ranking")}>금주 랭킹</div>
-                <div className="menu-item" onClick={() => nav("/qna")}>QnA</div>
-                {role && <div className="menu-item" onClick={() => nav("/userBoard")}>사용자 통계</div>}
+                <div className="menu-item" onClick={() => nav("/img")}>
+                    전시회
+                </div>
+                <div className="menu-item" onClick={() => nav("/ranking")}>
+                    명예의 전당
+                </div>
+                <div className="menu-item" onClick={() => nav("/qna")}>
+                    QnA
+                </div>
+                {role && (
+                    <div className="menu-item" onClick={() => nav("/userBoard")}>
+                        사용자 통계
+                    </div>
+                )}
             </div>
         </div>
     );
