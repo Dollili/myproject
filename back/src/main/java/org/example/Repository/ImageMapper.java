@@ -44,4 +44,6 @@ public interface ImageMapper {
 
     @Update("UPDATE IMGCOMMENT SET DEL_YN ='Y' WHERE BOARD_NO=#{no}")
     void deleteAllCom(String no);
+
+    List<Map<String, Object>> selectRanking();
 }
