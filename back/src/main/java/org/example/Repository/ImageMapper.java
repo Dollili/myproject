@@ -25,7 +25,7 @@ public interface ImageMapper {
     void viewCount(Map<String, Object> no);
 
     @Update("UPDATE IMGBOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO=#{no}")
-    int recommendUp(Map<String, Object> param);
+    int recommendUp(String no);
 
     List<Map<String, Object>> getBoardComment(Map<String, Object> no);
 

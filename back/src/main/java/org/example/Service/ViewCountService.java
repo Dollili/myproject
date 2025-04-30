@@ -20,6 +20,8 @@ public class ViewCountService {
     public void markUserPost(String userId, String postId, String category) {
         String key = category + userId;
         redisTemplate.opsForSet().add(key, postId);
-        redisTemplate.expire(key, 1, TimeUnit.DAYS);
+        if (!category.equals("recommendBoard") && !category.equals("recommendImg")) {
+            redisTemplate.expire(key, 1, TimeUnit.DAYS);
+        }
     }
 }

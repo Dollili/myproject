@@ -63,13 +63,10 @@ public class HomeController {
     }
 
     @PutMapping("/detail/recommend")
-    public ResponseEntity<Void> boardRecUp(@RequestBody Map<String, Object> param) {
-        int result = homeService.recommendUp(param);
-        if (result == 1) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<?> boardRecUp(@RequestBody Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("id", username);
+        return homeService.recommendUp(param);
     }
 
     @GetMapping("/comment")
