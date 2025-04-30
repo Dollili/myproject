@@ -12,7 +12,6 @@ import BoardComment from "./BoardComment";
 import MyEditor from "../../components/MyEditor";
 import DOMPurity from "quill/formats/link";
 import thumb from "../../assets/img/thumbs_16019896.png";
-import {showAlert} from "../../components/alert/customAlert";
 import ToastCon from "../../components/ToastCon";
 
 const BoardDetail = () => {
@@ -162,15 +161,18 @@ const BoardDetail = () => {
 
     const recommend = async (no) => {
         if (role === "user") {
-            return showAlert("본인이 작성한 글에는 추천할 수 없습니다.");
+            return toast.warn("본인이 작성한 글에는 추천할 수 없습니다.");
         }
 
         try {
             const res = await dbPut("/board/detail/recommend", {no: no});
-            if (res === 204) {
+            if (res === 200) {
                 getDetail();
             }
         } catch (e) {
+            if (e.status === 515) {
+                return toast.warn("이미 추천한 게시물 입니다.");
+            }
             nav("/error", {state: e.status});
         }
     };

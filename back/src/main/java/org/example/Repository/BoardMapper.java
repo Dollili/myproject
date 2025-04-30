@@ -25,7 +25,7 @@ public interface BoardMapper {
     void viewCount(String no);
 
     @Update("UPDATE BOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO=#{no}")
-    int recommendUp(Map<String, Object> param);
+    int recommendUp(String no);
 
     List<Map<String, Object>> getBoardComment(Map<String, Object> no);
 
