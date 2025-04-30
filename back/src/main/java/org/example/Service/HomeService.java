@@ -55,8 +55,18 @@ public class HomeService {
         return result;
     }
 
-    public int recommendUp(Map<String, Object> param) {
-        return boardMapper.recommendUp(param);
+    public ResponseEntity<?> recommendUp(Map<String, Object> param) {
+        String category = "recommendBoard";
+        String no = param.get("no") == null ? "" : param.get("no").toString();
+        String id = param.get("id") == null ? "" : param.get("id").toString();
+
+        if (!viewCountService.hasUserPost(id, no, category)) {
+            boardMapper.recommendUp(no);
+            viewCountService.markUserPost(id, no, category);
+        } else {
+            return ResponseEntity.status(515).build();
+        }
+        return ResponseEntity.ok().build();
     }
 
     public int insertBoard(Map<String, Object> param) {
