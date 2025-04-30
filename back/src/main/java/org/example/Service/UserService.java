@@ -69,13 +69,18 @@ public class UserService {
         }
         String userId = (String) params.get("id");
         String userNic = (String) params.get("nic");
+
+        if (!userId.matches("^[a-zA-Z0-9]+$")) {
+            return ResponseEntity.status(511).body("아이디는 영문자, 숫자만 입력 가능합니다.");
+        }
+
         Map<String, Object> user = userMapper.findUserId(userId);
         Map<String, Object> nic = userMapper.findUserNic(userNic);
 
         if (user != null) {
-            return ResponseEntity.status(409).body("Duplicate ID");
+            return ResponseEntity.status(409).body("사용 중인 아이디 입니다.");
         } else if (nic != null) {
-            return ResponseEntity.status(418).body("Duplicate NIC");
+            return ResponseEntity.status(418).body("사용 중인 닉네임 입니다.");
         }
 
         if (userNic == null) {

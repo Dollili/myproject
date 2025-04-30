@@ -1,5 +1,5 @@
 .main-container {
-    margin: 20px;
+    padding: 20px;
     flex-direction: column;
     flex: 1;
 }
@@ -172,14 +172,13 @@ td {
     padding: 10px;
 }
 
-.pagination-custom .page-item:hover {
-    font-size: 1.2rem;
+.pagination-custom .page-item.disabled .page-link {
+    background-color: unset;
 }
 
 .pagination-custom .page-item.active .page-link {
-    border-color: beige;
     color: white;
-    background-color: #757575;
+    background-color: black;
 }
 
 .contents-td {

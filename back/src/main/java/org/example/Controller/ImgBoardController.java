@@ -25,8 +25,10 @@ public class ImgBoardController {
     }
 
     @GetMapping("/imgDetail")
-    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> no) {
-        return imgBoardService.getBoardDetail(no);
+    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("id", username);
+        return imgBoardService.getBoardDetail(param);
     }
 
     @PostMapping("/imgDetail")
@@ -87,5 +89,10 @@ public class ImgBoardController {
         String username = authentication.getName();
         param.put("id", username);
         return imgBoardService.deleteComment(param);
+    }
+
+    @GetMapping("/imgList/rank")
+    public List<Map<String, Object>> rank() {
+        return imgBoardService.getRank();
     }
 }
