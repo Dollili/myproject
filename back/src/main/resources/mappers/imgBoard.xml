@@ -131,4 +131,12 @@
         WHERE NO = #{no}
     </update>
 
+    <select id="selectRanking" resultType="map">
+        SELECT *
+        FROM IMGBOARD
+        WHERE RECOMMEND != 0
+          AND DEL_YN IS NULL
+        ORDER BY RECOMMEND DESC, APPLY_DATE
+        LIMIT 3
+    </select>
 </mapper>

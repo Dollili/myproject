@@ -1,9 +1,55 @@
+
 .grid-container {
     margin-top: 50px;
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개씩 */
     gap: 16px;
     padding: 20px;
+}
+
+@keyframes Zzan {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rank {
+    display: flex;
+    flex-direction: column;
+}
+
+.rank .crown {
+    margin: 15px;
+    width: 60px;
+    height: 60px;
+}
+
+.ranking {
+    grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개씩 */
+    gap: 20px;
+    animation: Zzan 1s forwards;
+}
+
+/*.ranking .left {
+    width: 10%;
+    text-align: center;
+    justify-items: center;
+}
+
+.ranking .right {
+    width: 10%;
+    text-align: center;
+    justify-items: center;
+}*/
+
+.rank .card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .noPost {
@@ -27,6 +73,7 @@
     flex-direction: column;
     justify-content: space-between;
     transition: 0.2s ease-in-out;
+    font-family: TmoneyRoundWindExtraBold;
 }
 
 .card:hover {
@@ -37,17 +84,63 @@
 
 .card img {
     width: 100%;
-    height: auto;
+    height: 70%;
     object-fit: contain;
 }
 
 .card .info {
+    height: 30%;
     padding: 10px;
+}
+
+.rank-1 {
+    transition: .3s ease-in-out;
+}
+
+.rank-2 {
+    transform: scale(0.8);
+    transition: .3s ease-in-out;
+}
+
+.rank-3 {
+    transform: scale(0.8);
+    transition: .3s ease-in-out;
+}
+
+.rank.rank-2:hover,
+.rank.rank-3:hover {
+    transform: scale(0.9);
+}
+
+.rank.rank-1:hover {
+    transform: scale(1.05);
+}
+
+.rank .rank1 img,
+.rank .rank2 img,
+.rank .rank3 img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.rank .rank1 .noImg,
+.rank .rank2 .noImg,
+.rank .rank3 .noImg {
+    width: 30%;
+    height: 30%;
+}
+
+.rank1,
+.rank2,
+.rank3 {
+    justify-content: center;
+    align-items: center;
 }
 
 .card h4 {
     margin: 0 0 6px;
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .card p {

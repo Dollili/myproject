@@ -57,12 +57,17 @@ const Register = ({toggle}) => {
                     toast.error("회원가입 실패");
                 }
             } catch (e) {
+                const msg = e.response.data;
                 if (e.status === 409) {
-                    return toast.warn("이미 사용중인 ID 입니다.", {
+                    return toast.warn(msg, {
                         autoClose: 1500,
                     });
                 } else if (e.status === 418) {
-                    return toast.warn("이미 사용중인 닉네임 입니다.", {
+                    return toast.warn(msg, {
+                        autoClose: 1500,
+                    });
+                } else if (e.status === 511) {
+                    return toast.warn(msg, {
                         autoClose: 1500,
                     });
                 }
