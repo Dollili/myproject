@@ -15,11 +15,12 @@ const BoardComment = ({location}) => {
 
     const [time, setTime] = useState("desc");
 
-    const [item, setItem] = useState(5);
+    const [item, setItem] = useState(10);
     const [current, setCurrent] = useState(1);
 
     const [cmt, setCmt] = useState([]);
 
+    const [submit, setSubmit] = useState(false);
     const [comment, setComment] = useState(() => {
         return user.ROLE === "M" ? {nic: "관리자"} : {nic: user.USER_NIC};
     });
@@ -52,16 +53,25 @@ const BoardComment = ({location}) => {
     };
 
     const append_comment = async () => {
-        if (comment?.comment == null || comment?.comment.length === 0)
+        if (submit) {
+            return toast.info("잠시 후에 다시 시도해주세요.");
+        }
+        if (comment?.comment == null || comment?.comment.length === 0) {
             return toast.info("내용을 입력해주세요.");
+        }
         comment["no"] = location.state;
         try {
             comment["category"] = "board";
 
             const res = await dbPost("/board/comment", comment);
             if (res === 1) {
-                getComment();
+                setComment(prev => ({...prev, "comment": ""}))
                 textareaRef.current.value = "";
+                getComment();
+                setSubmit(true);
+                setTimeout(() => {
+                    setSubmit(false);
+                }, 3000)
             }
         } catch (e) {
             nav("/error", {state: e.status});
@@ -89,6 +99,10 @@ const BoardComment = ({location}) => {
             setTime("desc");
         }
     };
+
+    useEffect(() => {
+
+    }, [textareaRef.current]);
 
     useEffect(() => {
         getComment(time);
