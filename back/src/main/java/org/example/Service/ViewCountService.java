@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class ViewCountService {
@@ -18,5 +20,6 @@ public class ViewCountService {
     public void markUserPost(String userId, String postId, String category) {
         String key = category + userId;
         redisTemplate.opsForSet().add(key, postId);
+        redisTemplate.expire(key, 1, TimeUnit.DAYS);
     }
 }

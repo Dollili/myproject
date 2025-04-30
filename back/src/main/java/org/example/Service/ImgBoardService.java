@@ -17,6 +17,7 @@ import java.util.Map;
 public class ImgBoardService {
     private final ImageMapper imageMapper;
     private final FileMapper fileMapper;
+    private final ViewCountService viewCountService;
     Logger logger = LoggerFactory.getLogger(HomeService.class);
 
     public Map<String, Object> getBoardList(Map<String, Object> params) {
@@ -36,26 +37,19 @@ public class ImgBoardService {
         return result;
     }
 
-    public Map<String, Object> getBoardDetail(Map<String, Object> no) {
-/*
-        HttpSession session = request.getSession();
-        Set<String> view = (Set<String>) session.getAttribute("view"); // 조회수 세션 임시
-
-        if (view == null) {
-            view = new HashSet<>();
-            session.setAttribute("view", view);
+    public Map<String, Object> getBoardDetail(Map<String, Object> param) {
+        String category = "imageBoard";
+        String no = param.get("no") == null ? "" : param.get("no").toString();
+        String id = param.get("id") == null ? "" : param.get("id").toString();
+        if (!viewCountService.hasUserPost(id, no, category)) {
+            imageMapper.viewCount(param);
+            viewCountService.markUserPost(id, no, category);
         }
 
-        if (!view.contains((String) no.get("no"))) {
-            view.add((String) no.get("no"));
-            imageMapper.viewCount(no);
-        }
-*/
-
-        Map<String, Object> result = imageMapper.getBoardDetail(no);
+        Map<String, Object> result = imageMapper.getBoardDetail(param);
         //file
         if (result != null) {
-            result.put("file", fileMapper.getFileList((String) no.get("no")));
+            result.put("file", fileMapper.getFileList((String) param.get("no")));
         }
 
         return result;
@@ -103,5 +97,9 @@ public class ImgBoardService {
         } else {
             return ResponseEntity.status(409).build();
         }
+    }
+
+    public List<Map<String, Object>> getRank() {
+        return imageMapper.selectRanking();
     }
 }
