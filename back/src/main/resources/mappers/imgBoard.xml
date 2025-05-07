@@ -134,8 +134,9 @@
     </update>
 
     <select id="selectRanking" resultType="map">
-        SELECT *
+        SELECT *, USER.USER_NIC AS AUTHOR
         FROM IMGBOARD
+                 JOIN USER ON IMGBOARD.USER_ID = USER.USER_ID
         WHERE RECOMMEND != 0
           AND DEL_YN IS NULL
         ORDER BY RECOMMEND DESC, APPLY_DATE
