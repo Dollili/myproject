@@ -16,20 +16,26 @@ const Rank = () => {
     const [data3, setData3] = useState({});
     const [load, setLoad] = useState(false);
 
+    const [effect, setEffect] = useState("");
+
     const getRanking = async () => {
-        const res = await dbGet("/board/imgList/rank", {});
-        if (res.length === 0) {
-            setLoad(true);
-            return;
-        }
-        if (res[0]?.IMG_PATH) {
-            setData1(res[0]);
-        }
-        if (res[1]?.IMG_PATH) {
-            setData2(res[1]);
-        }
-        if (res[2]?.IMG_PATH) {
-            setData3(res[2]);
+        try {
+            const res = await dbGet("/board/imgList/rank", {});
+            if (res.length === 0) {
+                setLoad(true);
+                return;
+            }
+            if (res[0]?.IMG_PATH) {
+                setData1(res[0]);
+            }
+            if (res[1]?.IMG_PATH) {
+                setData2(res[1]);
+            }
+            if (res[2]?.IMG_PATH) {
+                setData3(res[2]);
+            }
+        } catch (e) {
+            nav("/error", {state: e.status})
         }
     };
 
@@ -38,7 +44,14 @@ const Rank = () => {
     }
 
     useEffect(() => {
-        getRanking();
+        getRanking().then(() => {
+            setTimeout(() => {
+                setEffect("effect")
+                setTimeout(() => {
+                    setEffect("")
+                }, 3000)
+            }, 1000);
+        });
     }, []);
 
     return (
@@ -75,7 +88,7 @@ const Rank = () => {
                                 <div hidden={data2.IMG_PATH}>Image not found . . .</div>
                             </div>
                         </div>
-                        <div className="rank rank-1">
+                        <div className={`rank rank-1 ${effect}`}>
                             <img className="crown" src={medal1} alt="crown"/>
                             <div className="card rank1" onClick={() => movePage(data1.TITLE, data1.NO)}>
                                 <img
