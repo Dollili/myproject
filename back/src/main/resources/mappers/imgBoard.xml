@@ -5,6 +5,7 @@
     <select id="getBoardListCnt" resultType="integer">
         SELECT COUNT(*)
         FROM IMGBOARD
+        JOIN USER U ON U.USER_ID = IMGBOARD.USER_ID
         WHERE DEL_YN IS NULL
         AND CATEGORY = #{category}
         <if test="val != null and val !=''">
@@ -12,7 +13,7 @@
                 <when test="option != null and option != ''">
                     <choose>
                         <when test="option == 'author'">
-                            AND UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                            AND UPPER(U.USER_NIC) LIKE CONCAT('%',UPPER(#{val}),'%')
                         </when>
                         <otherwise>
                             AND TITLE LIKE CONCAT('%',#{val},'%')
@@ -20,7 +21,7 @@
                     </choose>
                 </when>
                 <otherwise>
-                    AND (UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                    AND (UPPER(U.USER_NIC) LIKE CONCAT('%',UPPER(#{val}),'%')
                     OR TITLE LIKE CONCAT('%',#{val},'%'))
                 </otherwise>
             </choose>
@@ -55,7 +56,7 @@
                 <when test="option != null and option != ''">
                     <choose>
                         <when test="option == 'author'">
-                            AND UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                            AND UPPER(U.USER_NIC) LIKE CONCAT('%',UPPER(#{val}),'%')
                         </when>
                         <otherwise>
                             AND TITLE LIKE CONCAT('%',#{val},'%')
@@ -63,7 +64,7 @@
                     </choose>
                 </when>
                 <otherwise>
-                    AND (UPPER(AUTHOR) LIKE CONCAT('%',UPPER(#{val}),'%')
+                    AND (UPPER(U.USER_NIC) LIKE CONCAT('%',UPPER(#{val}),'%')
                     OR TITLE LIKE CONCAT('%',#{val},'%'))
                 </otherwise>
             </choose>
