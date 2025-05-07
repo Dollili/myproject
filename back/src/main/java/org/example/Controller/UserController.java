@@ -32,12 +32,20 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
+    public ResponseEntity<?> logout(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
+        userService.logoutToken(refreshToken);
+
         Cookie cookie = new Cookie("token", null);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
+
+        Cookie rtCookie = new Cookie("refreshToken", null);
+        rtCookie.setHttpOnly(true);
+        rtCookie.setMaxAge(0);
+        rtCookie.setPath("/");
+        response.addCookie(rtCookie);
 
         return ResponseEntity.ok().build();
     }
@@ -60,8 +68,8 @@ public class UserController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> reLogin(@CookieValue("token") String token) {
-        return userService.refreshToken(token);
+    public ResponseEntity<?> reLogin(@CookieValue(value = "refreshToken", required = true) String token, HttpServletResponse response) {
+        return userService.refreshToken(token, response);
     }
 
     @PostMapping("/findPwd")
