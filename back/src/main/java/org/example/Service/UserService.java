@@ -7,9 +7,8 @@ import org.example.Repository.UserMapper;
 import org.example.util.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +21,7 @@ import javax.security.auth.login.LoginException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,13 +32,13 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
+    private final StringRedisTemplate stringRedisTemplate;
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public Map<String, Object> login(Map<String, Object> params, HttpServletResponse response) throws LoginException {
         String username = params.get("id").toString();
         String password = params.get("pwd").toString();
-
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
         List<String> roles = authentication.getAuthorities()
@@ -47,7 +47,9 @@ public class UserService {
                 .collect(Collectors.toList());
 
         String token = jwtTokenProvider.createToken(username, roles);
+        String refreshToken = jwtTokenProvider.createRefreshToken(username);
         long maxAge = jwtTokenProvider.getValidityInMilliseconds() / 1000;
+        long maxAge2 = jwtTokenProvider.refreshValidityInMilliseconds() / 1000;
 
         Cookie cookie = new Cookie("token", token);
         cookie.setHttpOnly(true);
@@ -56,11 +58,29 @@ public class UserService {
         cookie.setMaxAge((int) maxAge); // 1시간
         response.addCookie(cookie);
 
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(true); // HTTPS 환경에서만 전달
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge((int) maxAge2); // 7일
+        response.addCookie(refreshCookie);
+
+        stringRedisTemplate.opsForValue()
+                .set("RT:" + username, refreshToken, 7, TimeUnit.DAYS);
+
         Map<String, Object> map = new HashMap<>();
         map.put("result", userMapper.userInfo(params));
         map.put("time", System.currentTimeMillis() + jwtTokenProvider.getValidityInMilliseconds());
 
         return map;
+    }
+
+    public void logoutToken(String token) {
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            String username = jwtTokenProvider.getUsername(token);
+            stringRedisTemplate.delete("RT:" + username);
+        } else {
+        }
     }
 
     public ResponseEntity<String> join(Map<String, Object> params) {
@@ -175,29 +195,33 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<?> refreshToken(String token) {
-        if (jwtTokenProvider.validateToken(token)) {
-            String username = jwtTokenProvider.getUsername(token);
-            List<String> roles = jwtTokenProvider.getRoles(token);
-            String newToken = jwtTokenProvider.createToken(username, roles);
-
-            String cookie = ResponseCookie.from("token", newToken)
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .maxAge((int) (jwtTokenProvider.getValidityInMilliseconds() / 1000))
-                    .build()
-                    .toString();
-
-            Map<String, Object> map = new HashMap<>();
-            map.put("result", "success");
-            map.put("time", System.currentTimeMillis() + jwtTokenProvider.getValidityInMilliseconds());
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, cookie)
-                    .body(map);
+    public ResponseEntity<?> refreshToken(String token, HttpServletResponse response) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        String username = jwtTokenProvider.getUsername(token);
+
+        String saveRt = stringRedisTemplate.opsForValue()
+                .get("RT:" + username);
+        if (!token.equals(saveRt)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<String> roles = jwtTokenProvider.getRoles(token);
+        String newToken = jwtTokenProvider.createToken(username, roles);
+
+        Cookie cookie = new Cookie("token", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // HTTPS 환경에서만 전달
+        cookie.setPath("/");
+        cookie.setMaxAge((int) (jwtTokenProvider.getValidityInMilliseconds() / 1000)); // 1시간
+        response.addCookie(cookie);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", "success");
+        map.put("time", System.currentTimeMillis() + jwtTokenProvider.getValidityInMilliseconds());
+
+        return ResponseEntity.ok().body(map);
     }
 
     public String passwordEncoder(String password) {

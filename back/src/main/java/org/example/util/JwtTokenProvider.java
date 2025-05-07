@@ -16,7 +16,11 @@ public class JwtTokenProvider {
 
     public long getValidityInMilliseconds() {
         return 60 * 60 * 1000L;
-    }
+    } // 1시간
+
+    public long refreshValidityInMilliseconds() {
+        return 7 * 24 * 60 * 60 * 1000L;
+    } // 7일
 
     public String createToken(String username, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(username);
@@ -31,6 +35,17 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
+
+    public String createRefreshToken(String username) {
+        Date now = new Date();
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshValidityInMilliseconds()))
+                .signWith(SignatureAlgorithm.HS256, key)
+                .compact();
+    }
+
 
     public String getUsername(String token) {
         return Jwts.parser()
