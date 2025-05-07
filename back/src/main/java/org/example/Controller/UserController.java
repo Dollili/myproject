@@ -64,4 +64,9 @@ public class UserController {
         return userService.refreshToken(token);
     }
 
+    @PostMapping("/findPwd")
+    public ResponseEntity<?> findPwd(@RequestBody Map<String, Object> params) throws Exception {
+        return userService.findUserPwd(params);
+    }
+
 }

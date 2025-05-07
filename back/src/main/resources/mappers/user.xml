@@ -92,4 +92,23 @@
         WHERE UPPER(USER_ID) = UPPER(#{id})
     </update>
 
+    <select id="findPwd">
+        SELECT COUNT(*)
+        FROM USER
+        WHERE USER_ID = #{id}
+          AND USER_EMAIL = #{email}
+          AND USER_NM = #{name}
+    </select>
+
+    <update id="updateUserPwd">
+        UPDATE USER
+        <set>
+            UPDATE_DATE = NOW(),
+            <if test="pwd != null and pwd != ''">
+                USER_PWD = #{pwd}
+            </if>
+        </set>
+        WHERE UPPER(USER_ID) = UPPER(#{id})
+    </update>
+
 </mapper>

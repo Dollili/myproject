@@ -35,11 +35,11 @@
         SELECT
         NO,
         TITLE,
-        AUTHOR,
+        U.USER_NIC AS AUTHOR,
         RECOMMEND,
         VIEW_CNT,
         DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE,
-        DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d') AS UPDATE_FORMAT_DATE,
+        DATE_FORMAT(B.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_FORMAT_DATE,
         (
         SELECT COUNT(*)
         FROM IMGCOMMENT C
@@ -47,9 +47,9 @@
         ) AS COMMENT_CNT,
         IMG_PATH
         FROM IMGBOARD B
+        JOIN USER U ON B.USER_ID = U.USER_ID
         WHERE
-        DEL_YN IS NULL
-        AND CATEGORY = #{category}
+        DEL_YN IS NULL AND CATEGORY = #{category}
         <if test="val != null and val !=''">
             <choose>
                 <when test="option != null and option != ''">
@@ -76,13 +76,17 @@
         SELECT *
         FROM
         (
-        SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
+        SELECT
+        U.USER_NIC AS USER_NIC,
+        COMMENT
+        , DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
         (SELECT COUNT(*)
         FROM IMGCOMMENT
         WHERE BOARD_NO = #{no}
         AND DEL_YN IS NULL
         )AS TOTAL
         FROM IMGCOMMENT
+        JOIN USER U ON IMGCOMMENT.USER_ID = U.USER_ID
         WHERE BOARD_NO=#{no} AND DEL_YN IS NULL
         ORDER BY APPLY_FORMAT_DATE
         <if test="orderBy == 'desc'">
@@ -101,7 +105,6 @@
         (TITLE,
          DRAWINFO,
          DRAWTIME,
-         AUTHOR,
          APPLY_DATE,
          USER_ID,
          DEL_YN,
@@ -111,7 +114,6 @@
         VALUES (#{title},
                 #{drawinfo},
                 #{drawtime},
-                #{author},
                 NOW(),
                 #{id},
                 #{temp},
