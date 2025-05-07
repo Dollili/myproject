@@ -11,6 +11,7 @@ const Register = ({toggle}) => {
     const [user, setUser] = useState({
         name: "",
         id: "",
+        email: "",
         pwd: "",
         pwd2: "",
     });
@@ -57,16 +58,9 @@ const Register = ({toggle}) => {
                     toast.error("회원가입 실패");
                 }
             } catch (e) {
+                const code = [409, 418, 511, 512];
                 const msg = e.response.data;
-                if (e.status === 409) {
-                    return toast.warn(msg, {
-                        autoClose: 1500,
-                    });
-                } else if (e.status === 418) {
-                    return toast.warn(msg, {
-                        autoClose: 1500,
-                    });
-                } else if (e.status === 511) {
+                if (code.includes(e.status)) {
                     return toast.warn(msg, {
                         autoClose: 1500,
                     });
@@ -121,6 +115,17 @@ const Register = ({toggle}) => {
                                 name="nic"
                                 type="text"
                                 placeholder="닉네임 (미입력 시 아이디로 대체됩니다)"
+                                onChange={(e) => {
+                                    objChange(e);
+                                }}
+                            />
+                        </div>
+                        <div className="input-group">
+                            <i className="bx bxs-user"></i>
+                            <input
+                                name="email"
+                                type="text"
+                                placeholder="yourEmail@icursor.com"
                                 onChange={(e) => {
                                     objChange(e);
                                 }}

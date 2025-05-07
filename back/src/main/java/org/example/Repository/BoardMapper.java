@@ -18,7 +18,7 @@ public interface BoardMapper {
 
     int getBoardListCnt(Map<String, Object> params);
 
-    @Select("SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE FROM BOARD WHERE NO=#{no}")
+    @Select("SELECT NO, TITLE, CONTENTS, RECOMMEND, VIEW_CNT, CATEGORY, USER.USER_NIC AS AUTHOR, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE FROM BOARD JOIN USER ON USER.USER_ID = BOARD.USER_ID WHERE NO=#{no}")
     Map<String, Object> getBoardDetail(Map<String, Object> no);
 
     @Update("UPDATE BOARD SET VIEW_CNT = VIEW_CNT + 1 WHERE NO=#{no}")
@@ -36,7 +36,7 @@ public interface BoardMapper {
 
     int updateBoard(Map<String, Object> param);
 
-    @Insert("INSERT INTO COMMENT (USER_ID, APPLY_DATE, COMMENT, BOARD_NO, USER_NIC, CATEGORY) VALUES (#{user}, NOW(), #{comment}, #{no}, #{nic}, #{category})")
+    @Insert("INSERT INTO COMMENT (USER_ID, APPLY_DATE, COMMENT, BOARD_NO, CATEGORY) VALUES (#{user}, NOW(), #{comment}, #{no}, #{category})")
     int insertComment(Map<String, Object> param);
 
     @Update("UPDATE COMMENT SET DEL_YN ='Y' WHERE ID=#{id} AND USER_ID=#{user}")

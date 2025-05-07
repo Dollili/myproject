@@ -5,8 +5,12 @@ import medal1 from "../../assets/img/free-icon-medal-2583344.png";
 import noImg from "../../assets/img/free-icon-broken-image-13435075.png";
 
 import {dbGet} from "../../services/commonApi";
+import {useNavigate} from "react-router-dom";
+import {slugUtil} from "../../utils/common";
 
 const Rank = () => {
+    const nav = useNavigate();
+
     const [data1, setData1] = useState({});
     const [data2, setData2] = useState({});
     const [data3, setData3] = useState({});
@@ -29,13 +33,27 @@ const Rank = () => {
         }
     };
 
+    const movePage = (title, no) => {
+        nav("/img/" + slugUtil(title), {state: no})
+    }
+
     useEffect(() => {
         getRanking();
     }, []);
 
     return (
         <div className="main-container ranking-container">
-            <h2 className="boardTitle">명예의 전당</h2>
+            <h2 className="boardTitle">
+                <p>🖼️ 명예의 전당</p>
+            </h2>
+            <div className="titleWrapper">
+                <h3 className="ranking-title origin">
+                    <span>✨ 1위 {data1.AUTHOR} 님</span>
+                    <span>2위 {data2.AUTHOR} 님</span>
+                    <span>3위 {data3.AUTHOR} 님</span>
+                    <span>축하드립니다 ✨</span>
+                </h3>
+            </div>
             <div className="grid-container ranking">
                 {load ? (
                     <div className="noPost">RANKING 데이터가 존재하지 않습니다.</div>
@@ -44,7 +62,7 @@ const Rank = () => {
                         {/*<div className="left">왼쪽</div>*/}
                         <div className="rank rank-2">
                             <img className="crown" src={medal2} alt="crown"/>
-                            <div className="card rank2">
+                            <div className="card rank2" onClick={() => movePage(data2.TITLE, data2.NO)}>
                                 <img
                                     className={!data2.IMG_PATH ? "noImg" : ""}
                                     src={
@@ -59,7 +77,7 @@ const Rank = () => {
                         </div>
                         <div className="rank rank-1">
                             <img className="crown" src={medal1} alt="crown"/>
-                            <div className="card rank1">
+                            <div className="card rank1" onClick={() => movePage(data1.TITLE, data1.NO)}>
                                 <img
                                     className={!data1.IMG_PATH ? "noImg" : ""}
                                     src={
@@ -74,7 +92,7 @@ const Rank = () => {
                         </div>
                         <div className="rank rank-3">
                             <img className="crown" src={medal3} alt="crown"/>
-                            <div className="card rank3">
+                            <div className="card rank3" onClick={() => movePage(data3.TITLE, data3.NO)}>
                                 <img
                                     className={!data3.IMG_PATH ? "noImg" : ""}
                                     src={

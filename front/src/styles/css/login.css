@@ -377,3 +377,22 @@
 .goHome:hover {
     cursor: pointer;
 }
+
+.form-wrapper.find-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form.find {
+    height: auto;
+}
+
+.form.find button {
+    margin-top: 5px;
+}
+
+.homeKey {
+    margin: 10px;
+}
