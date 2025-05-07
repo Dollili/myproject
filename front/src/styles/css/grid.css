@@ -95,16 +95,17 @@
     padding: 10px;
 }
 
-.rank-1 {
+.rank.rank-1 {
     transition: .3s ease-in-out;
+
 }
 
-.rank-2 {
+.rank.rank-2 {
     transform: scale(0.8);
     transition: .3s ease-in-out;
 }
 
-.rank-3 {
+.rank.rank-3 {
     transform: scale(0.8);
     transition: .3s ease-in-out;
 }
@@ -121,7 +122,7 @@
 .rank .rank1 img,
 .rank .rank2 img,
 .rank .rank3 img {
-    width: 100%;
+    width: 95%;
     height: 100%;
     object-fit: contain;
 }
@@ -137,10 +138,58 @@
 .rank2,
 .rank3 {
     border: unset;
-    border-radius: 6px;
     justify-content: center;
     align-items: center;
+    transition: .5s ease-in-out;
 }
+
+/*.card.rank1::after,
+.card.rank2::after,
+.card.rank3::after {
+    content: "";
+    position: absolute;
+    border-radius: 12px;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    background: white;
+    z-index: 1;
+}
+
+.card.rank1:hover::before,
+.card.rank2:hover::before,
+.card.rank3:hover::before {
+    content: "";
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: conic-gradient(transparent 180deg, #ffe30f 360deg);
+    animation: rotate 4s linear infinite;
+    z-index: 0;
+}*/
+
+.card.rank1:hover,
+.card.rank2:hover,
+.card.rank3:hover {
+    box-shadow: 0 2px 8px #cccccc;
+}
+
+.rank.effect {
+    border-radius: 20px;
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgb(255, 227, 15),
+    0 0 300px rgb(243, 204, 10);
+    transition: 1s ease-in-out;
+}
+
+.rank.effect .card {
+    box-shadow: none;
+}
+
+/*@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}*/
 
 .card h4 {
     margin: 0 0 6px;
@@ -168,7 +217,7 @@
 
 .ranking-title.origin {
     display: flex;
-    animation: slide-right-left 20s linear infinite;
+    animation: slide-right-left 30s linear infinite;
     transform: translateX(220%);
 }
 
