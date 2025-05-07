@@ -15,6 +15,7 @@ import ImgBoardDetail from "./pages/imgboard/ImgBoardDetail";
 import Qna from "./pages/qna/Qna";
 import QnaDetail from "./pages/qna/QnaDetail";
 import Rank from "./pages/ranking/Rank";
+import FindPwd from "./pages/user/FindPwd";
 
 const router = createBrowserRouter([
     {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
         children: [
             {path: "", element: <Home/>},
             {path: "admin", element: <Admin/>},
+            {path: "find", element: <FindPwd/>},
             {
                 path: "info",
                 element: <ProtectedRoute/>,

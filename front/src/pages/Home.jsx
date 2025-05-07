@@ -114,7 +114,7 @@ const Home = () => {
                                     </button>
                                     <div style={{display: "flex", justifyContent: "center"}}>
                                         <p>
-                                            <b>비밀번호 찾기</b> {/*구현해야함 ㅋㅋ*/}
+                                            <b onClick={() => nav("/find")} className="pointer">비밀번호 찾기</b>
                                         </p>
                                         &nbsp;
                                         <p>

@@ -34,20 +34,20 @@
         SELECT
         NO,
         TITLE,
-        AUTHOR,
+        U.USER_NIC AS AUTHOR,
         RECOMMEND,
         VIEW_CNT,
         DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE,
-        DATE_FORMAT(UPDATE_DATE, '%Y-%m-%d') AS UPDATE_FORMAT_DATE,
+        DATE_FORMAT(B.UPDATE_DATE, '%Y-%m-%d') AS UPDATE_FORMAT_DATE,
         (
         SELECT COUNT(*)
         FROM COMMENT C
         WHERE C.BOARD_NO = B.NO AND C.DEL_YN IS NULL
         ) AS COMMENT_CNT
         FROM BOARD B
+        JOIN USER U ON U.USER_ID = B.USER_ID
         WHERE
-        DEL_YN IS NULL
-        AND CATEGORY = #{category}
+        DEL_YN IS NULL AND CATEGORY = #{category}
         <if test="val != null and val !=''">
             <choose>
                 <when test="option != null and option != ''">
@@ -74,13 +74,17 @@
         SELECT *
         FROM
         (
-        SELECT *, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
+        SELECT
+        U.USER_NIC AS USER_NIC,
+        COMMENT,
+        DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
         (SELECT COUNT(*)
         FROM COMMENT
         WHERE BOARD_NO = #{no}
         AND DEL_YN IS NULL
         )AS TOTAL
         FROM COMMENT
+        JOIN USER U ON U.USER_ID = COMMENT.USER_ID
         WHERE BOARD_NO=#{no} AND DEL_YN IS NULL
         ORDER BY APPLY_FORMAT_DATE
         <if test="orderBy == 'desc'">
@@ -98,14 +102,12 @@
         INTO BOARD
         (TITLE,
          CONTENTS,
-         AUTHOR,
          APPLY_DATE,
          USER_ID,
          DEL_YN,
          CATEGORY)
         VALUES (#{title},
                 #{contents},
-                #{author},
                 NOW(),
                 #{id},
                 #{temp},
