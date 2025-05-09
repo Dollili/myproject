@@ -85,8 +85,18 @@
 .form .mod-btn {
     line-height: initial;
     width: 40%;
+    margin: 3px;
 }
 
 .form .mod-btn:hover {
     background-color: #99ea97;
+}
+
+.form .delUser {
+    background-color: white;
+    color: #cccccc;
+}
+
+.form .delUser:hover {
+    background-color: #dfdfdf;
 }

@@ -13,6 +13,7 @@ import Drawing from "../../components/Drawing";
 import api from "../../services/axiosInterceptor";
 import FileUpload from "../../components/FileUpload";
 import ToastCon from "../../components/ToastCon";
+import {deleteAlert} from "../../components/alert/customAlert";
 
 const ImgBoardDetail = () => {
     const nav = useNavigate();
@@ -164,23 +165,20 @@ const ImgBoardDetail = () => {
     };
 
     const deleteBoard = async (no) => {
-        let qa = window.confirm("해당 게시물을 삭제하시겠습니까?");
-        if (qa) {
-            try {
-                const res = await dbPut("/board/imgDetail", {no});
-                if (res === 204) {
-                    toast.success("삭제완료", {
-                        autoClose: 500,
-                        onClose: () => {
-                            nav("/img");
-                        },
-                    });
-                } else {
-                    toast.error("삭제실패");
-                }
-            } catch (e) {
-                nav("/error", {state: e.status});
+        try {
+            const res = await dbPut("/board/imgDetail", {no});
+            if (res === 204) {
+                toast.success("삭제완료", {
+                    autoClose: 500,
+                    onClose: () => {
+                        nav("/img");
+                    },
+                });
+            } else {
+                toast.error("삭제실패");
             }
+        } catch (e) {
+            nav("/error", {state: e.status});
         }
     };
 
@@ -241,18 +239,18 @@ const ImgBoardDetail = () => {
     };
 
     /*useEffect(() => {
-                    if (files?.length > 0) {
-                        files.forEach(function (f) {
-                            if (!f.type.startsWith("image/")) {
-                                toast.info("이미지 파일만 업로드 가능합니다.", {
-                                    autoClose: 500,
-                                });
-                                setFiles(null);
-                                click.current.value = null;
-                            }
-                        });
-                    }
-                }, [files]);*/
+                        if (files?.length > 0) {
+                            files.forEach(function (f) {
+                                if (!f.type.startsWith("image/")) {
+                                    toast.info("이미지 파일만 업로드 가능합니다.", {
+                                        autoClose: 500,
+                                    });
+                                    setFiles(null);
+                                    click.current.value = null;
+                                }
+                            });
+                        }
+                    }, [files]);*/
 
     useEffect(() => {
         userCheck();
@@ -381,7 +379,7 @@ const ImgBoardDetail = () => {
                     <button
                         className="common_btn"
                         onClick={() => {
-                            deleteBoard(data.NO);
+                            deleteAlert("삭제하시겠습니까?", deleteBoard, data.NO)
                         }}
                     >
                         삭제

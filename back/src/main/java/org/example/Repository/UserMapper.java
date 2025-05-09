@@ -19,6 +19,8 @@ public interface UserMapper {
 
     int updateUserInfo(Map<String, Object> user);
 
+    int deleteUserInfo(Map<String, Object> user);
+
     int updateUserPwd(Map<String, Object> param);
 
     List<Map<String, Object>> userBoard(Map<String, Object> user);

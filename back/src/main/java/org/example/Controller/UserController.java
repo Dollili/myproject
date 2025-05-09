@@ -1,7 +1,6 @@
 package org.example.Controller;
 
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.Service.UserService;
@@ -22,31 +21,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, Object> params, HttpServletResponse response) {
-        try {
-            Map<String, Object> result = userService.login(params, response);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            logger.error("로그인 실패:{}", e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return userService.login(params, response);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
-        userService.logoutToken(refreshToken);
-
-        Cookie cookie = new Cookie("token", null);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
-        Cookie rtCookie = new Cookie("refreshToken", null);
-        rtCookie.setHttpOnly(true);
-        rtCookie.setMaxAge(0);
-        rtCookie.setPath("/");
-        response.addCookie(rtCookie);
-
+        userService.logoutToken(refreshToken, response);
         return ResponseEntity.ok().build();
     }
 
@@ -75,6 +55,14 @@ public class UserController {
     @PostMapping("/findPwd")
     public ResponseEntity<?> findPwd(@RequestBody Map<String, Object> params) throws Exception {
         return userService.findUserPwd(params);
+    }
+
+    @PutMapping("/user/delete")
+    public ResponseEntity<?> deleteUserInfo(@CookieValue(name = "refreshToken", required = false) String refreshToken, @RequestBody Map<String, Object> params, Authentication authentication, HttpServletResponse response) {
+        String username = authentication.getName();
+        params.put("token", refreshToken);
+        params.put("id", username);
+        return userService.deleteUserInfo(params, response);
     }
 
 }

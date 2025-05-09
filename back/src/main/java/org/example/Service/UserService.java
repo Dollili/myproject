@@ -17,7 +17,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.LoginException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class UserService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public Map<String, Object> login(Map<String, Object> params, HttpServletResponse response) throws LoginException {
+    public ResponseEntity<?> login(Map<String, Object> params, HttpServletResponse response) {
         String username = params.get("id").toString();
         String password = params.get("pwd").toString();
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -72,15 +71,11 @@ public class UserService {
         map.put("result", userMapper.userInfo(params));
         map.put("time", System.currentTimeMillis() + jwtTokenProvider.getValidityInMilliseconds());
 
-        return map;
+        return ResponseEntity.ok(map);
     }
 
-    public void logoutToken(String token) {
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            String username = jwtTokenProvider.getUsername(token);
-            stringRedisTemplate.delete("RT:" + username);
-        } else {
-        }
+    public void logoutToken(String token, HttpServletResponse response) {
+        tokenInit(token, response);
     }
 
     public ResponseEntity<String> join(Map<String, Object> params) {
@@ -210,7 +205,7 @@ public class UserService {
         List<String> roles = jwtTokenProvider.getRoles(token);
         String newToken = jwtTokenProvider.createToken(username, roles);
 
-        Cookie cookie = new Cookie("token", token);
+        Cookie cookie = new Cookie("token", newToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(true); // HTTPS 환경에서만 전달
         cookie.setPath("/");
@@ -226,6 +221,35 @@ public class UserService {
 
     public String passwordEncoder(String password) {
         return bCryptPasswordEncoder.encode(password);
+    }
+
+    public ResponseEntity<String> deleteUserInfo(Map<String, Object> params, HttpServletResponse response) {
+        int result = userMapper.deleteUserInfo(params);
+        if (result == 1) {
+            String token = params.get("token").toString();
+            tokenInit(token, response);
+            return ResponseEntity.ok().body("success");
+        } else {
+            return ResponseEntity.internalServerError().body("fail");
+        }
+    }
+
+    public void tokenInit(String token, HttpServletResponse response) {
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            String username = jwtTokenProvider.getUsername(token);
+            stringRedisTemplate.delete("RT:" + username);
+        }
+        Cookie cookie = new Cookie("token", null);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        Cookie rtCookie = new Cookie("refreshToken", null);
+        rtCookie.setHttpOnly(true);
+        rtCookie.setMaxAge(0);
+        rtCookie.setPath("/");
+        response.addCookie(rtCookie);
     }
 
 }
