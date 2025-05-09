@@ -46,7 +46,7 @@ const Board = () => {
     return (
         <>
             <div className="main-container notice">
-                <h2 className="boardTitle">자유게시판</h2>
+                <h3 className="boardTitle">🍀 자유게시판</h3>
                 <div className="search-container notice-search">
                     <select
                         className="search-count notice-count"

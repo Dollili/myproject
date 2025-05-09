@@ -55,7 +55,7 @@ const Qna = () => {
     return (
         <>
             <div className="main-container notice">
-                <h2 className="boardTitle">QnA</h2>
+                <h3 className="boardTitle">QnA</h3>
                 <div className="search-container notice-search">
                     <select
                         className="search-count notice-count"

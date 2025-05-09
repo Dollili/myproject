@@ -77,14 +77,14 @@ public class ImgBoardController {
     @PostMapping("/iComment")
     public int commentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
-        param.put("id", username);
+        param.put("user", username);
         return imgBoardService.insertComment(param);
     }
 
     @PutMapping("/iComment/delete")
     public ResponseEntity<?> commentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
-        param.put("id", username);
+        param.put("user", username);
         return imgBoardService.deleteComment(param);
     }
 

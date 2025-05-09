@@ -32,16 +32,16 @@
     transition-delay: unset;
     margin: 10px;
     height: 65vh;
+    z-index: 5;
 }
 
 .form .complete {
-    background-color: #DB4437;
     line-height: initial;
     width: 40%;
 }
 
 .form .complete:hover {
-    background-color: rgba(219, 68, 55, 0.66);
+    background-color: #99ea97;
 }
 
 .user-container.sign-up .form.sign-up,
@@ -88,5 +88,5 @@
 }
 
 .form .mod-btn:hover {
-    background-color: #dee2e6;
+    background-color: #99ea97;
 }

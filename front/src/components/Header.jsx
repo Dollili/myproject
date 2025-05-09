@@ -88,7 +88,6 @@ const Header = ({toggle}) => {
                 <Link
                     className="logo"
                     to="/img"
-                    style={{color: "white", textDecorationLine: "none", fontFamily: "BagelFatOne-Regular"}}
                 >
                     I-CURSOR
                 </Link>

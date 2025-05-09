@@ -75,6 +75,8 @@ const Home = () => {
                 id="container"
                 className={`container ${container === null ? "" : container ? "sign-in" : "sign-up"}`}
             >
+                <div className="circle circle-1"></div>
+                <div className="circle circle-2"></div>
                 {sessionStorage.getItem("user") == null ? (
                     <div className="row">
                         <Register toggle={toggle}/>
