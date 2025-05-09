@@ -18,20 +18,23 @@ public interface ImageMapper {
 
     int getBoardListCnt(Map<String, Object> params);
 
-    @Select("SELECT NO, TITLE, DRAWINFO, DRAWTIME, RECOMMEND, VIEW_CNT, IMG_PATH, IMG_NM, USER.USER_NIC AS AUTHOR, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE FROM IMGBOARD JOIN USER ON USER.USER_ID = IMGBOARD.USER_ID WHERE NO=#{no}")
+    @Select("SELECT NO, TITLE, DRAWINFO, DRAWTIME, RECOMMEND, VIEW_CNT, IMG_PATH, IMG_NM, CASE"
+            + "        WHEN U.IS_DEL = 'Y' THEN '탈퇴한 사용자'"
+            + "        ELSE U.USER_NIC"
+            + "        END AS AUTHOR, DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE FROM IMGBOARD JOIN USER U ON U.USER_ID = IMGBOARD.USER_ID WHERE NO = #{no}")
     Map<String, Object> getBoardDetail(Map<String, Object> no);
 
-    @Update("UPDATE IMGBOARD SET VIEW_CNT = VIEW_CNT + 1 WHERE NO=#{no}")
+    @Update("UPDATE IMGBOARD SET VIEW_CNT = VIEW_CNT + 1 WHERE NO = #{no}")
     void viewCount(Map<String, Object> no);
 
-    @Update("UPDATE IMGBOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO=#{no}")
+    @Update("UPDATE IMGBOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO = #{no}")
     int recommendUp(String no);
 
     List<Map<String, Object>> getBoardComment(Map<String, Object> no);
 
     int insertBoard(Map<String, Object> param);
 
-    @Update("UPDATE IMGBOARD SET DEL_YN = 'Y' WHERE NO=#{no}")
+    @Update("UPDATE IMGBOARD SET DEL_YN = 'Y' WHERE NO = #{no}")
     int deleteBoard(Map<String, Object> param);
 
     int updateBoard(Map<String, Object> param);
@@ -39,10 +42,10 @@ public interface ImageMapper {
     @Insert("INSERT INTO IMGCOMMENT (USER_ID, APPLY_DATE, COMMENT, BOARD_NO, CATEGORY) VALUES (#{user}, NOW(), #{comment}, #{no}, #{category})")
     int insertComment(Map<String, Object> param);
 
-    @Update("UPDATE IMGCOMMENT SET DEL_YN ='Y' WHERE ID=#{id} AND USER_ID=#{user}")
+    @Update("UPDATE IMGCOMMENT SET DEL_YN ='Y' WHERE ID = #{id} AND USER_ID = #{user}")
     int deleteComment(Map<String, Object> param);
 
-    @Update("UPDATE IMGCOMMENT SET DEL_YN ='Y' WHERE BOARD_NO=#{no}")
+    @Update("UPDATE IMGCOMMENT SET DEL_YN ='Y' WHERE BOARD_NO = #{no}")
     void deleteAllCom(String no);
 
     List<Map<String, Object>> selectRanking();

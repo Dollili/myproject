@@ -6,6 +6,7 @@ import {Table} from "react-bootstrap";
 import {UserContext} from "../../contexts/UserContext";
 import {toast} from "react-toastify";
 import ToastCon from "../../components/ToastCon";
+import {deleteAlert} from "../../components/alert/customAlert";
 
 const UserInfo = () => {
     const nav = useNavigate();
@@ -109,6 +110,22 @@ const UserInfo = () => {
         }
     };
 
+    const deleteUser = async () => {
+        try {
+            const res = await dbPut("/auth/user/delete", {});
+            if (res === 200) {
+                toast.success("회원탈퇴 완료. 홈으로 이동합니다.", {
+                    onClose: () => {
+                        nav("/");
+                        setUser("");
+                    }
+                })
+            }
+        } catch (e) {
+            nav("/error", {state: e.status})
+        }
+    }
+
     useEffect(() => {
     }, [res]);
 
@@ -188,6 +205,14 @@ const UserInfo = () => {
                                     완료
                                 </button>
                             )}
+                            <button
+                                className="mod-btn delUser"
+                                onClick={() => {
+                                    deleteAlert("탈퇴하시겠습니까?", deleteUser)
+                                }}
+                            >
+                                회원 탈퇴
+                            </button>
                         </div>
                     </div>
                 </div>
