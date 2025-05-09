@@ -1,6 +1,3 @@
-.ranking-container {
-}
-
 .grid-container {
     margin-top: 50px;
     display: grid;
@@ -35,6 +32,7 @@
     grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개씩 */
     gap: 20px;
     animation: Zzan 1s forwards;
+    margin-top: unset;
 }
 
 /*.ranking .left {
@@ -75,7 +73,6 @@
     flex-direction: column;
     justify-content: space-between;
     transition: 0.2s ease-in-out;
-    font-family: TmoneyRoundWindExtraBold;
 }
 
 .card:hover {
@@ -96,27 +93,26 @@
 }
 
 .rank.rank-1 {
-    transition: .3s ease-in-out;
-
+    transition: .4s ease-in-out;
 }
 
-.rank.rank-2 {
+.rank .rank2 {
     transform: scale(0.8);
     transition: .3s ease-in-out;
 }
 
-.rank.rank-3 {
+.rank .rank3 {
     transform: scale(0.8);
     transition: .3s ease-in-out;
 }
 
-.rank.rank-2:hover,
-.rank.rank-3:hover {
+.rank .rank2:hover,
+.rank .rank3:hover {
     transform: scale(0.9);
 }
 
-.rank.rank-1:hover {
-    transform: scale(1.05);
+.rank .rank1:hover {
+    transform: scale(1.1);
 }
 
 .rank .rank1 img,
@@ -173,16 +169,13 @@
     box-shadow: 0 2px 8px #cccccc;
 }
 
-.rank.effect {
+.rank.effect .card {
     border-radius: 20px;
     transform: scale(1.2);
     box-shadow: 0 0 15px rgb(255, 227, 15),
     0 0 300px rgb(243, 204, 10);
     transition: 1s ease-in-out;
-}
-
-.rank.effect .card {
-    box-shadow: none;
+    z-index: 1;
 }
 
 /*@keyframes rotate {
@@ -193,7 +186,7 @@
 
 .card h4 {
     margin: 0 0 6px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .card p {
@@ -205,7 +198,7 @@
 .titleWrapper {
     position: relative;
     overflow: hidden;
-    background-color: #ffffe8;
+    background-color: rgba(255, 255, 255, 0.45);
     height: 60px;
     display: flex;
     align-items: center;
@@ -217,19 +210,23 @@
 
 .ranking-title.origin {
     display: flex;
-    animation: slide-right-left 30s linear infinite;
-    transform: translateX(220%);
+    animation: slide-right-left 20s linear infinite;
+    transform: translateX(180%);
 }
 
 @keyframes slide-right-left {
     100% {
-        transform: translateX(-220%); /* 왼쪽 끝으로 이동 */
+        transform: translateX(-180%); /* 왼쪽 끝으로 이동 */
     }
 }
 
 .ranking-title span {
     margin-right: 20px;
     flex-shrink: 0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     white-space: nowrap;
+}
+
+.rank h1 span {
+    font-size: 1.3rem;
 }

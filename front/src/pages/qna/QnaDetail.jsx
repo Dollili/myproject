@@ -39,7 +39,7 @@ const QnaDetail = () => {
     const downloadFile = async (file, origin) => {
         try {
             const response = await axios.get(
-                process.env.REACT_APP_BACKEND_URL + "/files/" + file,
+                process.env.REACT_APP_API_BASE_URL + "/files/" + file,
                 {
                     responseType: "blob",
                     withCredentials: true,

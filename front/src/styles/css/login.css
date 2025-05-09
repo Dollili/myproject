@@ -1,10 +1,10 @@
 :root {
-    --primary-color: #4EA685;
+    --primary-color: #98f698;
     --secondary-color: #57B894;
-    --black: #000000;
+    --black: #8ad588;
     --white: #ffffff;
     --gray: #efefef;
-    --gray-2: #757575;
+    --gray-2: #7aba78;
 
     --facebook-color: #4267B2;
     --google-color: #DB4437;
@@ -179,6 +179,7 @@
 
 .pointer {
     cursor: pointer;
+    font-weight: bold;
 }
 
 .container.sign-in .form.sign-in,
@@ -227,6 +228,7 @@
 .text.sign-in p,
 .img.sign-in img {
     transform: translateX(-250%);
+    font-family: BagelFatOne-Regular;
 }
 
 .text.sign-up h2,
@@ -245,6 +247,33 @@
 }
 
 /* BACKGROUND */
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 6;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* 첫 번째 원 */
+.circle-1 {
+    width: 150px;
+    height: 150px;
+    background-color: var(--primary-color);
+    top: 10%;
+    right: 10%;
+}
+
+/* 두 번째 원 */
+.circle-2 {
+    width: 100px;
+    height: 100px;
+    background-color: var(--secondary-color);
+    top: 10%;
+    right: 5%;
+}
+
 
 .container::before {
     content: "";
