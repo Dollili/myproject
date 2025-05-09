@@ -35,7 +35,10 @@
         SELECT
         NO,
         TITLE,
-        U.USER_NIC AS AUTHOR,
+        CASE
+        WHEN U.IS_DEL = 'Y' THEN '탈퇴한 사용자'
+        ELSE U.USER_NIC
+        END AS USER_NIC,
         RECOMMEND,
         VIEW_CNT,
         DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE,
@@ -54,6 +57,7 @@
                 <when test="option != null and option != ''">
                     <choose>
                         <when test="option == 'author'">
+                            AND U.USER IS NULL
                             AND UPPER(U.USER_NIC) LIKE CONCAT('%',UPPER(#{val}),'%')
                         </when>
                         <otherwise>
@@ -62,7 +66,7 @@
                     </choose>
                 </when>
                 <otherwise>
-                    AND (UPPER(U.USER_NIC) LIKE CONCAT('%',UPPER(#{val}),'%')
+                    AND ( U.USER IS NULL AND UPPER(U.USER_NIC) LIKE CONCAT('%',UPPER(#{val}),'%')
                     OR TITLE LIKE CONCAT('%',#{val},'%'))
                 </otherwise>
             </choose>
@@ -76,7 +80,10 @@
         FROM
         (
         SELECT
-        U.USER_NIC AS USER_NIC,
+        CASE
+        WHEN U.IS_DEL = 'Y' THEN '탈퇴한 사용자'
+        ELSE U.USER_NIC
+        END AS USER_NIC,
         COMMENT,
         DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
         (SELECT COUNT(*)

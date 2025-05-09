@@ -57,7 +57,7 @@ const ImgBoard = () => {
     return (
         <>
             <div className="main-container">
-                <h2 className="boardTitle">전시회</h2>
+                <h3 className="boardTitle">🎨 전시회</h3>
                 <div className={`search-container ${scroll ? "" : "scroll"}`}>
                     <select
                         className="search-count"
@@ -117,7 +117,7 @@ const ImgBoard = () => {
                                     nav(`/img/${slugUtil(item.TITLE)}`, {state: item.NO});
                                 }}
                             >
-                                <img src={`${process.env.REACT_APP_BACKEND_URL}${item.IMG_PATH}`} alt="thumbnail"/>
+                                <img src={`${process.env.REACT_APP_API_BASE_URL}${item.IMG_PATH}`} alt="thumbnail"/>
                                 <div className="info">
                                     <h4>{item.TITLE} <span
                                         style={{color: "red", marginLeft: "3px"}}>[{item.COMMENT_CNT}]</span></h4>

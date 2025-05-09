@@ -55,7 +55,7 @@ const Notice = () => {
     return (
         <>
             <div className="main-container notice">
-                <h2 className="boardTitle">공지사항</h2>
+                <h3 className="boardTitle">📢 공지사항</h3>
                 <div className="search-container notice-search">
                     <select
                         className="search-count notice-count"

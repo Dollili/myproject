@@ -39,7 +39,7 @@ const ImgBoardDetail = () => {
     const downloadFile = async (file, origin) => {
         try {
             const response = await axios.get(
-                process.env.REACT_APP_BACKEND_URL + "/files/" + file,
+                process.env.REACT_APP_API_BASE_URL + "/files/" + file,
                 {
                     responseType: "blob",
                     withCredentials: true,
@@ -164,20 +164,23 @@ const ImgBoardDetail = () => {
     };
 
     const deleteBoard = async (no) => {
-        try {
-            const res = await dbPut("/board/imgDetail", {no});
-            if (res === 204) {
-                toast.success("삭제완료", {
-                    autoClose: 500,
-                    onClose: () => {
-                        nav("/img");
-                    },
-                });
-            } else {
-                toast.error("삭제실패");
+        let qa = window.confirm("해당 게시물을 삭제하시겠습니까?");
+        if (qa) {
+            try {
+                const res = await dbPut("/board/imgDetail", {no});
+                if (res === 204) {
+                    toast.success("삭제완료", {
+                        autoClose: 500,
+                        onClose: () => {
+                            nav("/img");
+                        },
+                    });
+                } else {
+                    toast.error("삭제실패");
+                }
+            } catch (e) {
+                nav("/error", {state: e.status});
             }
-        } catch (e) {
-            nav("/error", {state: e.status});
         }
     };
 
@@ -238,18 +241,18 @@ const ImgBoardDetail = () => {
     };
 
     /*useEffect(() => {
-                if (files?.length > 0) {
-                    files.forEach(function (f) {
-                        if (!f.type.startsWith("image/")) {
-                            toast.info("이미지 파일만 업로드 가능합니다.", {
-                                autoClose: 500,
-                            });
-                            setFiles(null);
-                            click.current.value = null;
-                        }
-                    });
-                }
-            }, [files]);*/
+                    if (files?.length > 0) {
+                        files.forEach(function (f) {
+                            if (!f.type.startsWith("image/")) {
+                                toast.info("이미지 파일만 업로드 가능합니다.", {
+                                    autoClose: 500,
+                                });
+                                setFiles(null);
+                                click.current.value = null;
+                            }
+                        });
+                    }
+                }, [files]);*/
 
     useEffect(() => {
         userCheck();
