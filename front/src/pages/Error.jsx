@@ -41,21 +41,22 @@ const Error = () => {
                 textAlign: "center",
             }}
         >
-            {user.USER_ID ? <><h1
-                style={{fontSize: "1.5rem", color: "red.600", marginBottom: "20px"}}
-            >
-                요청 오류 발생. 홈 화면으로 이동합니다.
-            </h1>
-                <h2
-                    style={{fontSize: "1.0rem", color: "gray.600", marginBottom: "20px"}}
-                >
-                    {msg}
-                </h2></> : <h1
-                style={{fontSize: "1.5rem", color: "red.600", marginBottom: "20px"}}
-            >
-                로그인 후 이용하실 수 있습니다. 로그인 화면으로 이동합니다.
-            </h1>
-            }
+            {user.USER_ID ? (
+                <>
+                    <h1 style={{fontSize: "1.5rem", marginBottom: "20px"}}>
+                        요청 오류 발생. 홈 화면으로 이동합니다.
+                    </h1>
+                    <h2
+                        style={{fontSize: "1.0rem", color: "gray", marginBottom: "20px"}}
+                    >
+                        {msg}
+                    </h2>
+                </>
+            ) : (
+                <h1 style={{fontSize: "1.5rem", marginBottom: "20px"}}>
+                    로그인 후 이용하실 수 있습니다. 로그인 화면으로 이동합니다.
+                </h1>
+            )}
         </div>
     );
 };
