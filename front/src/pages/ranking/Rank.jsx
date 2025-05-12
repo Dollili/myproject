@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import noImg from "../../assets/img/free-icon-broken-image-13435075.png";
+import noImg from "../../assets/img/cross-1300236_1280.png";
 
 import {dbGet} from "../../services/commonApi";
 import {useNavigate} from "react-router-dom";
@@ -59,9 +59,9 @@ const Rank = () => {
             </h3>
             <div className="titleWrapper">
                 <h4 className="ranking-title origin">
-                    <span>✨ 1위 {data1.AUTHOR} 님</span>
-                    <span>2위{data2.AUTHOR} 님</span>
-                    <span>3위 {data3.AUTHOR} 님</span>
+                    <span>✨ 1위 {data1.AUTHOR ? data1.AUTHOR + "님" : "공석"}</span>
+                    <span>2위 {data2.AUTHOR ? data2.AUTHOR + "님" : "공석"}</span>
+                    <span>3위 {data3.AUTHOR ? data3.AUTHOR + "님" : "공석"}</span>
                     <span>축하드립니다 ✨</span>
                 </h4>
             </div>

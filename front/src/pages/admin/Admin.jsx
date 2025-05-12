@@ -32,23 +32,32 @@ const Admin = () => {
         if (adminLogin.id.length === 0 || adminLogin.pwd.length === 0) {
             return toast.warn("아이디 혹은 비밀번호를 입력해주세요.");
         }
+        let toastId;
         try {
+            toastId = toast.loading("로그인 중 ...");
             const res = await dbPost("/auth/login", adminLogin);
             if (res) {
-                toast.success("로그인 성공", {
+                toast.update(toastId, {
+                    render: "로그인 성공",
+                    type: "success",
+                    isLoading: false,
                     autoClose: 500,
                     onClose: () => {
                         setUser(res.result);
                         sessionStorage.setItem("user", JSON.stringify(res.result));
+                        sessionStorage.setItem("time", res.time);
                         nav("/board");
                     },
                 });
-            } else {
-                toast.error("로그인 실패");
             }
         } catch (e) {
-            if (e.status === 400) {
-                return toast.warn("로그인 실패");
+            if (e.status === 403) {
+                return toast.update(toastId, {
+                    render: "아이디 또는 비밀번호가 올바르지 않습니다.",
+                    type: "warning",
+                    isLoading: false,
+                    autoClose: 1000,
+                });
             }
             nav("/error", {state: e.status});
         }

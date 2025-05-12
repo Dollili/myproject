@@ -70,8 +70,6 @@ public class ImgBoardService {
     }
 
     public int insertBoard(Map<String, Object> param) {
-
-
         return imageMapper.insertBoard(param);
     }
 

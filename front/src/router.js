@@ -1,6 +1,4 @@
-import {createBrowserRouter} from "react-router-dom";
-import App from "./App";
-import NotFound from "./pages/NotFound";
+import {createBrowserRouter, Navigate} from "react-router-dom";
 import Board from "./pages/board/Board";
 import BoardDetail from "./pages/board/BoardDetail";
 import ProtectedRoute from "./ProtectedRoute";
@@ -16,23 +14,27 @@ import Qna from "./pages/qna/Qna";
 import QnaDetail from "./pages/qna/QnaDetail";
 import Rank from "./pages/ranking/Rank";
 import FindPwd from "./pages/user/FindPwd";
+import UserBoard from "./pages/admin/UserBoard";
+import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: (
-            <>
-                <App/>
-            </>
-        ),
+        path: "/login",
+        element: <Home/>,
         errorElement: <NotFound/>,
+    },
+    {
+        path: "/",
+        element: <Navigate to="/login" replace/>,
+    },
+    {path: "find", element: <FindPwd/>, errorElement: <NotFound/>},
+    {path: "admin", element: <Admin/>, errorElement: <NotFound/>},
+    {
+        path: "/",
+        element: <ProtectedRoute/>,
         children: [
-            {path: "", element: <Home/>},
-            {path: "admin", element: <Admin/>},
-            {path: "find", element: <FindPwd/>},
             {
                 path: "info",
-                element: <ProtectedRoute/>,
                 children: [
                     {
                         index: true,
@@ -42,7 +44,6 @@ const router = createBrowserRouter([
             },
             {
                 path: "img",
-                element: <ProtectedRoute/>, // 보호된 경로 그룹
                 children: [
                     {
                         index: true,
@@ -53,7 +54,6 @@ const router = createBrowserRouter([
             },
             {
                 path: "board",
-                element: <ProtectedRoute/>, // 보호된 경로 그룹
                 children: [
                     {
                         index: true,
@@ -64,7 +64,6 @@ const router = createBrowserRouter([
             },
             {
                 path: "notice",
-                element: <ProtectedRoute/>, // 보호된 경로 그룹
                 children: [
                     {
                         index: true,
@@ -75,7 +74,6 @@ const router = createBrowserRouter([
             },
             {
                 path: "qna",
-                element: <ProtectedRoute/>, // 보호된 경로 그룹
                 children: [
                     {
                         index: true,
@@ -86,17 +84,26 @@ const router = createBrowserRouter([
             },
             {
                 path: "ranking",
-                element: <ProtectedRoute/>, // 보호된 경로 그룹
                 children: [
                     {
                         index: true,
                         element: <Rank/>,
                     },
-                    /*{path: ":no", element: <QnaDetail/>},*/
                 ],
             },
-            {path: "/error", element: <Error/>},
         ],
+        errorElement: <NotFound/>,
+    },
+    {path: "error", element: <Error/>},
+    {
+        path: "userBoard",
+        element: (
+            <>
+                <ProtectedRoute adminOnly={true}/>
+                <UserBoard/>
+            </>
+        ),
+        errorElement: <NotFound/>,
     },
 ]);
 export default router;

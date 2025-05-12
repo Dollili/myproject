@@ -6,6 +6,7 @@ import org.example.Service.UserDetailService;
 import org.example.util.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,6 +49,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 //.addFilterBefore(sessionFilter, SecurityContextPersistenceFilter.class)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/error")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/board/**", "/files/**")
                         .permitAll()
                         .requestMatchers("/board/**", "/file/**", "/files/**")
                         .hasAnyRole("U", "M")

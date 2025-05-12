@@ -85,7 +85,7 @@ const Home = () => {
             >
                 <div className="circle circle-1"></div>
                 <div className="circle circle-2"></div>
-                {sessionStorage.getItem("user") == null ? (
+                {user.USER_ID === "" ? (
                     <div className="row">
                         <Register toggle={toggle}/>
                         <div className="col align-items-center flex-col sign-in">
@@ -121,6 +121,24 @@ const Home = () => {
                                         }}
                                     >
                                         로그인
+                                    </button>
+                                    <button
+                                        className="move_home"
+                                        onClick={() => {
+                                            toast.warn(
+                                                <div style={{whiteSpace: "pre-wrap", justifyContent: "center"}}>
+                                                    비회원으로 이용 중입니다.
+                                                    <br/>글 작성이 제한됩니다.
+                                                </div>,
+                                                {
+                                                    onClose: () => {
+                                                        nav("/img");
+                                                    },
+                                                },
+                                            );
+                                        }}
+                                    >
+                                        탐방하러 가기
                                     </button>
                                     <div style={{display: "flex", justifyContent: "center"}}>
                                         <p>
