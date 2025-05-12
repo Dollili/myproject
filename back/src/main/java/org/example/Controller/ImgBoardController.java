@@ -1,11 +1,13 @@
 package org.example.Controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.example.Service.ImgBoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +27,13 @@ public class ImgBoardController {
     }
 
     @GetMapping("/imgDetail")
-    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> param, Authentication authentication) {
-        String username = authentication.getName();
+    public Map<String, Object> boardDetail(@RequestParam Map<String, Object> param, Authentication authentication, HttpServletRequest request) {
+        String username = request.getRemoteAddr(); // 비로그인 IP
+        if (authentication != null && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken)) {
+            username = authentication.getName(); // 로그인한 사용자 ID
+        }
+
         param.put("id", username);
         return imgBoardService.getBoardDetail(param);
     }

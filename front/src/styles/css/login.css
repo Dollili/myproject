@@ -425,3 +425,11 @@
 .homeKey {
     margin: 10px;
 }
+
+.move_home {
+    margin-top: 3px;
+}
+
+.move_home:hover {
+    background-color: #98f698;
+}

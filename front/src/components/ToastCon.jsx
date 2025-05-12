@@ -7,7 +7,6 @@ const ToastCon = ({autoClose}) => {
             toastStyle={{maxWidth: "100%", width: "auto", whiteSpace: "nowrap"}}
             theme="light"
             position="top-center"
-            limit={1}
             closeButton={false}
             autoClose={autoClose}
             hideProgressBar

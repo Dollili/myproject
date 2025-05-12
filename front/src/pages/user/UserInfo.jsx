@@ -17,7 +17,6 @@ const UserInfo = () => {
 
     const [res, setRes] = useState({});
     const [board, setBoard] = useState([]);
-    const [imgBoard, setImgBoard] = useState([]);
     const [temporary, setTemp] = useState([]);
     const [comment, setComment] = useState([]);
 
@@ -114,7 +113,7 @@ const UserInfo = () => {
         try {
             const res = await dbPut("/auth/user/delete", {});
             if (res === 200) {
-                toast.success("회원탈퇴 완료. 홈으로 이동합니다.", {
+                toast.success("회원탈퇴 완료. 감사했습니다.", {
                     onClose: () => {
                         nav("/");
                         setUser("");
@@ -208,7 +207,7 @@ const UserInfo = () => {
                             <button
                                 className="mod-btn delUser"
                                 onClick={() => {
-                                    deleteAlert("탈퇴하시겠습니까?", deleteUser)
+                                    deleteAlert("정말 탈퇴하시겠습니까? 😭", deleteUser)
                                 }}
                             >
                                 회원 탈퇴

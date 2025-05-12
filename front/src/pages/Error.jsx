@@ -25,8 +25,8 @@ const Error = () => {
             }
         }
         setTimeout(() => {
-            nav('/')
-        }, 2000);
+            nav("/");
+        }, 1500);
     }, []);
 
     return (
@@ -41,16 +41,21 @@ const Error = () => {
                 textAlign: "center",
             }}
         >
-            <h1
+            {user.USER_ID ? <><h1
                 style={{fontSize: "1.5rem", color: "red.600", marginBottom: "20px"}}
             >
-                요청 오류 발생. 이전 화면으로 이동합니다.
+                요청 오류 발생. 홈 화면으로 이동합니다.
             </h1>
-            <h2
-                style={{fontSize: "1.0rem", color: "gray.600", marginBottom: "20px"}}
+                <h2
+                    style={{fontSize: "1.0rem", color: "gray.600", marginBottom: "20px"}}
+                >
+                    {msg}
+                </h2></> : <h1
+                style={{fontSize: "1.5rem", color: "red.600", marginBottom: "20px"}}
             >
-                {msg}
-            </h2>
+                로그인 후 이용하실 수 있습니다. 로그인 화면으로 이동합니다.
+            </h1>
+            }
         </div>
     );
 };

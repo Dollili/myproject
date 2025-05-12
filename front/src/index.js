@@ -6,20 +6,19 @@ import "./styles/css/board.css";
 import "./styles/css/notice.css";
 import "./styles/css/grid.css";
 import "./styles/css/user.css";
+import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import router from "./router";
 
 import reportWebVitals from "./reportWebVitals";
 import {RouterProvider} from "react-router-dom";
-import App from "./App";
 import {UserProvider} from "./contexts/UserContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <UserProvider>
         <RouterProvider router={router}>
-            <App/>
         </RouterProvider>
     </UserProvider>,
 );

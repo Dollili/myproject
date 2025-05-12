@@ -91,10 +91,12 @@ const Header = ({toggle}) => {
                 >
                     I-CURSOR
                 </Link>
-                <div className="menu">
+                {user.USER_ID ? <div className="menu">
                     <p onClick={() => info()}>내정보</p>
                     <p onClick={() => logout()}>로그아웃</p>
-                </div>
+                </div> : <div className="menu">
+                    <p onClick={() => nav("/login")}>로그인</p>
+                </div>}
             </header>
             <ToastCon autoClose={1000}/>
         </>
