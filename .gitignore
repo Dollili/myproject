@@ -6,6 +6,8 @@ back/.project
 back/.settings/
 back/*.iml
 back/src/main/resources/application.properties
+back/src/main/resources/application-dev.properties
+back/src/main/resources/application-prod.properties
 
 # Node.js/React 관련
 front/node_modules/
