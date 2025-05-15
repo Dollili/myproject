@@ -85,7 +85,7 @@ const Drawing = ({canvasRef, saveInfo, drawTime}) => {
                             canvasRef.current?.eraseMode(eraser);
                         }}
                     >
-                        {!eraser ? "펜 ✏️" : "지우개 ✐"}
+                        {!eraser ? "펜 ✏️" : "지우개"}
                     </div>
                     <br/>
                     <div className="common_btn" onClick={clearCanvas}>

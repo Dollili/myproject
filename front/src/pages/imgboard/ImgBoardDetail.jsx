@@ -242,18 +242,18 @@ const ImgBoardDetail = () => {
     };
 
     /*useEffect(() => {
-                          if (files?.length > 0) {
-                              files.forEach(function (f) {
-                                  if (!f.type.startsWith("image/")) {
-                                      toast.info("이미지 파일만 업로드 가능합니다.", {
-                                          autoClose: 500,
-                                      });
-                                      setFiles(null);
-                                      click.current.value = null;
-                                  }
-                              });
-                          }
-                      }, [files]);*/
+                            if (files?.length > 0) {
+                                files.forEach(function (f) {
+                                    if (!f.type.startsWith("image/")) {
+                                        toast.info("이미지 파일만 업로드 가능합니다.", {
+                                            autoClose: 500,
+                                        });
+                                        setFiles(null);
+                                        click.current.value = null;
+                                    }
+                                });
+                            }
+                        }, [files]);*/
 
     useEffect(() => {
         userCheck();
@@ -414,7 +414,9 @@ const ImgBoardDetail = () => {
                     <ToastCon autoClose={2000}/>
                 </div>
             ) : (
-                <LoadingSpinner/>
+                <div className="main-container">
+                    <LoadingSpinner/>
+                </div>
             )}
         </>
     );

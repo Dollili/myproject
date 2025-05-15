@@ -105,5 +105,6 @@ const router = createBrowserRouter([
         ),
         errorElement: <NotFound/>,
     },
+    {path: "*", element: <NotFound/>},
 ]);
 export default router;
