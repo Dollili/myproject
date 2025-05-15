@@ -28,9 +28,9 @@ public interface ImageMapper {
     void viewCount(Map<String, Object> no);
 
     @Update("UPDATE IMGBOARD SET RECOMMEND = RECOMMEND + 1 WHERE NO = #{no}")
-    int recommendUp(String no);
+    void recommendUp(String no);
 
-    List<Map<String, Object>> getBoardComment(Map<String, Object> no);
+    List<Map<String, Object>> getBoardComment(Map<String, Object> params);
 
     int insertBoard(Map<String, Object> param);
 
@@ -49,4 +49,12 @@ public interface ImageMapper {
     void deleteAllCom(String no);
 
     List<Map<String, Object>> selectRanking();
+
+    List<Map<String, Object>> getBoardRComment(Map<String, Object> params);
+
+    @Insert("INSERT INTO IMGCOMMENT (USER_ID, APPLY_DATE, COMMENT, BOARD_NO, CATEGORY) VALUES (#{user}, NOW(), #{comment}, #{no}, #{category})")
+    int insertRComment(Map<String, Object> param);
+
+    @Update("UPDATE IMGCOMMENT SET DEL_YN ='Y' WHERE ID = #{id} AND USER_ID = #{user}")
+    int deleteRComment(Map<String, Object> param);
 }

@@ -14,10 +14,12 @@ import api from "../../services/axiosInterceptor";
 import FileUpload from "../../components/FileUpload";
 import ToastCon from "../../components/ToastCon";
 import {deleteAlert} from "../../components/alert/customAlert";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const ImgBoardDetail = () => {
     const nav = useNavigate();
     const {user, setUser} = useContext(UserContext);
+    const [isLoading, setLoading] = useState(false);
 
     const [role, setRole] = useState("");
 
@@ -76,6 +78,7 @@ const ImgBoardDetail = () => {
         } else {
             setPath(false);
         }
+        setLoading(true);
     };
 
     const validation = (param) => {
@@ -239,18 +242,18 @@ const ImgBoardDetail = () => {
     };
 
     /*useEffect(() => {
-                        if (files?.length > 0) {
-                            files.forEach(function (f) {
-                                if (!f.type.startsWith("image/")) {
-                                    toast.info("이미지 파일만 업로드 가능합니다.", {
-                                        autoClose: 500,
-                                    });
-                                    setFiles(null);
-                                    click.current.value = null;
-                                }
-                            });
-                        }
-                    }, [files]);*/
+                          if (files?.length > 0) {
+                              files.forEach(function (f) {
+                                  if (!f.type.startsWith("image/")) {
+                                      toast.info("이미지 파일만 업로드 가능합니다.", {
+                                          autoClose: 500,
+                                      });
+                                      setFiles(null);
+                                      click.current.value = null;
+                                  }
+                              });
+                          }
+                      }, [files]);*/
 
     useEffect(() => {
         userCheck();
@@ -261,153 +264,159 @@ const ImgBoardDetail = () => {
     }, []);
 
     return (
-        <div className="main-container">
-            <Table bordered>
-                <colgroup>
-                    <col style={{width: "20%"}}/>
-                    <col/>
-                </colgroup>
-                <tbody>
-                <tr>
-                    <td>제목</td>
-                    <td>
-                        {path ? (
-                            data.TITLE
-                        ) : (
-                            <Form.Control
-                                name="title"
-                                value={param.title || ""}
-                                placeholder="제목을 입력하세요"
-                                onChange={(e) => {
-                                    changeBoard(e);
+        <>
+            {isLoading ? (
+                <div className="main-container">
+                    <Table bordered>
+                        <colgroup>
+                            <col style={{width: "20%"}}/>
+                            <col/>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <td>제목</td>
+                            <td>
+                                {path ? (
+                                    data.TITLE
+                                ) : (
+                                    <Form.Control
+                                        name="title"
+                                        value={param.title || ""}
+                                        placeholder="제목을 입력하세요"
+                                        onChange={(e) => {
+                                            changeBoard(e);
+                                        }}
+                                    />
+                                )}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>글쓴이</td>
+                            <td>{path ? data.AUTHOR : param.author}</td>
+                        </tr>
+                        <tr>
+                            <td>첨부파일</td>
+                            <td>
+                                {data &&
+                                    data.file?.length > 0 &&
+                                    data.file.map((f, idx) => (
+                                        <div className="file-div" key={idx}>
+                        <span
+                            className="file-view"
+                            onClick={() => {
+                                downloadFile(f.FILE_NM, f.ORIGIN_NM);
+                            }}
+                        >
+                          {f.ORIGIN_NM}
+                        </span>
+                                            {!path && (
+                                                <img
+                                                    key={idx}
+                                                    className="comment_del file"
+                                                    src={del_icon}
+                                                    alt="파일삭제"
+                                                    onClick={() => {
+                                                        setTrash((prev) => [...prev, f.ID]);
+                                                        filterFile(f.ID);
+                                                    }}
+                                                />
+                                            )}
+                                            <br/>
+                                        </div>
+                                    ))}
+                                <FileUpload
+                                    files={files}
+                                    setFiles={setFiles}
+                                    data={data}
+                                    onOff={path}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="contents-section" colSpan={2}>
+                                {path ? (
+                                    <Drawing
+                                        canvasRef={canvasRef}
+                                        saveInfo={data?.DRAWINFO}
+                                        drawTime={data?.DRAWTIME}
+                                    />
+                                ) : (
+                                    <Drawing canvasRef={canvasRef}/>
+                                )}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </Table>
+                    {path && (
+                        <div className="text-center">
+                            <img
+                                className="thumb_btn"
+                                src={thumb}
+                                alt="추천"
+                                style={{width: "40px", height: "40px"}}
+                                onClick={() => {
+                                    recommend(data.NO);
                                 }}
                             />
-                        )}
-                    </td>
-                </tr>
-                <tr>
-                    <td>글쓴이</td>
-                    <td>{path ? data.AUTHOR : param.author}</td>
-                </tr>
-                <tr>
-                    <td>첨부파일</td>
-                    <td>
-                        {data &&
-                            data.file?.length > 0 &&
-                            data.file.map((f, idx) => (
-                                <div className="file-div" key={idx}>
-                    <span
-                        className="file-view"
-                        onClick={() => {
-                            downloadFile(f.FILE_NM, f.ORIGIN_NM);
-                        }}
-                    >
-                      {f.ORIGIN_NM}
-                    </span>
-                                    {!path && (
-                                        <img
-                                            key={idx}
-                                            className="comment_del file"
-                                            src={del_icon}
-                                            alt="파일삭제"
-                                            onClick={() => {
-                                                setTrash((prev) => [...prev, f.ID]);
-                                                filterFile(f.ID);
-                                            }}
-                                        />
-                                    )}
-                                    <br/>
-                                </div>
-                            ))}
-                        <FileUpload
-                            files={files}
-                            setFiles={setFiles}
-                            data={data}
-                            onOff={path}
-                        />
-                    </td>
-                </tr>
-                <tr>
-                    <td className="contents-section" colSpan={2}>
-                        {path ? (
-                            <Drawing
-                                canvasRef={canvasRef}
-                                saveInfo={data?.DRAWINFO}
-                                drawTime={data?.DRAWTIME}
-                            />
-                        ) : (
-                            <Drawing canvasRef={canvasRef}/>
-                        )}
-                    </td>
-                </tr>
-                </tbody>
-            </Table>
-            {path && (
-                <div className="text-center">
-                    <img
-                        className="thumb_btn"
-                        src={thumb}
-                        alt="추천"
-                        style={{width: "40px", height: "40px"}}
-                        onClick={() => {
-                            recommend(data.NO);
-                        }}
-                    />
-                    <div>{data.RECOMMEND}</div>
+                            <div>{data.RECOMMEND}</div>
+                        </div>
+                    )}
+                    {path && data.DEL_YN !== "T" && (
+                        <div className="my-2">
+                            <ImgComment location={location}/>
+                        </div>
+                    )}
+                    <Link to={"/img"}>
+                        <button className="common_btn">목록</button>
+                    </Link>
+                    {path && (role === "user" || role === "admin") && (
+                        <div className="user_board_btn">
+                            <button
+                                className="common_btn"
+                                onClick={() => {
+                                    updateBoard(data.NO);
+                                }}
+                                disabled={role === "admin"}
+                                hidden={role === "admin"}
+                            >
+                                수정
+                            </button>
+                            <button
+                                className="common_btn"
+                                onClick={() => {
+                                    deleteAlert("삭제하시겠습니까?", deleteBoard, data.NO);
+                                }}
+                            >
+                                삭제
+                            </button>
+                        </div>
+                    )}
+                    {!path && (
+                        <>
+                            <button
+                                className="common_btn temp"
+                                onClick={() => {
+                                    append_board("temp");
+                                }}
+                            >
+                                임시 저장
+                            </button>
+                            <button
+                                className="common_btn append"
+                                onClick={() => {
+                                    append_board();
+                                }}
+                            >
+                                등록
+                            </button>
+                        </>
+                    )}
+                    <ToastCon autoClose={2000}/>
                 </div>
+            ) : (
+                <LoadingSpinner/>
             )}
-            {path && data.DEL_YN !== "T" && (
-                <div className="my-2">
-                    <ImgComment location={location}/>
-                </div>
-            )}
-            <Link to={"/img"}>
-                <button className="common_btn">목록</button>
-            </Link>
-            {path && (role === "user" || role === "admin") && (
-                <div className="user_board_btn">
-                    <button
-                        className="common_btn"
-                        onClick={() => {
-                            updateBoard(data.NO);
-                        }}
-                        disabled={role === "admin"}
-                        hidden={role === "admin"}
-                    >
-                        수정
-                    </button>
-                    <button
-                        className="common_btn"
-                        onClick={() => {
-                            deleteAlert("삭제하시겠습니까?", deleteBoard, data.NO)
-                        }}
-                    >
-                        삭제
-                    </button>
-                </div>
-            )}
-            {!path && (
-                <>
-                    <button
-                        className="common_btn temp"
-                        onClick={() => {
-                            append_board("temp");
-                        }}
-                    >
-                        임시 저장
-                    </button>
-                    <button
-                        className="common_btn append"
-                        onClick={() => {
-                            append_board();
-                        }}
-                    >
-                        등록
-                    </button>
-                </>
-            )}
-            <ToastCon autoClose={2000}/>
-        </div>
+        </>
     );
 };
 export default ImgBoardDetail;

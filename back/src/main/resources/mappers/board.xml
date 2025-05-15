@@ -38,7 +38,7 @@
         CASE
         WHEN U.IS_DEL = 'Y' THEN '탈퇴한 사용자'
         ELSE U.USER_NIC
-        END AS USER_NIC,
+        END AS AUTHOR,
         RECOMMEND,
         VIEW_CNT,
         DATE_FORMAT(APPLY_DATE, '%Y-%m-%d') AS APPLY_FORMAT_DATE,

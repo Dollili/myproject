@@ -19,13 +19,13 @@ import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
     {
-        path: "/login",
+        path: "login",
         element: <Home/>,
         errorElement: <NotFound/>,
     },
     {
         path: "/",
-        element: <Navigate to="/login" replace/>,
+        element: <Navigate to="login" replace/>,
     },
     {path: "find", element: <FindPwd/>, errorElement: <NotFound/>},
     {path: "admin", element: <Admin/>, errorElement: <NotFound/>},

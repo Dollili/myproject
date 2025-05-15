@@ -99,4 +99,23 @@ public class ImgBoardController {
     public List<Map<String, Object>> rank() {
         return imgBoardService.getRank();
     }
+
+    @GetMapping("/rankComment")
+    public List<Map<String, Object>> rCommentGet(@RequestParam Map<String, Object> param) {
+        return imgBoardService.getBoardRComment(param);
+    }
+
+    @PostMapping("/rankComment")
+    public int rCommentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("user", username);
+        return imgBoardService.insertRComment(param);
+    }
+
+    @PutMapping("/rankComment/delete")
+    public ResponseEntity<?> rCommentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("user", username);
+        return imgBoardService.deleteRComment(param);
+    }
 }
