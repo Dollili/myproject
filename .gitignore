@@ -16,6 +16,7 @@ front/.idea/
 front/build/
 front/.env.local
 front/.env.development
+front/.env.production
 front.iml
 
 **/node_modules/
