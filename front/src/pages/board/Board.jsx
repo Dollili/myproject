@@ -5,6 +5,7 @@ import {dbGet} from "../../services/commonApi";
 import eyeIcon from "../../assets/img/free-icon-eye-4818558.png";
 import Paging from "../../components/Paging";
 import {slugUtil} from "../../utils/common";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const Board = () => {
     const [data, setData] = useState([]);
@@ -12,6 +13,7 @@ const Board = () => {
     const [total, setTotal] = useState(0); // 검색된 총 데이터 수 (전체 포함)
     const [current, setCurrent] = useState(1); // 현재 페이지
 
+    const [isLoading, setLoading] = useState(false);
     const nav = useNavigate();
 
     const [search, setSearch] = useState({
@@ -22,7 +24,7 @@ const Board = () => {
     const getBoard = async () => {
         search["page"] = current;
         search["size"] = item;
-        search["category"] = 'board';
+        search["category"] = "board";
         try {
             const res = await dbGet("/board/list", search);
             if (res) {
@@ -31,6 +33,7 @@ const Board = () => {
             } else {
                 setData([]);
             }
+            setLoading(true);
         } catch (e) {
             nav("/error", {state: e.status});
         }
@@ -96,60 +99,69 @@ const Board = () => {
                         </button>
                     </Link>
                 </div>
-                <Table bordered hover className="board my-2">
-                    <colgroup>
-                        <col style={{width: "5%"}}/>
-                        <col style={{width: "55%"}}/>
-                        <col style={{width: "15%"}}/>
-                        <col style={{width: "15%"}}/>
-                        <col style={{width: "5%"}}/>
-                        <col style={{width: "5%"}}/>
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>날짜</th>
-                        <th>추천수</th>
-                        <th>
-                            <img
-                                src={eyeIcon}
-                                alt="조회수"
-                                style={{width: "20px", height: "20px"}}
-                            />
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.length === 0 ? (
+
+                {isLoading ? (
+                    <Table bordered hover className="board my-2">
+                        <colgroup>
+                            <col style={{width: "5%"}}/>
+                            <col style={{width: "55%"}}/>
+                            <col style={{width: "15%"}}/>
+                            <col style={{width: "15%"}}/>
+                            <col style={{width: "5%"}}/>
+                            <col style={{width: "5%"}}/>
+                        </colgroup>
+                        <thead>
                         <tr>
-                            <td colSpan={6}>게시글이 존재하지 않습니다.</td>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>날짜</th>
+                            <th>추천수</th>
+                            <th>
+                                <img
+                                    src={eyeIcon}
+                                    alt="조회수"
+                                    style={{width: "20px", height: "20px"}}
+                                />
+                            </th>
                         </tr>
-                    ) : (
-                        data.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.ROWNUM}</td>
-                                <td
-                                    className="contents-td"
-                                    onClick={() => {
-                                        nav(`/board/${slugUtil(item.TITLE)}`, {state: item.NO});
-                                    }}
-                                >
-                                    {item.TITLE}
-                                    <span style={{color: "red", marginLeft: "3px"}}>[{item.COMMENT_CNT}]</span>
-                                </td>
-                                <td>{item.AUTHOR}</td>
-                                <td>{item.APPLY_FORMAT_DATE}</td>
-                                <td>{item.RECOMMEND}</td>
-                                <td>{item.VIEW_CNT}</td>
+                        </thead>
+                        <tbody>
+                        {data.length === 0 ? (
+                            <tr>
+                                <td colSpan={6}>게시글이 존재하지 않습니다.</td>
                             </tr>
-                        ))
-                    )}
-                    </tbody>
-                </Table>
+                        ) : (
+                            data.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.ROWNUM}</td>
+                                    <td
+                                        className="contents-td"
+                                        onClick={() => {
+                                            nav(`/board/${slugUtil(item.TITLE)}`, {
+                                                state: item.NO,
+                                            });
+                                        }}
+                                    >
+                                        {item.TITLE}
+                                        <span style={{color: "red", marginLeft: "3px"}}>
+                        [{item.COMMENT_CNT}]
+                      </span>
+                                    </td>
+                                    <td>{item.AUTHOR}</td>
+                                    <td>{item.APPLY_FORMAT_DATE}</td>
+                                    <td>{item.RECOMMEND}</td>
+                                    <td>{item.VIEW_CNT}</td>
+                                </tr>
+                            ))
+                        )}
+                        </tbody>
+                    </Table>
+                ) : (
+                    <LoadingSpinner/>
+                )}
             </div>
-            {data.length !== 0 && (
+            {isLoading && data.length !== 0 && (
                 <Paging total={total} pageItem={item} currentPage={setCurrent}/>
             )}
         </>

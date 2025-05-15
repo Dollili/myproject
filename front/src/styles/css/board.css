@@ -46,6 +46,14 @@
     text-align: center;
 }
 
+.spinner {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+}
+
 .areaInput {
     height: 100px;
     resize: none;
@@ -302,6 +310,10 @@ td {
 
 .tools p {
     font-size: 0.8rem;
+}
+
+.tools.result {
+    height: 100px;
 }
 
 .drawing-contents {

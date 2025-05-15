@@ -169,7 +169,7 @@ const Home = () => {
                             <h4
                                 className="goHome"
                                 onClick={() => {
-                                    nav("img");
+                                    nav("/img");
                                 }}
                             >
                                 Click

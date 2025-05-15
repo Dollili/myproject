@@ -82,6 +82,7 @@
         FROM
         (
         SELECT
+        IMGCOMMENT.ID,
         CASE
         WHEN U.IS_DEL = 'Y' THEN '탈퇴한 사용자'
         ELSE U.USER_NIC
@@ -149,5 +150,36 @@
           AND DEL_YN IS NULL
         ORDER BY RECOMMEND DESC, APPLY_DATE
         LIMIT 3
+    </select>
+
+    <select id="getBoardRComment" resultType="map">
+        SELECT *
+        FROM
+        (
+        SELECT
+        IMGCOMMENT.ID,
+        CASE
+        WHEN U.IS_DEL = 'Y' THEN '탈퇴한 사용자'
+        ELSE U.USER_NIC
+        END AS USER_NIC,
+        COMMENT,
+        DATE_FORMAT(APPLY_DATE, '%Y-%m-%d %H:%i:%s') AS APPLY_FORMAT_DATE,
+        (SELECT COUNT(*)
+        FROM IMGCOMMENT
+        WHERE DEL_YN IS NULL
+        AND CATEGORY = 'rank'
+        )AS TOTAL
+        FROM IMGCOMMENT
+        JOIN USER U ON IMGCOMMENT.USER_ID = U.USER_ID
+        WHERE DEL_YN IS NULL AND CATEGORY = 'rank'
+        ORDER BY APPLY_FORMAT_DATE
+        <if test="orderBy == 'desc'">
+            DESC
+        </if>
+        <if test="orderBy == 'asc'">
+            ASC
+        </if>
+        ) A
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 </mapper>

@@ -104,6 +104,8 @@ const UserInfo = () => {
                 return "전시회";
             case "qna":
                 return "QnA";
+            case "rank":
+                return "명전";
             default:
                 return "no data";
         }

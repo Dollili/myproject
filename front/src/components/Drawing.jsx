@@ -94,9 +94,9 @@ const Drawing = ({canvasRef, saveInfo, drawTime}) => {
                 </div>
             )}
             {saveInfo && (
-                <div className="tools">
+                <div className="tools result">
                     <div>
-                        🎮️ 총 소요시간:{" "}
+                        ✏️ 총 소요시간:{" "}
                         {Math.floor(drawTime / 1000 / 60) +
                             " 분 " +
                             Math.floor((drawTime / 1000) % 60) +

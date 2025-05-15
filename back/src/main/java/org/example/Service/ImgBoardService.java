@@ -110,4 +110,27 @@ public class ImgBoardService {
     public List<Map<String, Object>> getRank() {
         return imageMapper.selectRanking();
     }
+
+    public List<Map<String, Object>> getBoardRComment(Map<String, Object> param) {
+        int page = param.get("page") == null ? 1 : Integer.parseInt((String) param.get("page"));
+        int size = param.get("size") == null ? 10 : Integer.parseInt((String) param.get("size"));
+
+        param.put("offset", (page - 1) * size);
+        param.put("limit", size);
+
+        return imageMapper.getBoardRComment(param);
+    }
+
+    public int insertRComment(Map<String, Object> param) {
+        return imageMapper.insertRComment(param);
+    }
+
+    public ResponseEntity<?> deleteRComment(Map<String, Object> param) {
+        int result = imageMapper.deleteRComment(param);
+        if (result == 1) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(409).build();
+        }
+    }
 }
