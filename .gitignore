@@ -27,3 +27,4 @@ front.iml
 .idea/
 .vscode/
 logs
+*.sql
