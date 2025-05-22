@@ -45,7 +45,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         username = ((String) attributes.get("nic")).isEmpty() ? email : username;
         System.out.println(attributes);
 
-        String token = jwtTokenProvider.createToken(username, roles, provider);
+        String token = jwtTokenProvider.createToken(username, roles);
         String refreshToken = jwtTokenProvider.createRefreshToken(username);
         long maxAge = jwtTokenProvider.getValidityInMilliseconds() / 1000;
         long maxAge2 = jwtTokenProvider.refreshValidityInMilliseconds() / 1000;
