@@ -46,22 +46,23 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-
-    public String getUsername(String token) {
+    private Claims getAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(key)
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+    }
+
+    public String getUsername(String token) {
+        return getAllClaims(token).getSubject();
+    }
+
+    public String getProvider(String token) {
+        return getAllClaims(token).get("provider", String.class);
     }
 
     public List<String> getRoles(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(key)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return (List<String>) claims.get("roles");
+        return getAllClaims(token).get("roles", List.class);
     }
 
     public boolean validateToken(String token) {

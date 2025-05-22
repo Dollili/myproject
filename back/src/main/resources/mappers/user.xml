@@ -3,10 +3,11 @@
 <mapper namespace="org.example.Repository.UserMapper">
 
     <select id="userLogin" parameterType="string" resultType="map">
-        SELECT USER_ID, USER_PWD, ROLE, USER_NM, USER_NIC
+        SELECT USER_ID, USER_PWD, ROLE, USER_NM, USER_NIC, PROVIDER_ID
         FROM USER
         WHERE UPPER(USER_ID) = UPPER(#{id})
-          AND IS_DEL IS NULL
+           OR UPPER(PROVIDER_ID) = UPPER(#{id})
+            AND IS_DEL IS NULL
     </select>
 
     <select id="userInfo" resultType="map">

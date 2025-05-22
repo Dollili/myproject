@@ -2,8 +2,10 @@ package org.example.Config;
 
 import lombok.RequiredArgsConstructor;
 import org.example.Filter.JwtAuthenticationFilter;
+import org.example.Service.CustomOAuth2UserService;
 import org.example.Service.UserDetailService;
 import org.example.util.JwtTokenProvider;
+import org.example.util.OAuth2SuccessHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,8 +36,10 @@ public class SecurityConfig {
     //private final CorsConfig corsConfig;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailService userDetailService;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler oauth2SuccessHandler;
 
-    @Value("${spring.graphql.cors.allowedOrigins}")
+    @Value("${app.cors.allowedOrigins}")
     private String allowedOrigins;
 
     @Bean
@@ -64,10 +69,14 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers("/error", "/favicon.ico");
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .securityContext(securityContext ->
-                        securityContext.securityContextRepository(new NullSecurityContextRepository()))
+        http.securityContext(securityContext -> securityContext.securityContextRepository(new NullSecurityContextRepository()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -80,8 +89,13 @@ public class SecurityConfig {
                         .hasAnyRole("U", "M")
                         .anyRequest()
                         .authenticated())
-                .addFilterBefore(corsFilter(), SecurityContextHolderFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailService), UsernamePasswordAuthenticationFilter.class);
+                .oauth2Login(oauth2 -> oauth2.authorizationEndpoint(endpoint -> endpoint.baseUri("/oauth2/authorization"))
+                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/login/oauth2/code"))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .successHandler(oauth2SuccessHandler)
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailService, customOAuth2UserService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(corsFilter(), SecurityContextHolderFilter.class);
 
         return http.build();
     }

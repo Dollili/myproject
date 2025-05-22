@@ -16,6 +16,7 @@ import Rank from "./pages/ranking/Rank";
 import FindPwd from "./pages/user/FindPwd";
 import UserBoard from "./pages/admin/UserBoard";
 import NotFound from "./pages/NotFound";
+import OauthPage from "./pages/OauthPage";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Navigate to="login" replace/>,
     },
+    {path: "/oauth2/redirect", element: <OauthPage/>, errorElement: <NotFound/>},
     {path: "find", element: <FindPwd/>, errorElement: <NotFound/>},
     {path: "admin", element: <Admin/>, errorElement: <NotFound/>},
     {

@@ -80,6 +80,7 @@ const FindPwd = () => {
                             <div className="input-group">
                                 <i className="bx bxs-user"></i>
                                 <input
+                                    className="email"
                                     name="email"
                                     type="text"
                                     placeholder="yourEmail@icursor.com"

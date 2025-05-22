@@ -53,7 +53,6 @@ const MyEditor = ({onChange, value}) => {
                     ["image"],
                     [{align: []}],
                     ["code-block"],
-                    ["clean"],
                 ],
                 handlers: {
                     image: imageHandler,

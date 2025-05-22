@@ -123,6 +123,7 @@ const Register = ({toggle}) => {
                         <div className="input-group">
                             <i className="bx bxs-user"></i>
                             <input
+                                className="email"
                                 name="email"
                                 type="text"
                                 placeholder="yourEmail@icursor.com"
@@ -180,6 +181,33 @@ const Register = ({toggle}) => {
                                 회원 로그인
                             </b>
                         </p>
+                    </div>
+                    <div className="social-list sign-up">
+                        <p>간편 로그인</p>
+                        <div
+                            className="google-bg"
+                            onClick={() => {
+                                window.location.href = process.env.REACT_APP_API_BASE_URL + "/oauth2/authorization/google";
+                            }}
+                        >
+                            <i>Google</i>
+                        </div>
+                        <div
+                            className="kakao-bg"
+                            onClick={() => {
+                                window.location.href = process.env.REACT_APP_API_BASE_URL + "/oauth2/authorization/kakao";
+                            }}
+                        >
+                            <i>Kakao</i>
+                        </div>
+                        <div
+                            className="naver-bg"
+                            onClick={() => {
+                                window.location.href = process.env.REACT_APP_API_BASE_URL + "/oauth2/authorization/naver";
+                            }}
+                        >
+                            <i>Naver</i>
+                        </div>
                     </div>
                 </div>
                 <ToastCon autoClose={1000}/>

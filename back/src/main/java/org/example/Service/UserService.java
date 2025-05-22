@@ -79,8 +79,8 @@ public class UserService {
     }
 
     public ResponseEntity<String> join(Map<String, Object> params) {
-        if (params.get("id") == null || params.get("pwd") == null) {
-            logger.error("params is null");
+        if (params.get("email") == null) {
+            logger.error("email is null");
             throw new RuntimeException("Required fields");
         }
         String userId = (String) params.get("id");
@@ -203,7 +203,9 @@ public class UserService {
         }
 
         List<String> roles = jwtTokenProvider.getRoles(token);
-        String newToken = jwtTokenProvider.createToken(username, roles);
+        String provider = jwtTokenProvider.getProvider(token);
+
+        String newToken = jwtTokenProvider.createToken(username, roles, provider);
 
         Cookie cookie = new Cookie("token", newToken);
         cookie.setHttpOnly(true);

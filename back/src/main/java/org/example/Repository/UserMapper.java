@@ -29,7 +29,7 @@ public interface UserMapper {
 
     List<Map<String, Object>> userComment(Map<String, Object> user);
 
-    @Insert("INSERT INTO USER (USER_NM, USER_ID, USER_PWD, REGISTER_DATE, ROLE, USER_NIC, USER_EMAIL) VALUES (#{name}, #{id}, #{pwd}, NOW(), 'U', #{nic}, #{email})")
+    @Insert("INSERT INTO USER (USER_NM, USER_ID, USER_PWD, REGISTER_DATE, ROLE, USER_NIC, USER_EMAIL, PROVIDER_ID) VALUES (#{name}, #{id}, #{pwd}, NOW(), 'U', #{nic}, #{email}, #{provider})")
     int insertUser(Map<String, Object> user);
 
     int findPwd(Map<String, Object> user);

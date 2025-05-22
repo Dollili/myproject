@@ -35,6 +35,28 @@
     z-index: 5;
 }
 
+.oauth {
+    width: 10%;
+}
+
+.oauth button {
+    margin: 5px;
+    border-radius: 30px;
+    border: unset;
+    width: 60px;
+    height: 60px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: white;
+}
+
+.social-list p {
+    margin: 5px;
+    width: 60px;
+    font-size: 0.7rem;
+    font-family: GmarketSansMedium;
+}
+
 .form .complete {
     line-height: initial;
     width: 40%;

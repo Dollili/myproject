@@ -90,7 +90,7 @@ public class FileService {
             Path tempPath;
             if (name == null || name.isEmpty()) {
                 tempPath = uploadDir.toPath().resolve(saveName);
-                String fileUrl = "/files/temp/" + saveName;
+                String fileUrl = "/files/" + saveName;
                 result.put("url", fileUrl);
                 result.put("name", saveName);
             } else {

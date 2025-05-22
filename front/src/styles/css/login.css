@@ -1,18 +1,20 @@
 :root {
     --primary-color: #98f698;
-    --secondary-color: #57B894;
+    --secondary-color: #57b894;
     --black: #8ad588;
     --white: #ffffff;
     --gray: #efefef;
     --gray-2: #7aba78;
 
-    --facebook-color: #4267B2;
-    --google-color: #DB4437;
-    --twitter-color: #1DA1F2;
-    --insta-color: #E1306C;
+    --facebook-color: #4267b2;
+    --google-color: #db4437;
+    --twitter-color: #1da1f2;
+    --naver-color: #03c75a;
+    --kakao-color: #fee500;
+    --insta-color: #e1306c;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap");
 
 * {
     margin: 0;
@@ -60,8 +62,8 @@
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     transform: scale(0);
-    transition: .5s ease-in-out;
-    transition-delay: .5s;
+    transition: 0.5s ease-in-out;
+    transition-delay: 0.5s;
 }
 
 .input-group {
@@ -84,7 +86,7 @@
     padding: 1rem 1rem;
     font-size: 1rem;
     background-color: var(--gray);
-    border-radius: .5rem;
+    border-radius: 0.5rem;
     border: 0.125rem solid var(--white);
     outline: none;
 }
@@ -96,8 +98,8 @@
 .form button {
     cursor: pointer;
     width: 100%;
-    padding: .6rem 0;
-    border-radius: .5rem;
+    padding: 0.6rem 0;
+    border-radius: 0.5rem;
     border: none;
     background-color: var(--black);
     color: var(--white);
@@ -107,7 +109,7 @@
 
 .form p {
     margin: 1rem 0;
-    font-size: .8rem;
+    font-size: 0.8rem;
 }
 
 .flex-col {
@@ -115,50 +117,39 @@
 }
 
 .social-list {
-    margin: 2rem 0;
-    padding: 1rem;
-    border-radius: 1.5rem;
-    width: 100%;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     transform: scale(0);
-    transition: .5s ease-in-out;
-    transition-delay: 1.2s;
+    transition: 0.5s ease-in-out;
 }
 
 .social-list > div {
+    width: 60px;
+    height: 60px;
     color: var(--white);
-    margin: 0 .5rem;
-    padding: .7rem;
+    margin: 5px;
     cursor: pointer;
-    border-radius: .5rem;
-    cursor: pointer;
+    border-radius: 0.5rem;
     transform: scale(0);
-    transition: .5s ease-in-out;
+    transition: transform 1s ease-in-out;
 }
 
 .social-list > div:nth-child(1) {
-    transition-delay: 1.4s;
+    transition-delay: 0.2s;
 }
 
 .social-list > div:nth-child(2) {
-    transition-delay: 1.6s;
+    transition-delay: 0.4s;
 }
 
 .social-list > div:nth-child(3) {
-    transition-delay: 1.8s;
+    transition-delay: 0.6s;
 }
 
 .social-list > div:nth-child(4) {
-    transition-delay: 2s;
+    transition-delay: 0.8s;
 }
 
 .social-list > div > i {
-    font-size: 1.5rem;
-    transition: .4s ease-in-out;
-}
-
-.social-list > div:hover i {
-    transform: scale(1.5);
+    font-size: 1.3rem;
 }
 
 .facebook-bg {
@@ -167,6 +158,7 @@
 
 .google-bg {
     background-color: var(--google-color);
+    letter-spacing: -1.9px;
 }
 
 .twitter-bg {
@@ -175,6 +167,14 @@
 
 .insta-bg {
     background-color: var(--insta-color);
+}
+
+.naver-bg {
+    background-color: var(--naver-color);
+}
+
+.kakao-bg {
+    background-color: var(--kakao-color);
 }
 
 .pointer {
@@ -215,13 +215,13 @@
 .text p {
     font-weight: 600;
     transition: 1s ease-in-out;
-    transition-delay: .2s;
+    transition-delay: 0.2s;
 }
 
 .img img {
     width: 30vw;
     transition: 1s ease-in-out;
-    transition-delay: .4s;
+    transition-delay: 0.4s;
 }
 
 .text.sign-in h2,
@@ -274,7 +274,6 @@
     right: 5%;
 }
 
-
 .container::before {
     content: "";
     position: absolute;
@@ -283,7 +282,11 @@
     height: 100vh;
     width: 300vw;
     transform: translate(35%, 0);
-    background-image: linear-gradient(-45deg, var(--black) 0%, var(--gray-2) 100%);
+    background-image: linear-gradient(
+            -45deg,
+            var(--black) 0%,
+            var(--gray-2) 100%
+    );
     transition: 1s ease-in-out;
     z-index: 6;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -304,7 +307,6 @@
 /* RESPONSIVE */
 
 @media only screen and (max-width: 425px) {
-
     .container::before,
     .container.sign-in::before,
     .container.sign-up::before {
@@ -317,8 +319,8 @@
     }
 
     /* .container.sign-in .col.sign-up {
-        transform: translateY(100%);
-    } */
+          transform: translateY(100%);
+      } */
     .container.sign-in .col.sign-in,
     .container.sign-up .col.sign-up {
         transform: translateY(0);
@@ -365,7 +367,7 @@
     }
 
     .text h2 {
-        margin: .5rem;
+        margin: 0.5rem;
         font-size: 2rem;
     }
 }
@@ -432,4 +434,8 @@
 
 .move_home:hover {
     background-color: #98f698;
+}
+
+.email {
+    letter-spacing: .8px;
 }
