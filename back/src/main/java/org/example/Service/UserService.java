@@ -48,7 +48,6 @@ public class UserService {
         String token = jwtTokenProvider.createToken(username, roles);
         String refreshToken = jwtTokenProvider.createRefreshToken(username);
         long maxAge = jwtTokenProvider.getValidityInMilliseconds() / 1000;
-        long maxAge2 = jwtTokenProvider.refreshValidityInMilliseconds() / 1000;
 
         Cookie cookie = new Cookie("token", token);
         cookie.setHttpOnly(true);
@@ -56,13 +55,6 @@ public class UserService {
         cookie.setPath("/");
         cookie.setMaxAge((int) maxAge); // 1시간
         response.addCookie(cookie);
-
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setHttpOnly(true);
-        refreshCookie.setSecure(true); // HTTPS 환경에서만 전달
-        refreshCookie.setPath("/");
-        refreshCookie.setMaxAge((int) maxAge2); // 7일
-        response.addCookie(refreshCookie);
 
         stringRedisTemplate.opsForValue()
                 .set("RT:" + username, refreshToken, 7, TimeUnit.DAYS);
@@ -244,12 +236,6 @@ public class UserService {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
-
-        Cookie rtCookie = new Cookie("refreshToken", null);
-        rtCookie.setHttpOnly(true);
-        rtCookie.setMaxAge(0);
-        rtCookie.setPath("/");
-        response.addCookie(rtCookie);
     }
 
 }

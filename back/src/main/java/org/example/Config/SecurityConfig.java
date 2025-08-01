@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailService userDetailService;
 
-    @Value("${spring.graphql.cors.allowedOrigins}")
+    @Value("${app.cors.allowedOrigins}")
     private String allowedOrigins;
 
     @Bean
