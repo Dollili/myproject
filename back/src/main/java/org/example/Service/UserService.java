@@ -67,6 +67,9 @@ public class UserService {
     }
 
     public void logoutToken(String token, HttpServletResponse response) {
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            jwtTokenProvider.blacklistToken(token);
+        }
         tokenInit(token, response);
     }
 
@@ -194,8 +197,11 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        jwtTokenProvider.blacklistToken(token);
+
         List<String> roles = jwtTokenProvider.getRoles(token);
         String newToken = jwtTokenProvider.createToken(username, roles);
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(username);
 
         Cookie cookie = new Cookie("token", newToken);
         cookie.setHttpOnly(true);
@@ -203,6 +209,8 @@ public class UserService {
         cookie.setPath("/");
         cookie.setMaxAge((int) (jwtTokenProvider.getValidityInMilliseconds() / 1000)); // 1시간
         response.addCookie(cookie);
+
+        stringRedisTemplate.opsForValue().set("RT:" + username, newRefreshToken, 7, TimeUnit.DAYS);
 
         Map<String, Object> map = new HashMap<>();
         map.put("result", "success");
