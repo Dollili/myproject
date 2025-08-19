@@ -1,7 +1,7 @@
-package org.example.Controller;
+package org.example.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.Service.HomeService;
+import org.example.Service.ImgBoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +15,18 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/board")
-public class HomeController {
+@RequestMapping("/board")
+public class ImgBoardController {
     Logger logger = LoggerFactory.getLogger(HomeController.class);
     @Autowired
-    private HomeService homeService;
+    private ImgBoardService imgBoardService;
 
-    @GetMapping("/list")
+    @GetMapping("/imgList")
     public Map<String, Object> board(@RequestParam Map<String, Object> params) {
-        return homeService.getBoardList(params);
+        return imgBoardService.getBoardList(params);
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/imgDetail")
     public Map<String, Object> boardDetail(@RequestParam Map<String, Object> param, Authentication authentication, HttpServletRequest request) {
         String username = request.getRemoteAddr(); // 비로그인 IP
         if (authentication != null && authentication.isAuthenticated()
@@ -35,19 +35,19 @@ public class HomeController {
         }
 
         param.put("id", username);
-        return homeService.getBoardDetail(param);
+        return imgBoardService.getBoardDetail(param);
     }
 
-    @PostMapping("/detail")
+    @PostMapping("/imgDetail")
     public int boardInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("id", username);
-        return homeService.insertBoard(param);
+        return imgBoardService.insertBoard(param);
     }
 
-    @PutMapping("/detail/modify")
+    @PutMapping("/imgDetail/modify")
     public ResponseEntity<Void> boardModify(@RequestBody Map<String, Object> param) {
-        int result = homeService.modifyBoard(param);
+        int result = imgBoardService.modifyBoard(param);
 
         if (result == 1) {
             logger.info("success modify board");
@@ -58,9 +58,9 @@ public class HomeController {
         }
     }
 
-    @PutMapping("/detail")
+    @PutMapping("/imgDetail")
     public ResponseEntity<Void> boardDelete(@RequestBody Map<String, Object> param) {
-        int result = homeService.deleteBoard(param);
+        int result = imgBoardService.deleteBoard(param);
 
         if (result == 1) {
             return ResponseEntity.noContent().build();
@@ -69,30 +69,53 @@ public class HomeController {
         }
     }
 
-    @PutMapping("/detail/recommend")
+    @PutMapping("/imgDetail/recommend")
     public ResponseEntity<?> boardRecUp(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("id", username);
-        return homeService.recommendUp(param);
+        return imgBoardService.recommendUp(param);
     }
 
-    @GetMapping("/comment")
+    @GetMapping("/iComment")
     public List<Map<String, Object>> commentGet(@RequestParam Map<String, Object> param) {
-        return homeService.getBoardComment(param);
+        return imgBoardService.getBoardComment(param);
     }
 
-    @PostMapping("/comment")
+    @PostMapping("/iComment")
     public int commentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
-        return homeService.insertComment(param);
+        return imgBoardService.insertComment(param);
     }
 
-    @PutMapping("/comment/delete")
+    @PutMapping("/iComment/delete")
     public ResponseEntity<?> commentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
-        return homeService.deleteComment(param);
+        return imgBoardService.deleteComment(param);
     }
 
+    @GetMapping("/imgList/rank")
+    public List<Map<String, Object>> rank() {
+        return imgBoardService.getRank();
+    }
+
+    @GetMapping("/rankComment")
+    public List<Map<String, Object>> rCommentGet(@RequestParam Map<String, Object> param) {
+        return imgBoardService.getBoardRComment(param);
+    }
+
+    @PostMapping("/rankComment")
+    public int rCommentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("user", username);
+        return imgBoardService.insertRComment(param);
+    }
+
+    @PutMapping("/rankComment/delete")
+    public ResponseEntity<?> rCommentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
+        String username = authentication.getName();
+        param.put("user", username);
+        return imgBoardService.deleteRComment(param);
+    }
 }
