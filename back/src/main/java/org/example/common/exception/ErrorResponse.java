@@ -1,4 +1,4 @@
-package org.example.Exception;
+package org.example.common.exception;
 
 import lombok.Getter;
 import lombok.Setter;

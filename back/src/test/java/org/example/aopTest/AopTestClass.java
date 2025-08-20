@@ -1,6 +1,6 @@
 package org.example.aopTest;
 
-import org.example.Exception.LoggingAspect;
+import org.example.common.aop.LoggingAspect;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

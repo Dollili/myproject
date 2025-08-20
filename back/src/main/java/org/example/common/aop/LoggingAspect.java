@@ -1,4 +1,4 @@
-package org.example.Exception;
+package org.example.common.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,13 +12,8 @@ import org.springframework.stereotype.Component;
 public class LoggingAspect {
     private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
-    public LoggingAspect() {
-        System.out.println("Testttt");
-    }
-
     @Around("execution(* org.example.controller..*(..))")
     public Object logRequestResponse(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("TEST");
         log.info(">>> Request: {}", joinPoint.getSignature());
         Object result = joinPoint.proceed();
         log.info("<<< Response: {}", result);

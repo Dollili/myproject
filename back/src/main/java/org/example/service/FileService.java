@@ -1,14 +1,14 @@
-package org.example.Service;
+package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.Repository.BoardMapper;
-import org.example.Repository.FileMapper;
-import org.example.util.CryptoUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.example.common.exception.ResourceNotFoundException;
+import org.example.repository.BoardMapper;
+import org.example.repository.FileMapper;
+import org.example.common.util.CryptoUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -24,11 +24,14 @@ public class FileService {
 
     private final FileMapper fileMapper;
     private final BoardMapper boardMapper;
-    Logger logger = LoggerFactory.getLogger(FileService.class);
     @Value("${file.upload.path}")
     private String filePath;
 
     public ResponseEntity<?> fileUpload(MultipartFile[] files, String no) {
+        if (files == null || files.length == 0) {
+            throw new ResourceNotFoundException("파일이 존재하지 않습니다.");
+        }
+
         List<Map<String, Object>> list = new ArrayList<>();
         int seq = 0;
         for (MultipartFile file : files) {
@@ -67,7 +70,6 @@ public class FileService {
 
                 list.add(map);
             } catch (IOException e) {
-                logger.error(e.getMessage());
                 try {
                     throw new IOException("파일 업로드 중 문제가 발생했습니다.");
                 } catch (IOException ex) {
@@ -101,7 +103,6 @@ public class FileService {
             // 덮어쓰기 허용
             Files.copy(file.getInputStream(), tempPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            logger.error(e.getMessage());
             try {
                 throw new IOException("파일 업로드 중 문제가 발생했습니다.");
             } catch (IOException ex) {
@@ -111,6 +112,7 @@ public class FileService {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional
     public ResponseEntity<?> deleteFile(List<String> files) {
         try {
             for (String id : files) {
@@ -118,8 +120,7 @@ public class FileService {
             }
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("파일 삭제 실패");
         }
     }
 

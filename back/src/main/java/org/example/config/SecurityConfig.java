@@ -1,9 +1,9 @@
-package org.example.Config;
+package org.example.config;
 
 import lombok.RequiredArgsConstructor;
-import org.example.Filter.JwtAuthenticationFilter;
-import org.example.Service.UserDetailService;
-import org.example.util.JwtTokenProvider;
+import org.example.common.filter.JwtAuthenticationFilter;
+import org.example.service.UserDetailService;
+import org.example.common.util.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -3,7 +3,7 @@ package org.example.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.Service.UserService;
+import org.example.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,6 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class UserController {
     private final UserService userService;
-    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, Object> params, HttpServletResponse response) {

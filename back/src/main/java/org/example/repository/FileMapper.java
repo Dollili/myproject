@@ -1,4 +1,4 @@
-package org.example.Repository;
+package org.example.repository;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;

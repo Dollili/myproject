@@ -1,11 +1,10 @@
 package org.example.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.Service.ImgBoardService;
+import org.example.service.ImgBoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,8 +28,7 @@ public class ImgBoardController {
     @GetMapping("/imgDetail")
     public Map<String, Object> boardDetail(@RequestParam Map<String, Object> param, Authentication authentication, HttpServletRequest request) {
         String username = request.getRemoteAddr(); // 비로그인 IP
-        if (authentication != null && authentication.isAuthenticated()
-                && !(authentication instanceof AnonymousAuthenticationToken)) {
+        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
             username = authentication.getName(); // 로그인한 사용자 ID
         }
 
@@ -47,26 +45,14 @@ public class ImgBoardController {
 
     @PutMapping("/imgDetail/modify")
     public ResponseEntity<Void> boardModify(@RequestBody Map<String, Object> param) {
-        int result = imgBoardService.modifyBoard(param);
-
-        if (result == 1) {
-            logger.info("success modify board");
-            return ResponseEntity.noContent().build();
-        } else {
-            logger.info("fail modify board");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        imgBoardService.modifyBoard(param);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/imgDetail")
     public ResponseEntity<Void> boardDelete(@RequestBody Map<String, Object> param) {
-        int result = imgBoardService.deleteBoard(param);
-
-        if (result == 1) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        imgBoardService.deleteBoard(param);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/imgDetail/recommend")
@@ -92,7 +78,8 @@ public class ImgBoardController {
     public ResponseEntity<?> commentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
-        return imgBoardService.deleteComment(param);
+        imgBoardService.deleteComment(param);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/imgList/rank")
@@ -116,6 +103,7 @@ public class ImgBoardController {
     public ResponseEntity<?> rCommentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
-        return imgBoardService.deleteRComment(param);
+        imgBoardService.deleteRComment(param);
+        return ResponseEntity.ok().build();
     }
 }

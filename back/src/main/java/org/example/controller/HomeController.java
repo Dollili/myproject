@@ -1,11 +1,10 @@
 package org.example.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.Service.HomeService;
+import org.example.service.HomeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,33 +46,22 @@ public class HomeController {
 
     @PutMapping("/detail/modify")
     public ResponseEntity<Void> boardModify(@RequestBody Map<String, Object> param) {
-        int result = homeService.modifyBoard(param);
-
-        if (result == 1) {
-            logger.info("success modify board");
-            return ResponseEntity.noContent().build();
-        } else {
-            logger.info("fail modify board");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        homeService.modifyBoard(param);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/detail")
     public ResponseEntity<Void> boardDelete(@RequestBody Map<String, Object> param) {
-        int result = homeService.deleteBoard(param);
-
-        if (result == 1) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        homeService.deleteBoard(param);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/detail/recommend")
     public ResponseEntity<?> boardRecUp(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("id", username);
-        return homeService.recommendUp(param);
+        homeService.recommendUp(param);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/comment")
@@ -92,7 +80,8 @@ public class HomeController {
     public ResponseEntity<?> commentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
-        return homeService.deleteComment(param);
+        homeService.deleteComment(param);
+        return ResponseEntity.noContent().build();
     }
 
 }

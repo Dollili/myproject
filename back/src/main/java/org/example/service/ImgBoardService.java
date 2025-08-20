@@ -1,12 +1,13 @@
-package org.example.Service;
+package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.Repository.FileMapper;
-import org.example.Repository.ImageMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.example.common.exception.ResourceConflictException;
+import org.example.common.exception.ResourceNotFoundException;
+import org.example.repository.FileMapper;
+import org.example.repository.ImageMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,6 @@ public class ImgBoardService {
     private final ImageMapper imageMapper;
     private final FileMapper fileMapper;
     private final ViewCountService viewCountService;
-    Logger logger = LoggerFactory.getLogger(HomeService.class);
 
     public Map<String, Object> getBoardList(Map<String, Object> params) {
         int page = params.get("page") == null ? 1 : Integer.parseInt((String) params.get("page"));
@@ -73,15 +73,22 @@ public class ImgBoardService {
         return imageMapper.insertBoard(param);
     }
 
-    public int modifyBoard(Map<String, Object> param) {
-        return imageMapper.updateBoard(param);
+    public void modifyBoard(Map<String, Object> param) {
+        int result = imageMapper.updateBoard(param);
+        if (result != 1) {
+            throw new ResourceConflictException("등록 실패");
+        }
     }
 
-    public int deleteBoard(Map<String, Object> param) {
+    @Transactional
+    public void deleteBoard(Map<String, Object> param) {
         String no = param.get("no").toString();
         fileMapper.deleteAll(no); // 파일 삭제 처리
         imageMapper.deleteAllCom(no); // 댓글 삭제 처리
-        return imageMapper.deleteBoard(param);
+        int result = imageMapper.deleteBoard(param);
+        if (result != 1) {
+            throw new ResourceNotFoundException("게시글이 존재하지 않거나 삭제할 수 없습니다.");
+        }
     }
 
     public List<Map<String, Object>> getBoardComment(Map<String, Object> param) {
@@ -98,12 +105,10 @@ public class ImgBoardService {
         return imageMapper.insertComment(param);
     }
 
-    public ResponseEntity<?> deleteComment(Map<String, Object> param) {
+    public void deleteComment(Map<String, Object> param) {
         int result = imageMapper.deleteComment(param);
-        if (result == 1) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(409).build();
+        if (result != 1) {
+            throw new ResourceConflictException("삭제 권한이 없습니다.");
         }
     }
 
@@ -125,12 +130,10 @@ public class ImgBoardService {
         return imageMapper.insertRComment(param);
     }
 
-    public ResponseEntity<?> deleteRComment(Map<String, Object> param) {
+    public void deleteRComment(Map<String, Object> param) {
         int result = imageMapper.deleteRComment(param);
-        if (result == 1) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(409).build();
+        if (result != 1) {
+            throw new ResourceConflictException("삭제 권한이 없습니다.");
         }
     }
 }

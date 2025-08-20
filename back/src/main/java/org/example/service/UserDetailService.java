@@ -1,6 +1,6 @@
-package org.example.Service;
+package org.example.service;
 
-import org.example.Repository.UserMapper;
+import org.example.repository.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;

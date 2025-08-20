@@ -1,10 +1,10 @@
-package org.example.Service;
+package org.example.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.Repository.UserMapper;
-import org.example.util.JwtTokenProvider;
+import org.example.repository.UserMapper;
+import org.example.common.util.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;

@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.Service.FileService;
+import org.example.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +17,6 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile[] files, @RequestParam(value = "no", required = false) String no) {
-        if (files == null || files.length == 0) {
-            throw new IllegalArgumentException("files is null or empty");
-        }
         return fileService.fileUpload(files, no);
     }
 
