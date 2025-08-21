@@ -113,12 +113,11 @@ public class FileService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteFile(List<String> files) {
+    public void deleteFile(List<String> files) {
         try {
             for (String id : files) {
                 fileMapper.deleteFile(id);
             }
-            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             throw new ResourceNotFoundException("파일 삭제 실패");
         }

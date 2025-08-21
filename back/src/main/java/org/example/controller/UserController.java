@@ -4,8 +4,6 @@ package org.example.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +22,9 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
-        userService.logoutToken(refreshToken, response);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> logout(@CookieValue(name = "token", required = false) String token, HttpServletResponse response) {
+        userService.logoutToken(token, response);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/user")
@@ -35,19 +33,21 @@ public class UserController {
     }
 
     @PutMapping("/user")
-    public ResponseEntity<?> updateUserInfo(@RequestBody Map<String, Object> params, Authentication authentication) {
+    public ResponseEntity<?> updateUserInfo(@RequestBody Map<String, Object> params, Authentication authentication) throws Exception {
         String username = authentication.getName();
         params.put("id", username);
-        return userService.updateUserInfo(params);
+        userService.updateUserInfo(params);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody Map<String, Object> params) {
-        return userService.join(params);
+    public ResponseEntity<?> join(@RequestBody Map<String, Object> params) throws Exception {
+        userService.join(params);
+        return ResponseEntity.ok("success");
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> reLogin(@CookieValue(value = "refreshToken", required = true) String token, HttpServletResponse response) {
+    public ResponseEntity<?> reLogin(@CookieValue(value = "token") String token, HttpServletResponse response) {
         return userService.refreshToken(token, response);
     }
 
@@ -57,11 +57,11 @@ public class UserController {
     }
 
     @PutMapping("/user/delete")
-    public ResponseEntity<?> deleteUserInfo(@CookieValue(name = "refreshToken", required = false) String refreshToken, @RequestBody Map<String, Object> params, Authentication authentication, HttpServletResponse response) {
+    public void deleteUserInfo(@CookieValue(name = "token", required = false) String token, @RequestBody Map<String, Object> params, Authentication authentication, HttpServletResponse response) {
         String username = authentication.getName();
-        params.put("token", refreshToken);
+        params.put("token", token);
         params.put("id", username);
-        return userService.deleteUserInfo(params, response);
+        userService.deleteUserInfo(params, response);
     }
 
 }

@@ -5,7 +5,6 @@ import org.example.service.HomeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -38,30 +37,27 @@ public class HomeController {
     }
 
     @PostMapping("/detail")
-    public int boardInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
+    public void boardInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("id", username);
-        return homeService.insertBoard(param);
+        homeService.insertBoard(param);
     }
 
     @PutMapping("/detail/modify")
-    public ResponseEntity<Void> boardModify(@RequestBody Map<String, Object> param) {
+    public void boardModify(@RequestBody Map<String, Object> param) {
         homeService.modifyBoard(param);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/detail")
-    public ResponseEntity<Void> boardDelete(@RequestBody Map<String, Object> param) {
+    public void boardDelete(@RequestBody Map<String, Object> param) {
         homeService.deleteBoard(param);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/detail/recommend")
-    public ResponseEntity<?> boardRecUp(@RequestBody Map<String, Object> param, Authentication authentication) {
+    public void boardRecUp(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("id", username);
         homeService.recommendUp(param);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/comment")
@@ -70,18 +66,17 @@ public class HomeController {
     }
 
     @PostMapping("/comment")
-    public int commentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
+    public void commentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
-        return homeService.insertComment(param);
+        homeService.insertComment(param);
     }
 
     @PutMapping("/comment/delete")
-    public ResponseEntity<?> commentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
+    public void commentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
         homeService.deleteComment(param);
-        return ResponseEntity.noContent().build();
     }
 
 }

@@ -66,8 +66,8 @@ public class HomeService {
         viewCountService.markUserPost(id, no, category);
     }
 
-    public int insertBoard(Map<String, Object> param) {
-        return boardMapper.insertBoard(param);
+    public void insertBoard(Map<String, Object> param) {
+        boardMapper.insertBoard(param);
     }
 
     public void modifyBoard(Map<String, Object> param) {
@@ -95,8 +95,8 @@ public class HomeService {
         return boardMapper.getBoardComment(param);
     }
 
-    public int insertComment(Map<String, Object> param) {
-        return boardMapper.insertComment(param);
+    public void insertComment(Map<String, Object> param) {
+        boardMapper.insertComment(param);
     }
 
     public void deleteComment(Map<String, Object> param) {

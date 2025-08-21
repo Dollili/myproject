@@ -1,6 +1,5 @@
 package org.example.common.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,47 +15,47 @@ public class GlobalExceptionHandler {
 
     // 400 잘못된 요청
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException e) {
         log.warn("Bad request: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), request.getRequestURI()));
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
     }
 
     // 401 인증 실패
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAuthentication() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), "인증이 필요합니다.", request.getRequestURI()));
+                .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), "인증이 필요합니다."));
     }
 
     // 403 권한 없음
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAccessDenied() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다.", request.getRequestURI()));
+                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다."));
     }
 
     // 404
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), request.getRequestURI()));
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage()));
     }
 
     // 409
     @ExceptionHandler(ResourceConflictException.class)
-    public ResponseEntity<ErrorResponse> handleConflict(ResourceConflictException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleConflict(ResourceConflictException e) {
         log.warn("Conflict: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage(), request.getRequestURI()));
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage()));
     }
 
     // 그 외 모든 예외 (500)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("Unhandled exception: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류가 발생했습니다.", request.getRequestURI()));
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류가 발생했습니다."));
     }
 
 }

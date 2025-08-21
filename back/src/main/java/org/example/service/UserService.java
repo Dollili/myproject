@@ -3,10 +3,10 @@ package org.example.service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.repository.UserMapper;
+import org.example.common.exception.ResourceConflictException;
+import org.example.common.exception.ResourceNotFoundException;
 import org.example.common.util.JwtTokenProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.example.repository.UserMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,17 +33,12 @@ public class UserService {
     private final EmailService emailService;
     private final StringRedisTemplate stringRedisTemplate;
 
-    Logger logger = LoggerFactory.getLogger(UserService.class);
-
     public ResponseEntity<?> login(Map<String, Object> params, HttpServletResponse response) {
         String username = params.get("id").toString();
         String password = params.get("pwd").toString();
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-        List<String> roles = authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
         String token = jwtTokenProvider.createToken(username, roles);
         String refreshToken = jwtTokenProvider.createRefreshToken(username);
@@ -56,8 +51,7 @@ public class UserService {
         cookie.setMaxAge((int) maxAge); // 1시간
         response.addCookie(cookie);
 
-        stringRedisTemplate.opsForValue()
-                .set("RT:" + username, refreshToken, 7, TimeUnit.DAYS);
+        stringRedisTemplate.opsForValue().set("RT:" + username, refreshToken, 7, TimeUnit.DAYS);
 
         Map<String, Object> map = new HashMap<>();
         map.put("result", userMapper.userInfo(params));
@@ -73,43 +67,38 @@ public class UserService {
         tokenInit(token, response);
     }
 
-    public ResponseEntity<String> join(Map<String, Object> params) {
+    public void join(Map<String, Object> params) throws Exception {
         if (params.get("id") == null || params.get("pwd") == null) {
-            logger.error("params is null");
-            throw new RuntimeException("Required fields");
+            throw new ResourceNotFoundException("아이디, 패스워드를 모두 입력해주세요.");
         }
         String userId = (String) params.get("id");
         String userNic = (String) params.get("nic");
         String userEmail = (String) params.get("email");
 
         if (!userId.matches("^[a-zA-Z0-9]+$")) {
-            return ResponseEntity.status(511).body("아이디는 영문자, 숫자만 입력 가능합니다.");
+            throw new ResourceConflictException("아이디는 영문자, 숫자만 입력 가능합니다.");
         } else if (!userEmail.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
-            return ResponseEntity.status(512).body("이메일 형식이 유효하지 않습니다.");
+            throw new ResourceConflictException("이메일 형식이 유효하지 않습니다.");
         }
 
         Map<String, Object> user = userMapper.findUserId(userId);
         Map<String, Object> nic = userMapper.findUserNic(userNic);
 
         if (user != null) {
-            return ResponseEntity.status(409).body("사용 중인 아이디 입니다.");
+            throw new ResourceConflictException("사용 중인 아이디 입니다.");
         } else if (nic != null) {
-            return ResponseEntity.status(418).body("사용 중인 닉네임 입니다.");
+            throw new ResourceConflictException("사용 중인 닉네임 입니다.");
         }
 
         if (userNic == null) {
             params.put("nic", userId);
         }
-        String password = bCryptPasswordEncoder.encode((String) params.get("pwd"));
+        String password = passwordEncoder((String) params.get("pwd"));
         params.put("pwd", password);
 
         int result = userMapper.insertUser(params);
-        if (result == 1) {
-            logger.info("join success");
-            return ResponseEntity.ok("success");
-        } else {
-            logger.info("join failed");
-            return ResponseEntity.internalServerError().body("fail");
+        if (result != 1) {
+            throw new Exception();
         }
     }
 
@@ -123,13 +112,13 @@ public class UserService {
         return info;
     }
 
-    public ResponseEntity<String> updateUserInfo(Map<String, Object> params) {
+    public void updateUserInfo(Map<String, Object> params) throws Exception {
         String pwd = (String) params.get("pwd");
         String nic = (String) params.get("nic");
         Map<String, Object> user_nic = userMapper.findUserNic(nic);
         if (user_nic != null) {
             if (!user_nic.get("USER_ID").equals(params.get("id"))) {
-                return ResponseEntity.status(418).body("Duplicate NIC");
+                throw new ResourceConflictException("중복된 닉네임이 존재합니다.");
             }
         }
 
@@ -138,15 +127,10 @@ public class UserService {
         }
         int result = userMapper.updateUserInfo(params);
 
-        if (!pwd.isEmpty() && result == 1) {
-            logger.info("update success");
-            return ResponseEntity.noContent().build();
-        } else if (result == 1) {
-            logger.info("update success(no pwd)");
-            return ResponseEntity.status(501).build();
-        } else {
-            logger.info("update failed");
-            return ResponseEntity.internalServerError().body("fail");
+        if (pwd.isEmpty() && result == 1) {
+            throw new ResourceConflictException("수정 완료"); // 패스워드 수정 없이
+        } else if (result != 1) {
+            throw new Exception("업데이트 실패");
         }
     }
 
@@ -157,14 +141,12 @@ public class UserService {
         int count = userMapper.findPwd(params);
         if (code.isEmpty()) {
             if (count == 0) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("사용자를 찾을 수 없습니다");
+                throw new ResourceNotFoundException("사용자를 찾을 수 없습니다.");
             }
             String random = String.valueOf((int) (Math.random() * 900000) + 100000);
             String result = emailService.send(random, email);
             if (result.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("인증코드 발송에 실패하였습니다.");
+                throw new ResourceNotFoundException("인증코드 발송에 실패하였습니다.");
             }
             return ResponseEntity.ok().body(result);
         } else {
@@ -173,35 +155,30 @@ public class UserService {
                 int result = userMapper.updateUserPwd(params);
                 if (result == 1) {
                     emailService.deleteData(code);
-                    return ResponseEntity.status(HttpStatus.CREATED)
-                            .body("비밀번호가 변경되었습니다. 로그인 화면으로 이동합니다.");
+                    return ResponseEntity.status(HttpStatus.CREATED).body("비밀번호가 변경되었습니다. 로그인 화면으로 이동합니다.");
                 } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("비밀번호 변경에 실패하였습니다. 관리자에게 문의바랍니다.");
+                    throw new Exception("비밀번호 변경에 실패하였습니다. 관리자에게 문의바랍니다.");
                 }
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                throw new IllegalArgumentException();
             }
         }
     }
 
     public ResponseEntity<?> refreshToken(String token, HttpServletResponse response) {
         if (!jwtTokenProvider.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new ResourceNotFoundException("Token validate fail.");
         }
         String username = jwtTokenProvider.getUsername(token);
 
-        String saveRt = stringRedisTemplate.opsForValue()
-                .get("RT:" + username);
-        if (!token.equals(saveRt)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        String saveRt = stringRedisTemplate.opsForValue().get("RT:" + username);
+        if (saveRt == null) {
+            throw new ResourceNotFoundException("Not found token.");
         }
-
-        jwtTokenProvider.blacklistToken(token);
 
         List<String> roles = jwtTokenProvider.getRoles(token);
         String newToken = jwtTokenProvider.createToken(username, roles);
-        String newRefreshToken = jwtTokenProvider.createRefreshToken(username);
+        //String newRefreshToken = jwtTokenProvider.createRefreshToken(username);
 
         Cookie cookie = new Cookie("token", newToken);
         cookie.setHttpOnly(true);
@@ -210,7 +187,8 @@ public class UserService {
         cookie.setMaxAge((int) (jwtTokenProvider.getValidityInMilliseconds() / 1000)); // 1시간
         response.addCookie(cookie);
 
-        stringRedisTemplate.opsForValue().set("RT:" + username, newRefreshToken, 7, TimeUnit.DAYS);
+        jwtTokenProvider.blacklistToken(token);
+        //stringRedisTemplate.opsForValue().set("RT:" + username, newRefreshToken, 7, TimeUnit.DAYS);
 
         Map<String, Object> map = new HashMap<>();
         map.put("result", "success");
@@ -223,15 +201,13 @@ public class UserService {
         return bCryptPasswordEncoder.encode(password);
     }
 
-    public ResponseEntity<String> deleteUserInfo(Map<String, Object> params, HttpServletResponse response) {
+    public void deleteUserInfo(Map<String, Object> params, HttpServletResponse response) {
         int result = userMapper.deleteUserInfo(params);
-        if (result == 1) {
-            String token = params.get("token").toString();
-            tokenInit(token, response);
-            return ResponseEntity.ok().body("success");
-        } else {
-            return ResponseEntity.internalServerError().body("fail");
+        if (result != 1) {
+            throw new ResourceNotFoundException("해당 사용자를 찾을 수 없습니다.");
         }
+        String token = params.get("token").toString();
+        tokenInit(token, response);
     }
 
     public void tokenInit(String token, HttpServletResponse response) {

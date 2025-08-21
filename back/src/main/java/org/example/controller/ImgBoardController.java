@@ -37,10 +37,10 @@ public class ImgBoardController {
     }
 
     @PostMapping("/imgDetail")
-    public int boardInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
+    public void boardInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("id", username);
-        return imgBoardService.insertBoard(param);
+        imgBoardService.insertBoard(param);
     }
 
     @PutMapping("/imgDetail/modify")
@@ -68,10 +68,10 @@ public class ImgBoardController {
     }
 
     @PostMapping("/iComment")
-    public int commentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
+    public void commentInsert(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
-        return imgBoardService.insertComment(param);
+        imgBoardService.insertComment(param);
     }
 
     @PutMapping("/iComment/delete")

@@ -69,8 +69,8 @@ public class ImgBoardService {
         return ResponseEntity.ok().build();
     }
 
-    public int insertBoard(Map<String, Object> param) {
-        return imageMapper.insertBoard(param);
+    public void insertBoard(Map<String, Object> param) {
+        imageMapper.insertBoard(param);
     }
 
     public void modifyBoard(Map<String, Object> param) {
@@ -101,8 +101,8 @@ public class ImgBoardService {
         return imageMapper.getBoardComment(param);
     }
 
-    public int insertComment(Map<String, Object> param) {
-        return imageMapper.insertComment(param);
+    public void insertComment(Map<String, Object> param) {
+        imageMapper.insertComment(param);
     }
 
     public void deleteComment(Map<String, Object> param) {

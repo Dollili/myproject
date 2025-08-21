@@ -26,8 +26,8 @@ public class FileController {
     }
 
     @PutMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody List<String> params) {
-        return fileService.deleteFile(params);
+    public void delete(@RequestBody List<String> params) {
+        fileService.deleteFile(params);
     }
 
 }

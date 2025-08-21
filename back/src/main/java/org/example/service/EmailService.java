@@ -55,7 +55,6 @@ public class EmailService {
             mailSender.send(mimeMessage);
         } catch (MailException es) {
             es.printStackTrace();
-            return "";
         }
         setDataExpire(pwd, to, 5L);
         return "인증 코드가 발송되었습니다.";

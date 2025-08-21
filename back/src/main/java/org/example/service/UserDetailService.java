@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,15 +23,14 @@ public class UserDetailService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         Map<String, Object> user = userMapper.userLogin(username);
         if (user == null) {
             logger.info("loadUserByUsername: 사용자 이름이 존재하지 않음");
             throw new UsernameNotFoundException(username);
         }
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.get("ROLE")));
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.get("ROLE")));
 
         return new org.springframework.security.core.userdetails.User((String) user.get("USER_ID")
                 , (String) user.get("USER_PWD"), authorities);
