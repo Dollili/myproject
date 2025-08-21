@@ -5,7 +5,6 @@ import org.example.common.exception.ResourceConflictException;
 import org.example.common.exception.ResourceNotFoundException;
 import org.example.repository.FileMapper;
 import org.example.repository.ImageMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +54,7 @@ public class ImgBoardService {
         return result;
     }
 
-    public ResponseEntity<?> recommendUp(Map<String, Object> param) {
+    public void recommendUp(Map<String, Object> param) {
         String category = "recommendImg";
         String no = param.get("no") == null ? "" : param.get("no").toString();
         String id = param.get("id") == null ? "" : param.get("id").toString();
@@ -64,9 +63,8 @@ public class ImgBoardService {
             imageMapper.recommendUp(no);
             viewCountService.markUserPost(id, no, category);
         } else {
-            return ResponseEntity.status(515).build();
+            throw new ResourceConflictException("이미 추천한 게시글 입니다.");
         }
-        return ResponseEntity.ok().build();
     }
 
     public void insertBoard(Map<String, Object> param) {
@@ -76,7 +74,7 @@ public class ImgBoardService {
     public void modifyBoard(Map<String, Object> param) {
         int result = imageMapper.updateBoard(param);
         if (result != 1) {
-            throw new ResourceConflictException("등록 실패");
+            throw new ResourceNotFoundException("수정 실패");
         }
     }
 
@@ -87,7 +85,7 @@ public class ImgBoardService {
         imageMapper.deleteAllCom(no); // 댓글 삭제 처리
         int result = imageMapper.deleteBoard(param);
         if (result != 1) {
-            throw new ResourceNotFoundException("게시글이 존재하지 않거나 삭제할 수 없습니다.");
+            throw new ResourceNotFoundException("삭제 실패");
         }
     }
 
@@ -108,7 +106,7 @@ public class ImgBoardService {
     public void deleteComment(Map<String, Object> param) {
         int result = imageMapper.deleteComment(param);
         if (result != 1) {
-            throw new ResourceConflictException("삭제 권한이 없습니다.");
+            throw new ResourceNotFoundException("삭제 실패");
         }
     }
 
@@ -133,7 +131,7 @@ public class ImgBoardService {
     public void deleteRComment(Map<String, Object> param) {
         int result = imageMapper.deleteRComment(param);
         if (result != 1) {
-            throw new ResourceConflictException("삭제 권한이 없습니다.");
+            throw new ResourceNotFoundException("삭제 실패");
         }
     }
 }

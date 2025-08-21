@@ -42,22 +42,20 @@ public class ImgBoardController {
     }
 
     @PutMapping("/imgDetail/modify")
-    public ResponseEntity<Void> boardModify(@RequestBody Map<String, Object> param) {
+    public void boardModify(@RequestBody Map<String, Object> param) {
         imgBoardService.modifyBoard(param);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/imgDetail")
-    public ResponseEntity<Void> boardDelete(@RequestBody Map<String, Object> param) {
+    public void boardDelete(@RequestBody Map<String, Object> param) {
         imgBoardService.deleteBoard(param);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/imgDetail/recommend")
-    public ResponseEntity<?> boardRecUp(@RequestBody Map<String, Object> param, Authentication authentication) {
+    public void boardRecUp(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("id", username);
-        return imgBoardService.recommendUp(param);
+        imgBoardService.recommendUp(param);
     }
 
     @GetMapping("/iComment")
@@ -98,10 +96,9 @@ public class ImgBoardController {
     }
 
     @PutMapping("/rankComment/delete")
-    public ResponseEntity<?> rCommentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
+    public void rCommentDelete(@RequestBody Map<String, Object> param, Authentication authentication) {
         String username = authentication.getName();
         param.put("user", username);
         imgBoardService.deleteRComment(param);
-        return ResponseEntity.ok().build();
     }
 }

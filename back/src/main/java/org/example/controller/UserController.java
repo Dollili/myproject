@@ -37,8 +37,7 @@ public class UserController {
     public ResponseEntity<?> updateUserInfo(@RequestBody Map<String, Object> params, Authentication authentication) throws Exception {
         String username = authentication.getName();
         params.put("id", username);
-        userService.updateUserInfo(params);
-        return ResponseEntity.noContent().build();
+        return userService.updateUserInfo(params);
     }
 
     @PostMapping("/join")

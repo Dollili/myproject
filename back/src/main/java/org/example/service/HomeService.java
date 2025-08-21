@@ -1,7 +1,6 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.common.exception.ResourceConflictException;
 import org.example.common.exception.ResourceNotFoundException;
 import org.example.repository.BoardMapper;
 import org.example.repository.FileMapper;
@@ -59,11 +58,10 @@ public class HomeService {
         String no = param.get("no") == null ? "" : param.get("no").toString();
         String id = param.get("id") == null ? "" : param.get("id").toString();
 
-        if (viewCountService.hasUserPost(id, no, category)) {
-            throw new ResourceConflictException("이미 추천한 게시물입니다.");
+        if (!viewCountService.hasUserPost(id, no, category)) {
+            boardMapper.recommendUp(no);
+            viewCountService.markUserPost(id, no, category);
         }
-        boardMapper.recommendUp(no);
-        viewCountService.markUserPost(id, no, category);
     }
 
     public void insertBoard(Map<String, Object> param) {
@@ -71,7 +69,10 @@ public class HomeService {
     }
 
     public void modifyBoard(Map<String, Object> param) {
-        boardMapper.updateBoard(param);
+        int result = boardMapper.updateBoard(param);
+        if (result != 1) {
+            throw new ResourceNotFoundException("수정 실패");
+        }
     }
 
     @Transactional
@@ -81,7 +82,7 @@ public class HomeService {
         boardMapper.deleteAllCom(no); // 댓글 삭제 처리
         int result = boardMapper.deleteBoard(param);
         if (result != 1) {
-            throw new ResourceNotFoundException("게시글이 존재하지 않거나 삭제할 수 없습니다.");
+            throw new ResourceNotFoundException("삭제 실패");
         }
     }
 
@@ -102,7 +103,7 @@ public class HomeService {
     public void deleteComment(Map<String, Object> param) {
         int result = boardMapper.deleteComment(param);
         if (result != 1) {
-            throw new ResourceConflictException("삭제 권한이 없습니다.");
+            throw new ResourceNotFoundException("삭제 실패");
         }
     }
 

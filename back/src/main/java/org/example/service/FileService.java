@@ -42,10 +42,7 @@ public class FileService {
 
             Map<String, Object> map = new HashMap<>();
             String fileName = file.getOriginalFilename();
-            String fileId = "FILE_" + UUID.randomUUID()
-                    .toString()
-                    .replace("-", "")
-                    .substring(0, 12);
+            String fileId = "FILE_" + UUID.randomUUID().toString().replace("-", "").substring(0, 12);
             seq = seq + 1;
 
             String encryptedFileName = CryptoUtil.encryptSHA256(fileId + "_" + seq);
@@ -70,11 +67,7 @@ public class FileService {
 
                 list.add(map);
             } catch (IOException e) {
-                try {
-                    throw new IOException("파일 업로드 중 문제가 발생했습니다.");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                throw new RuntimeException("파일 업로드 중 문제가 발생했습니다.", e);
             }
         }
         return ResponseEntity.ok(list);
@@ -82,32 +75,28 @@ public class FileService {
 
     public ResponseEntity<?> tempFile(MultipartFile file, String name) {
         Map<String, String> result = new HashMap<>();
+        String saveName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        File uploadDir = new File(filePath + "temp");
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        Path tempPath;
+        if (name == null || name.isEmpty()) {
+            tempPath = uploadDir.toPath().resolve(saveName);
+            String fileUrl = "/files/temp/" + saveName;
+            result.put("url", fileUrl);
+            result.put("name", saveName);
+        } else {
+            tempPath = uploadDir.toPath().resolve(name);
+            result.put("success", "true");
+        }
+
         try {
-            String saveName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            File uploadDir = new File(filePath + "temp");
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            Path tempPath;
-            if (name == null || name.isEmpty()) {
-                tempPath = uploadDir.toPath().resolve(saveName);
-                String fileUrl = "/files/temp/" + saveName;
-                result.put("url", fileUrl);
-                result.put("name", saveName);
-            } else {
-                tempPath = uploadDir.toPath().resolve(name);
-                result.put("success", "true");
-            }
-
             // 덮어쓰기 허용
             Files.copy(file.getInputStream(), tempPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            try {
-                throw new IOException("파일 업로드 중 문제가 발생했습니다.");
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            throw new RuntimeException("파일 업로드 중 문제가 발생했습니다.", e);
         }
         return ResponseEntity.ok(result);
     }

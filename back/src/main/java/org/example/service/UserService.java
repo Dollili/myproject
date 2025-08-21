@@ -8,7 +8,6 @@ import org.example.common.exception.ResourceNotFoundException;
 import org.example.common.util.JwtTokenProvider;
 import org.example.repository.UserMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,13 +67,17 @@ public class UserService {
         tokenInit(token, response);
     }
 
-    public void join(Map<String, Object> params) throws Exception {
+    public void join(Map<String, Object> params) {
         if (params.get("id") == null || params.get("pwd") == null) {
             throw new ResourceNotFoundException("아이디, 패스워드를 모두 입력해주세요.");
         }
         String userId = (String) params.get("id");
         String userNic = (String) params.get("nic");
         String userEmail = (String) params.get("email");
+
+        if (userNic == null) {
+            params.put("nic", userId);
+        }
 
         if (!userId.matches("^[a-zA-Z0-9]+$")) {
             throw new ResourceConflictException("아이디는 영문자, 숫자만 입력 가능합니다.");
@@ -90,16 +94,10 @@ public class UserService {
             throw new ResourceConflictException("사용 중인 닉네임 입니다.");
         }
 
-        if (userNic == null) {
-            params.put("nic", userId);
-        }
         String password = passwordEncoder((String) params.get("pwd"));
         params.put("pwd", password);
 
-        int result = userMapper.insertUser(params);
-        if (result != 1) {
-            throw new Exception();
-        }
+        userMapper.insertUser(params);
     }
 
     public Map<String, Object> findUserInfo(Map<String, Object> params) {
@@ -112,7 +110,7 @@ public class UserService {
         return info;
     }
 
-    public void updateUserInfo(Map<String, Object> params) throws Exception {
+    public ResponseEntity<?> updateUserInfo(Map<String, Object> params) throws Exception {
         String pwd = (String) params.get("pwd");
         String nic = (String) params.get("nic");
         Map<String, Object> user_nic = userMapper.findUserNic(nic);
@@ -122,16 +120,18 @@ public class UserService {
             }
         }
 
-        if (!pwd.isEmpty()) {
+        if (StringUtils.hasText(pwd)) {
             params.put("pwd", passwordEncoder(pwd));
         }
+
         int result = userMapper.updateUserInfo(params);
 
         if (pwd.isEmpty() && result == 1) {
-            throw new ResourceConflictException("수정 완료"); // 패스워드 수정 없이
+            return ResponseEntity.noContent().build(); // 패스워드 수정 없이
         } else if (result != 1) {
             throw new Exception("업데이트 실패");
         }
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<?> findUserPwd(Map<String, Object> params) throws Exception {
@@ -139,15 +139,14 @@ public class UserService {
         String email = params.get("email").toString();
         String pwd = params.get("pwd").toString();
         int count = userMapper.findPwd(params);
+
+        if (count == 0) {
+            throw new ResourceNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
         if (code.isEmpty()) {
-            if (count == 0) {
-                throw new ResourceNotFoundException("사용자를 찾을 수 없습니다.");
-            }
             String random = String.valueOf((int) (Math.random() * 900000) + 100000);
             String result = emailService.send(random, email);
-            if (result.isEmpty()) {
-                throw new ResourceNotFoundException("인증코드 발송에 실패하였습니다.");
-            }
             return ResponseEntity.ok().body(result);
         } else {
             if (emailService.getCode(code)) {
@@ -155,12 +154,12 @@ public class UserService {
                 int result = userMapper.updateUserPwd(params);
                 if (result == 1) {
                     emailService.deleteData(code);
-                    return ResponseEntity.status(HttpStatus.CREATED).body("비밀번호가 변경되었습니다. 로그인 화면으로 이동합니다.");
+                    return ResponseEntity.ok().body("비밀번호가 변경되었습니다. 로그인 화면으로 이동합니다.");
                 } else {
                     throw new Exception("비밀번호 변경에 실패하였습니다. 관리자에게 문의바랍니다.");
                 }
             } else {
-                throw new IllegalArgumentException();
+                throw new ResourceNotFoundException("잘못된 인증 코드입니다.");
             }
         }
     }
