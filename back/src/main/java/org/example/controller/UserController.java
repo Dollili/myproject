@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     @PostMapping("/login")

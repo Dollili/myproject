@@ -1,10 +1,8 @@
 package org.example.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.example.service.ImgBoardService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,10 +13,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/board")
+@RequiredArgsConstructor
 public class ImgBoardController {
-    Logger logger = LoggerFactory.getLogger(HomeController.class);
-    @Autowired
-    private ImgBoardService imgBoardService;
+
+    private final ImgBoardService imgBoardService;
 
     @GetMapping("/imgList")
     public Map<String, Object> board(@RequestParam Map<String, Object> params) {
